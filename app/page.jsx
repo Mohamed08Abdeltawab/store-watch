@@ -407,48 +407,39 @@ export default function StorefrontPage() {
             </div>
 
             <div className="cat-grid-bento">
-              <div className="cat-card-bento" onClick={() => { setActiveCategory("classic"); location.href = "#catalog"; }}>
-                <img src="/img/ben10-classic-concept-01.png" alt="ساعات كلاسيكية" />
+              <div className="cat-card-bento" onClick={() => { setActiveCategory("عادية (كلاسيكية)"); location.href = "#catalog"; }}>
+                <img src="/img/ben10-classic-concept-01.png" alt="عادية (كلاسيكية)" />
                 <div className="cat-card-bento__content">
                   <span className="cat-card-bento__tag">الأكثر شهرة وفخامة</span>
-                  <h3 className="cat-card-bento__title">الساعات الكلاسيكية الملكية</h3>
-                  <p className="cat-card-bento__sub">ستانلس ستيل مصقول وجلد طبيعي إيطالي</p>
+                  <h3 className="cat-card-bento__title">عادية (كلاسيكية)</h3>
+                  <p className="cat-card-bento__sub">ستانلس ستيل مصقول وتصاميم ملكية فاخرة</p>
                 </div>
               </div>
 
-              <div className="cat-card-bento" onClick={() => { setActiveCategory("chrono"); location.href = "#catalog"; }}>
-                <img src="/img/ben10-chronograph-concept-01.png" alt="ساعات كرونوغراف" />
+              <div className="cat-card-bento" onClick={() => { setActiveCategory("كرونوغراف (Chronograph)"); location.href = "#catalog"; }}>
+                <img src="/img/ben10-chronograph-concept-01.png" alt="كرونوغراف (Chronograph)" />
                 <div className="cat-card-bento__content">
                   <span className="cat-card-bento__tag">دقة هندسية</span>
-                  <h3 className="cat-card-bento__title">ساعات الكرونوغراف</h3>
-                  <p className="cat-card-bento__sub">3 مواني فرعية وتاكيميتر سرعة</p>
+                  <h3 className="cat-card-bento__title">كرونوغراف (Chronograph)</h3>
+                  <p className="cat-card-bento__sub">3 مواني فرعية وتاكيميتر لقياس السرعة</p>
                 </div>
               </div>
 
-              <div className="cat-card-bento" onClick={() => { setActiveCategory("sport"); location.href = "#catalog"; }}>
-                <img src="/img/ben10-sport-concept-01.png" alt="ساعات رياضية" />
+              <div className="cat-card-bento" onClick={() => { setActiveCategory("رقمية (Digital)"); location.href = "#catalog"; }}>
+                <img src="/img/ben10-sport-concept-01.png" alt="رقمية (Digital)" />
                 <div className="cat-card-bento__content">
-                  <span className="cat-card-bento__tag">قوة وتحمل</span>
-                  <h3 className="cat-card-bento__title">الساعات الرياضية</h3>
-                  <p className="cat-card-bento__sub">مقاومة صدمات ومياه حتى 100M</p>
+                  <span className="cat-card-bento__tag">عصرية وعملية</span>
+                  <h3 className="cat-card-bento__title">رقمية (Digital)</h3>
+                  <p className="cat-card-bento__sub">شاشات رقمية دقيقة وتنبيهات متعددة</p>
                 </div>
               </div>
 
-              <div className="cat-card-bento" onClick={() => { setActiveCategory("automatic"); location.href = "#catalog"; }}>
-                <img src="/img/ben10-chronograph-concept-01.png" alt="ساعات أوتوماتيك" />
-                <div className="cat-card-bento__content">
-                  <span className="cat-card-bento__tag">بدون بطارية</span>
-                  <h3 className="cat-card-bento__title">ساعات أوتوماتيك</h3>
-                  <p className="cat-card-bento__sub">تروس ميكانيكية وهيكل سكيلتون</p>
-                </div>
-              </div>
-
-              <div className="cat-card-bento" onClick={() => { setActiveCategory("smart"); location.href = "#catalog"; }}>
-                <img src="/img/ben10-sport-concept-01.png" alt="ساعات ذكية" />
+              <div className="cat-card-bento" onClick={() => { setActiveCategory("ذكية (Smartwatch)"); location.href = "#catalog"; }}>
+                <img src="/img/ben10-sport-concept-01.png" alt="ذكية (Smartwatch)" />
                 <div className="cat-card-bento__content">
                   <span className="cat-card-bento__tag">شاشة AMOLED</span>
-                  <h3 className="cat-card-bento__title">الساعات الذكية Omni</h3>
-                  <p className="cat-card-bento__sub">مكالمات وتتبع صحي وبطارية 10 أيام</p>
+                  <h3 className="cat-card-bento__title">ذكية (Smartwatch)</h3>
+                  <p className="cat-card-bento__sub">مكالمات وتتبع صحي وبطارية طويلة</p>
                 </div>
               </div>
             </div>
@@ -472,11 +463,10 @@ export default function StorefrontPage() {
               <div className="filter-tabs">
                 {[
                   { id: "all", label: "جميع الساعات" },
-                  { id: "classic", label: "ساعات كلاسيكية" },
-                  { id: "chrono", label: "كرونوغراف" },
-                  { id: "sport", label: "ساعات رياضية" },
-                  { id: "automatic", label: "أوتوماتيك" },
-                  { id: "smart", label: "ساعات ذكية" }
+                  { id: "عادية (كلاسيكية)", label: "عادية (كلاسيكية)" },
+                  { id: "رقمية (Digital)", label: "رقمية (Digital)" },
+                  { id: "ذكية (Smartwatch)", label: "ذكية (Smartwatch)" },
+                  { id: "كرونوغراف (Chronograph)", label: "كرونوغراف (Chronograph)" }
                 ].map(tab => (
                   <button
                     key={tab.id}
@@ -541,7 +531,7 @@ export default function StorefrontPage() {
 
                     <div className="p-card__body">
                       <div className="p-card__meta">
-                        <span>Ben10 Watches</span>
+                        <span>{p.cat} {p.target_audience ? `· ${p.target_audience}` : ""}</span>
                         <span className="p-card__rating">
                           ★ <b>{p.rating}</b> <small style={{ color: "var(--muted)" }}>({p.reviews})</small>
                         </span>
@@ -890,13 +880,20 @@ export default function StorefrontPage() {
                   {Number(quickProduct.price).toLocaleString("ar-EG")} ج.م
                 </div>
                 <ul className="specs-list">
-                  <li><span>نوع الماكينة:</span> <b>{quickProduct.movement || "كوارتز ياباني"}</b></li>
-                  <li><span>خامة الهيكل:</span> <b>{quickProduct.case_material || "ستانلس ستيل 316L"}</b></li>
-                  <li><span>نوع الزجاج:</span> <b>{quickProduct.glass || "سافاير ياقوتي ضد الخدش"}</b></li>
-                  <li><span>قطر الميناء:</span> <b>{quickProduct.diameter || "42 ملم"}</b></li>
-                  <li><span>مقاومة الماء:</span> <b>{quickProduct.water_resist || "5 ATM"}</b></li>
+                  <li><span>نوع الساعة:</span> <b>{quickProduct.cat}</b></li>
+                  {quickProduct.target_audience && <li><span>الفئة المستهدفة:</span> <b>{quickProduct.target_audience}</b></li>}
+                  {quickProduct.color && <li><span>لون الساعة:</span> <b>{quickProduct.color}</b></li>}
                   <li><span>الضمان:</span> <b>{quickProduct.warranty || "ضمان 12 شهر معتمد"}</b></li>
                 </ul>
+
+                {(quickProduct.description || quickProduct.overview) && (
+                  <div style={{ marginTop: "0.9rem", padding: "0.85rem", background: "rgba(0,0,0,0.03)", borderRadius: "8px", border: "1px solid rgba(0,0,0,0.06)" }}>
+                    <div style={{ fontSize: "0.8rem", fontWeight: "800", marginBottom: "0.3rem", color: "var(--ink)" }}>الوصف الكامل للساعة:</div>
+                    <p style={{ fontSize: "0.76rem", color: "var(--muted)", lineHeight: "1.7", margin: 0, whiteSpace: "pre-line" }}>
+                      {quickProduct.description || quickProduct.overview}
+                    </p>
+                  </div>
+                )}
                 <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.2rem" }}>
                   <button
                     type="button"

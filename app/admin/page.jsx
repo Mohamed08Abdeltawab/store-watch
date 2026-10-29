@@ -3,6 +3,35 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+const WATCH_TYPES = [
+  "عادية (كلاسيكية)",
+  "رقمية (Digital)",
+  "ذكية (Smartwatch)",
+  "كرونوغراف (Chronograph)"
+];
+
+const TARGET_AUDIENCES = [
+  { value: "", label: "— غير محدد — (اختياري)" },
+  { value: "رجالي", label: "رجالي" },
+  { value: "حريمي", label: "حريمي" },
+  { value: "للجنسين", label: "للجنسين" },
+  { value: "أطفال", label: "أطفال" }
+];
+
+const STANDARD_COLORS = [
+  { value: "", label: "— غير محدد — (اختياري)" },
+  { value: "فضي", label: "فضي" },
+  { value: "أسود", label: "أسود" },
+  { value: "ذهبي", label: "ذهبي" },
+  { value: "روز جولد", label: "روز جولد" },
+  { value: "رمادي", label: "رمادي" },
+  { value: "أزرق", label: "أزرق" },
+  { value: "أخضر", label: "أخضر" },
+  { value: "بني", label: "بني" },
+  { value: "أبيض", label: "أبيض" },
+  { value: "custom", label: "+ لون مخصص..." }
+];
+
 export default function AdminDashboardPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("products"); // 'products' or 'orders'
@@ -12,25 +41,23 @@ export default function AdminDashboardPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [notification, setNotification] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState("");
 
   // Product Form State
   const [form, setForm] = useState({
     name: "",
     sub: "",
-    cat: "classic",
+    cat: "عادية (كلاسيكية)",
+    target_audience: "",
+    color: "",
+    custom_color: "",
     price: "",
     old_price: "",
     tag: "best",
     badge_text: "الأكثر طلباً",
     image: "/img/ben10-classic-concept-01.png",
-    overview: "",
-    movement: "كوارتز ياباني فائق الدقة",
-    case_material: "ستانلس ستيل 316L",
-    glass: "زجاج سافاير ياقوتي مقاوم للخدش",
-    diameter: "42 ملم",
-    water_resist: "5 ATM (50 متر)",
-    strap: "جلد طبيعي إيطالي",
-    warranty: "ضمان 12 شهر معتمد",
+    description: "",
     in_stock: true
   });
 
@@ -73,6 +100,36 @@ export default function AdminDashboardPage() {
     router.push("/admin/login");
   }
 
+  // Handle Image Upload from device into source code (public/uploads)
+  async function handleImageUpload(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    setUploadError("");
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        setForm(prev => ({ ...prev, image: data.url }));
+        notify("تم رفع الصورة وحفظها في مجلد الملفات بنجاح");
+      } else {
+        setUploadError(data.error || "فشل رفع الصورة");
+      }
+    } catch (err) {
+      setUploadError("حدث خطأ في الاتصال أثناء رفع الصورة");
+    } finally {
+      setUploadingImage(false);
+    }
+  }
+
   async function handleDeleteProduct(id, name) {
     if (!confirm(`هل أنت متأكد من حذف ساعة "${name}" نهائياً من قاعدة البيانات؟`)) return;
 
@@ -92,8 +149,14 @@ export default function AdminDashboardPage() {
 
   async function handleSaveProduct(e) {
     e.preventDefault();
+
+    const selectedColor = form.color === "custom"
+      ? (form.custom_color.trim() || "")
+      : form.color;
+
     const payload = {
       ...form,
+      color: selectedColor,
       price: parseFloat(form.price),
       old_price: form.old_price ? parseFloat(form.old_price) : null
     };
@@ -144,45 +207,44 @@ export default function AdminDashboardPage() {
     setForm({
       name: "",
       sub: "",
-      cat: "classic",
+      cat: "عادية (كلاسيكية)",
+      target_audience: "",
+      color: "",
+      custom_color: "",
       price: "",
       old_price: "",
       tag: "best",
       badge_text: "الأكثر طلباً",
       image: "/img/ben10-classic-concept-01.png",
-      overview: "",
-      movement: "كوارتز ياباني فائق الدقة",
-      case_material: "ستانلس ستيل 316L",
-      glass: "زجاج سافاير ياقوتي مقاوم للخدش",
-      diameter: "42 ملم",
-      water_resist: "5 ATM (50 متر)",
-      strap: "جلد طبيعي إيطالي",
-      warranty: "ضمان 12 شهر معتمد",
+      description: "",
       in_stock: true
     });
+    setUploadError("");
   }
 
   function startEdit(p) {
     setEditingProduct(p);
+
+    const isStdColor = STANDARD_COLORS.some(c => c.value !== "custom" && c.value === p.color);
+    const colorVal = !p.color ? "" : (isStdColor ? p.color : "custom");
+    const customColorVal = isStdColor ? "" : (p.color || "");
+
     setForm({
       name: p.name,
       sub: p.sub || "",
-      cat: p.cat,
+      cat: WATCH_TYPES.includes(p.cat) ? p.cat : "عادية (كلاسيكية)",
+      target_audience: p.target_audience || "",
+      color: colorVal,
+      custom_color: customColorVal,
       price: p.price,
       old_price: p.old_price || "",
       tag: p.tag || "best",
       badge_text: p.badge_text || "",
       image: p.image,
-      overview: p.overview || "",
-      movement: p.movement || "",
-      case_material: p.case_material || "",
-      glass: p.glass || "",
-      diameter: p.diameter || "",
-      water_resist: p.water_resist || "",
-      strap: p.strap || "",
-      warranty: p.warranty || "",
+      description: p.description || p.overview || "",
       in_stock: p.in_stock === 1 || p.in_stock === true
     });
+    setUploadError("");
     setShowAddModal(true);
   }
 
@@ -376,7 +438,9 @@ export default function AdminDashboardPage() {
                   <tr style={{ background: "#0e1411", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", color: "#94a3b8", fontSize: "0.78rem" }}>
                     <th style={{ padding: "1rem" }}>الصورة</th>
                     <th style={{ padding: "1rem" }}>اسم الساعة والموديل</th>
-                    <th style={{ padding: "1rem" }}>الفئة</th>
+                    <th style={{ padding: "1rem" }}>الفئة (النوع)</th>
+                    <th style={{ padding: "1rem" }}>الفئة المستهدفة</th>
+                    <th style={{ padding: "1rem" }}>اللون</th>
                     <th style={{ padding: "1rem" }}>السعر الحالي</th>
                     <th style={{ padding: "1rem" }}>السعر السابق</th>
                     <th style={{ padding: "1rem" }}>المخزون</th>
@@ -394,8 +458,18 @@ export default function AdminDashboardPage() {
                         <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: "400" }}>{p.sub}</div>
                       </td>
                       <td style={{ padding: "0.8rem 1rem" }}>
-                        <span style={{ background: "rgba(255, 255, 255, 0.08)", padding: "0.2rem 0.6rem", borderRadius: "6px", fontSize: "0.72rem" }}>
+                        <span style={{ background: "rgba(163, 230, 53, 0.15)", color: "#A3E635", padding: "0.2rem 0.6rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "700" }}>
                           {p.cat}
+                        </span>
+                      </td>
+                      <td style={{ padding: "0.8rem 1rem" }}>
+                        <span style={{ background: "rgba(56, 189, 248, 0.15)", color: "#38bdf8", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: "700" }}>
+                          {p.target_audience || "غير محدد"}
+                        </span>
+                      </td>
+                      <td style={{ padding: "0.8rem 1rem" }}>
+                        <span style={{ background: "rgba(255, 255, 255, 0.08)", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem" }}>
+                          {p.color || "غير محدد"}
                         </span>
                       </td>
                       <td style={{ padding: "0.8rem 1rem", fontWeight: "800", color: "#A3E635" }}>
@@ -562,8 +636,8 @@ export default function AdminDashboardPage() {
           <div style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(0,0,0,0.8)",
-            backdropFilter: "blur(4px)",
+            background: "rgba(0,0,0,0.85)",
+            backdropFilter: "blur(5px)",
             zIndex: 100,
             display: "grid",
             placeItems: "center",
@@ -573,10 +647,11 @@ export default function AdminDashboardPage() {
               background: "#141c18",
               border: "1px solid rgba(163, 230, 53, 0.4)",
               borderRadius: "16px",
-              width: "min(640px, 100%)",
+              width: "min(680px, 100%)",
               maxHeight: "90vh",
               overflowY: "auto",
-              padding: "1.8rem"
+              padding: "1.8rem",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.7)"
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.4rem" }}>
                 <h3 style={{ fontSize: "1.2rem", fontWeight: "800", margin: 0 }}>
@@ -586,6 +661,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <form onSubmit={handleSaveProduct}>
+                {/* Watch Name */}
                 <div style={{ marginBottom: "1rem" }}>
                   <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>اسم الساعة *</label>
                   <input
@@ -593,39 +669,141 @@ export default function AdminDashboardPage() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     required
-                    style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem" }}
+                    placeholder="مثال: ساعة Ben10 رويال هيريتدج كلاسيك"
+                    style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
                   />
                 </div>
 
+                {/* Categories & Target Audience */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+                  {/* Category (Types from Image 2) */}
                   <div>
-                    <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>الفئة *</label>
+                    <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>الفئة (نوع الساعة) *</label>
                     <select
                       value={form.cat}
                       onChange={(e) => setForm({ ...form, cat: e.target.value })}
-                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem" }}
+                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
                     >
-                      <option value="classic">ساعات كلاسيكية</option>
-                      <option value="chrono">كرونوغراف</option>
-                      <option value="sport">ساعات رياضية</option>
-                      <option value="automatic">أوتوماتيك</option>
-                      <option value="smart">ساعات ذكية</option>
+                      {WATCH_TYPES.map(type => (
+                        <option key={type} value={type}>{type}</option>
+                      ))}
                     </select>
                   </div>
 
+                  {/* Target Audience (from Image 4) */}
                   <div>
-                    <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>رابط الصورة *</label>
+                    <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>الفئة المستهدفة</label>
+                    <select
+                      value={form.target_audience}
+                      onChange={(e) => setForm({ ...form, target_audience: e.target.value })}
+                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                    >
+                      {TARGET_AUDIENCES.map(aud => (
+                        <option key={aud.value} value={aud.value}>{aud.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Color Selection (from Image 3) */}
+                <div style={{ marginBottom: "1rem" }}>
+                  <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>لون الساعة</label>
+                  <select
+                    value={form.color}
+                    onChange={(e) => setForm({ ...form, color: e.target.value })}
+                    style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                  >
+                    {STANDARD_COLORS.map(col => (
+                      <option key={col.value} value={col.value}>{col.label}</option>
+                    ))}
+                  </select>
+
+                  {form.color === "custom" && (
+                    <div style={{ marginTop: "0.5rem" }}>
+                      <input
+                        type="text"
+                        placeholder="اكتب اسم اللون المخصص هنا..."
+                        value={form.custom_color}
+                        onChange={(e) => setForm({ ...form, custom_color: e.target.value })}
+                        required={form.color === "custom"}
+                        style={{ width: "100%", height: "38px", background: "#090d0b", border: "1px solid #A3E635", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Image Upload from Device & Storage in Source Code */}
+                <div style={{
+                  marginBottom: "1rem",
+                  background: "#0e1512",
+                  border: "1px dashed rgba(163, 230, 53, 0.4)",
+                  borderRadius: "10px",
+                  padding: "1rem"
+                }}>
+                  <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", color: "#A3E635", marginBottom: "0.5rem" }}>
+                    📷 رفع صورة الساعة من جهازك (يتم تخزينها في ملفات السورس كود)
+                  </label>
+                  
+                  <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+                    <div style={{ flex: 1 }}>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        style={{
+                          width: "100%",
+                          fontSize: "0.8rem",
+                          color: "#94a3b8",
+                          cursor: "pointer"
+                        }}
+                      />
+                      {uploadingImage && (
+                        <div style={{ fontSize: "0.75rem", color: "#A3E635", marginTop: "0.4rem" }}>
+                          ⏳ جاري رفع وحفظ الصورة في ملفات السورس كود...
+                        </div>
+                      )}
+                      {uploadError && (
+                        <div style={{ fontSize: "0.75rem", color: "#ef4444", marginTop: "0.4rem" }}>
+                          ✕ {uploadError}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Image Preview */}
+                    {form.image && (
+                      <div style={{ textAlign: "center" }}>
+                        <img
+                          src={form.image}
+                          alt="معاينة الصورة"
+                          style={{
+                            width: "56px",
+                            height: "56px",
+                            objectFit: "contain",
+                            background: "#fff",
+                            borderRadius: "8px",
+                            padding: "3px",
+                            border: "1px solid #A3E635"
+                          }}
+                        />
+                        <div style={{ fontSize: "0.62rem", color: "#94a3b8", marginTop: "2px" }}>معاينة</div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div style={{ marginTop: "0.6rem" }}>
+                    <label style={{ display: "block", fontSize: "0.68rem", color: "#94a3b8", marginBottom: "0.2rem" }}>مسار ملف الصورة المخزن:</label>
                     <input
                       type="text"
                       value={form.image}
                       onChange={(e) => setForm({ ...form, image: e.target.value })}
                       required
-                      placeholder="/img/ben10-classic-concept-01.png"
-                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem" }}
+                      placeholder="/uploads/watch-xxx.png أو /img/ben10-classic-concept-01.png"
+                      style={{ width: "100%", height: "34px", fontSize: "0.75rem", background: "#090d0b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", color: "#fff", paddingInline: "0.6rem" }}
                     />
                   </div>
                 </div>
 
+                {/* Price & Old Price */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
                   <div>
                     <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>السعر الحالي (ج.م) *</label>
@@ -634,7 +812,7 @@ export default function AdminDashboardPage() {
                       value={form.price}
                       onChange={(e) => setForm({ ...form, price: e.target.value })}
                       required
-                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem" }}
+                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
                     />
                   </div>
 
@@ -645,44 +823,50 @@ export default function AdminDashboardPage() {
                       value={form.old_price}
                       onChange={(e) => setForm({ ...form, old_price: e.target.value })}
                       placeholder="اتركه فارغاً إن لم يكن هناك خصم"
-                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem" }}
+                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
                     />
                   </div>
                 </div>
 
+                {/* Short Subtitle */}
                 <div style={{ marginBottom: "1rem" }}>
                   <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>وصف مختصر / سطر فرعي</label>
                   <input
                     type="text"
                     value={form.sub}
                     onChange={(e) => setForm({ ...form, sub: e.target.value })}
-                    placeholder="ستانلس ستيل · زجاج ياقوتي مقاوم للخدش"
-                    style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem" }}
+                    placeholder="ستانلس ستيل 316L مصقول · زجاج ياقوتي مقاوم للخدش"
+                    style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
                   />
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>نوع الماكينة</label>
-                    <input
-                      type="text"
-                      value={form.movement}
-                      onChange={(e) => setForm({ ...form, movement: e.target.value })}
-                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem" }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>مقاومة الماء</label>
-                    <input
-                      type="text"
-                      value={form.water_resist}
-                      onChange={(e) => setForm({ ...form, water_resist: e.target.value })}
-                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem" }}
-                    />
-                  </div>
+                {/* Full Description (الوصف الكامل بتاع الساعة) */}
+                <div style={{ marginBottom: "1.2rem" }}>
+                  <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>الوصف الكامل بتاع الساعة</label>
+                  <textarea
+                    rows={4}
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    placeholder="اكتب هنا الوصف التفصيلي والكامل للساعة، المميزات، الخامات، والاستخدام..."
+                    style={{ width: "100%", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", padding: "0.8rem", outline: "none", resize: "vertical", fontFamily: "inherit", fontSize: "0.82rem", lineHeight: "1.6" }}
+                  />
                 </div>
 
+                {/* Stock Status */}
+                <div style={{ marginBottom: "1.2rem", display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                  <input
+                    type="checkbox"
+                    id="stockCheck"
+                    checked={form.in_stock}
+                    onChange={(e) => setForm({ ...form, in_stock: e.target.checked })}
+                    style={{ width: "18px", height: "18px", accentColor: "#A3E635", cursor: "pointer" }}
+                  />
+                  <label htmlFor="stockCheck" style={{ fontSize: "0.82rem", fontWeight: "700", cursor: "pointer" }}>
+                    الساعة متوفرة في المخزن وقابلة للطلب
+                  </label>
+                </div>
+
+                {/* Submit / Cancel Buttons */}
                 <div style={{ display: "flex", gap: "0.8rem", marginTop: "1.5rem" }}>
                   <button
                     type="submit"
@@ -694,7 +878,9 @@ export default function AdminDashboardPage() {
                       fontWeight: "800",
                       border: 0,
                       borderRadius: "999px",
-                      cursor: "pointer"
+                      cursor: "pointer",
+                      fontSize: "0.92rem",
+                      boxShadow: "0 4px 15px rgba(163, 230, 53, 0.25)"
                     }}
                   >
                     {editingProduct ? "تحديث الساعة" : "حفظ وإضافة الساعة"}
@@ -709,7 +895,8 @@ export default function AdminDashboardPage() {
                       color: "#fff",
                       border: 0,
                       borderRadius: "999px",
-                      cursor: "pointer"
+                      cursor: "pointer",
+                      fontSize: "0.92rem"
                     }}
                   >
                     إلغاء
