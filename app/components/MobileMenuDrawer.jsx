@@ -120,12 +120,13 @@ export default function MobileMenuDrawer() {
                 { href: "/shop?filter=bestseller", label: "🔥 الأكثر مبيعاً", icon: "" },
                 { href: "/shop?audience=men", label: "ساعات رجالية", icon: "👔" },
                 { href: "/shop?audience=women", label: "ساعات نسائية", icon: "✨" },
-                { href: "/shop?category=classic", label: "كلاسيكية فاخرة", icon: "👑" },
-                { href: "/shop?category=chrono", label: "كرونوغراف ورياضية", icon: "⏱️" },
-                { href: "/shop?category=smart", label: "ساعات ذكية", icon: "⚡" },
-                { href: "/shop?category=automatic", label: "أوتوماتيك ميكانيكية", icon: "⚙️" },
-                { href: "/why-ben10", label: "لماذا Ben10؟ (الضمانات)", icon: "🛡️" },
-                { href: "/customer-service", label: "خدمة العملاء والدعم", icon: "💬" },
+                { href: "/shop?category=classic", label: "كلاسيكية", icon: "👑" },
+                { href: "/shop?category=chrono", label: "كرونوغراف", icon: "⏱️" },
+                { href: "/shop?category=automatic", label: "أوتوماتيك", icon: "⚙️" },
+                { href: "/shop?category=smart", label: "ذكية", icon: "⚡" },
+                { href: "/shop?category=digital", label: "رقمية", icon: "🔢" },
+                { href: "/why-ben10", label: "لماذا Ben10؟", icon: "🛡️" },
+                { href: "/customer-service", label: "خدمة العملاء", icon: "💬" },
               ].map(item => (
                 <li key={item.href}>
                   <Link

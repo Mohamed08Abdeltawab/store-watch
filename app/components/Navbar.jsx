@@ -189,11 +189,14 @@ export default function Navbar() {
             <Link href="/shop?category=chrono" className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-white/5 transition-colors">
               كرونوغراف
             </Link>
+            <Link href="/shop?category=automatic" className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-white/5 transition-colors">
+              أوتوماتيك
+            </Link>
             <Link href="/shop?category=smart" className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-white/5 transition-colors">
               ذكية
             </Link>
-            <Link href="/shop?category=automatic" className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-white/5 transition-colors">
-              أوتوماتيك
+            <Link href="/shop?category=digital" className="px-3 py-1.5 rounded-lg hover:text-white hover:bg-white/5 transition-colors">
+              رقمية
             </Link>
           </div>
 
