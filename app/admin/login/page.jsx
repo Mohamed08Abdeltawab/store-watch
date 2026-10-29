@@ -106,9 +106,8 @@ export default function AdminLoginPage() {
           </form>
 
           <div className="pt-4 mt-4 border-t border-white/10 text-center text-xs text-neutral-400 space-y-1">
-            <p>💡 <b>بيانات الدخول الافتراضية:</b></p>
-            <p className="text-[11px] font-mono text-neutral-300">
-              المستخدم: <code className="bg-white/10 px-1 py-0.5 rounded text-lime-400">admin</code> · كلمة المرور: <code className="bg-white/10 px-1 py-0.5 rounded text-lime-400">ben10admin2026</code>
+            <p className="text-[11px] text-neutral-500">
+              بوابة مخصصة للإدارة فقط · مشفرة ومحمية بالكامل
             </p>
           </div>
         </CardContent>

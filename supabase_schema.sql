@@ -57,12 +57,11 @@ CREATE TABLE IF NOT EXISTS admins (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- إضافة حساب المشرف الافتراضي
--- Username: admin
--- Password: ben10admin2026
+-- إضافة حساب المشرف الافتراضي (مشفر بـ Bcrypt)
 INSERT INTO admins (username, password_hash)
-VALUES ('admin', '$2a$10$wO4qQh/o9wP7W2k0lK3fQeM1ZtH8tG.7qCgPzU7D8c.m1Q2s4u/2C')
-ON CONFLICT (username) DO NOTHING;
+VALUES ('admin', '$2b$10$a5v32CH/sU13sdw47z5P0OqW.jhZukxkkOnvGQwH09YrNgM3MYl1m')
+ON CONFLICT (username) DO UPDATE 
+SET password_hash = '$2b$10$a5v32CH/sU13sdw47z5P0OqW.jhZukxkkOnvGQwH09YrNgM3MYl1m';
 
 -- 4. إدخال الساعات الأولية (Initial Seed Products)
 INSERT INTO products (
