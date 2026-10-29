@@ -16,25 +16,30 @@ export default function MobileBottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="mobile-bottom-nav" aria-label="شريط التنقل السفلي للموبايل">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#0d1210]/95 backdrop-blur-md border-t border-white/10 px-2 py-1.5 shadow-2xl flex items-center justify-around" aria-label="شريط التنقل السفلي للموبايل">
+      
       {/* Home */}
       <Link
         href="/"
-        className={`mobile-bottom-tab ${pathname === "/" ? "is-active" : ""}`}
+        className={`flex flex-col items-center gap-1 p-1 text-[11px] font-bold transition-colors ${
+          pathname === "/" ? "text-lime-400" : "text-neutral-400 hover:text-white"
+        }`}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
           <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
         <span>الرئيسية</span>
       </Link>
 
-      {/* Shop / Catalog */}
+      {/* Shop */}
       <Link
         href="/shop"
-        className={`mobile-bottom-tab ${pathname.startsWith("/shop") ? "is-active" : ""}`}
+        className={`flex flex-col items-center gap-1 p-1 text-[11px] font-bold transition-colors ${
+          pathname.startsWith("/shop") ? "text-lime-400" : "text-neutral-400 hover:text-white"
+        }`}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <rect x="3" y="3" width="7" height="7"></rect>
           <rect x="14" y="3" width="7" height="7"></rect>
           <rect x="14" y="14" width="7" height="7"></rect>
@@ -46,51 +51,56 @@ export default function MobileBottomNav() {
       {/* Search Trigger */}
       <button
         type="button"
-        className="mobile-bottom-tab"
+        className="flex flex-col items-center gap-1 p-1 text-[11px] font-bold text-neutral-400 hover:text-white transition-colors"
         onClick={() => setIsSearchOpen(true)}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
         <span>بحث</span>
       </button>
 
-      {/* Wishlist Drawer Trigger (Slides from Right) */}
+      {/* Wishlist Trigger */}
       <button
         type="button"
-        className="mobile-bottom-tab"
+        className="flex flex-col items-center gap-1 p-1 text-[11px] font-bold text-neutral-400 hover:text-white transition-colors relative"
         onClick={() => setIsWishlistOpen(true)}
       >
-        <div style={{ position: "relative" }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill={wishlist.length > 0 ? "#ef4444" : "none"} stroke={wishlist.length > 0 ? "#ef4444" : "currentColor"} strokeWidth="2">
+        <div className="relative">
+          <svg className={`w-5 h-5 ${wishlist.length > 0 ? "text-rose-500 fill-rose-500" : ""}`} viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
           {wishlist.length > 0 && (
-            <span className="bottom-tab-badge" style={{ background: "#ef4444" }}>{wishlist.length}</span>
+            <span className="absolute -top-1.5 -right-2 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white font-extrabold text-[9px] flex items-center justify-center">
+              {wishlist.length}
+            </span>
           )}
         </div>
         <span>المفضلة</span>
       </button>
 
-      {/* Cart Drawer Trigger (Slides from Left) */}
+      {/* Cart Trigger */}
       <button
         type="button"
-        className="mobile-bottom-tab"
+        className="flex flex-col items-center gap-1 p-1 text-[11px] font-bold text-neutral-400 hover:text-white transition-colors relative"
         onClick={() => setIsCartOpen(true)}
       >
-        <div style={{ position: "relative" }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <div className="relative">
+          <svg className="w-5 h-5 text-lime-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
           </svg>
           {totalCartCount > 0 && (
-            <span className="bottom-tab-badge" style={{ background: "var(--ben10-green)", color: "var(--ink)" }}>{totalCartCount}</span>
+            <span className="absolute -top-1.5 -right-2 min-w-4 h-4 px-1 rounded-full bg-lime-400 text-black font-black text-[9px] flex items-center justify-center">
+              {totalCartCount}
+            </span>
           )}
         </div>
         <span>السلة</span>
       </button>
+
     </nav>
   );
 }

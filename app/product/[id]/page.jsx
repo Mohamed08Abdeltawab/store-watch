@@ -4,6 +4,8 @@ import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useCart, GOVERNORATES } from "../../context/CartContext";
 import ProductCard from "../../components/ProductCard";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function ProductDetailPage({ params }) {
   const unwrappedParams = use(params);
@@ -47,21 +49,23 @@ export default function ProductDetailPage({ params }) {
 
   if (loading) {
     return (
-      <div style={{ textAlign: "center", padding: "8rem 1rem" }}>
-        <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>⌚</div>
-        <h3>جاري تحميل مواصفات الساعة الفاخرة...</h3>
+      <div className="py-28 text-center space-y-3">
+        <div className="text-4xl animate-bounce">⌚</div>
+        <h3 className="font-bold text-lg text-neutral-800">جاري تحميل مواصفات الساعة الفاخرة...</h3>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div style={{ textAlign: "center", padding: "8rem 1rem" }}>
-        <h2>الساعة غير موجودة أو تم حذفها</h2>
-        <p style={{ color: "var(--muted)", margin: "1rem 0 2rem" }}>قد يكون الرابط خاطئاً أو تم تعديل كود الساعة</p>
-        <Link href="/shop" className="btn btn--green">
-          العودة لكتالوج الساعات
-        </Link>
+      <div className="py-28 text-center max-w-md mx-auto px-4 space-y-4">
+        <h2 className="text-2xl font-black text-neutral-900">الساعة غير موجودة أو تم حذفها</h2>
+        <p className="text-xs text-neutral-500">قد يكون الرابط خاطئاً أو تم تعديل كود الساعة</p>
+        <Button asChild className="bg-lime-400 hover:bg-lime-500 text-black font-extrabold rounded-full px-6">
+          <Link href="/shop">
+            العودة لكتالوج الساعات
+          </Link>
+        </Button>
       </div>
     );
   }
@@ -82,58 +86,70 @@ export default function ProductDetailPage({ params }) {
     .slice(0, 4);
 
   return (
-    <div className="product-page" style={{ paddingBottom: "6.5rem" }}>
-      {/* Breadcrumbs - clearly visible on light background */}
-      <div className="container" style={{ paddingTop: "1rem" }}>
-        <nav className="breadcrumbs product-breadcrumbs" aria-label="مسار التنقل">
-          <Link href="/">الرئيسية</Link>
+    <div className="pb-24">
+      {/* Breadcrumbs */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5">
+        <nav className="flex items-center gap-2 text-xs font-semibold text-neutral-400 flex-wrap" aria-label="مسار التنقل">
+          <Link href="/" className="hover:text-emerald-700 transition-colors">الرئيسية</Link>
           <span>/</span>
-          <Link href="/shop">المتجر</Link>
+          <Link href="/shop" className="hover:text-emerald-700 transition-colors">المتجر</Link>
           <span>/</span>
-          <Link href={`/shop?category=${encodeURIComponent(product.cat)}`}>{product.cat}</Link>
+          <Link href={`/shop?category=${encodeURIComponent(product.cat)}`} className="hover:text-emerald-700 transition-colors">
+            {product.cat}
+          </Link>
           <span>/</span>
-          <span style={{ color: "var(--ink)", fontWeight: "700" }}>{product.name}</span>
+          <span className="text-neutral-900 font-bold">{product.name}</span>
         </nav>
       </div>
 
       {/* Main Product Layout */}
-      <section className="section" style={{ paddingTop: "0.5rem" }}>
-        <div className="container">
-          <div className="product-detail-grid">
+      <section className="pt-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            
             {/* Gallery Column */}
-            <div className="product-gallery">
-              <div className="product-gallery__main">
+            <div className="lg:col-span-6 space-y-4">
+              <div className="relative aspect-square w-full rounded-3xl overflow-hidden bg-white border border-neutral-200/80 p-6 flex items-center justify-center shadow-sm">
                 <img
                   src={images[activeImgIndex] || product.image}
                   alt={product.name}
-                  className="product-gallery__img"
+                  className="max-h-full max-w-full object-contain transition-transform duration-300 hover:scale-105"
                 />
 
                 {/* Badges */}
-                <div className="p-card__badges" style={{ top: "12px", right: "12px" }}>
-                  {product.badge_text && <span className="badge badge--best">{product.badge_text}</span>}
-                  {discount > 0 && <span className="badge badge--sale">خصم {discount}%</span>}
+                <div className="absolute top-4 right-4 flex flex-col gap-1.5 z-10 pointer-events-none">
+                  {product.badge_text && (
+                    <Badge className="bg-lime-400 text-black font-extrabold text-xs hover:bg-lime-400 shadow-sm border-0">
+                      {product.badge_text}
+                    </Badge>
+                  )}
+                  {discount > 0 && (
+                    <Badge className="bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-700 shadow-sm border-0">
+                      خصم {discount}%
+                    </Badge>
+                  )}
                 </div>
 
                 {/* Wishlist toggle */}
                 <button
                   type="button"
-                  className={`p-card__fav ${isFav ? "is-active" : ""}`}
-                  style={{ top: "12px", left: "12px", width: "38px", height: "38px" }}
+                  className={`absolute top-4 left-4 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/90 shadow-md backdrop-blur-sm transition-all hover:scale-110 ${
+                    isFav ? "text-rose-500" : "text-neutral-400 hover:text-neutral-700"
+                  }`}
                   onClick={() => toggleWishlist(product.id)}
                   aria-label="المفضلة"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill={isFav ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill={isFav ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                   </svg>
                 </button>
 
-                {/* Arrow navigation if multiple images */}
+                {/* Navigation arrows if multiple images */}
                 {images.length > 1 && (
                   <>
                     <button
                       type="button"
-                      className="gallery-nav gallery-nav--prev"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-xs backdrop-blur-sm transition-transform active:scale-95"
                       onClick={() => setActiveImgIndex(prev => (prev > 0 ? prev - 1 : images.length - 1))}
                       aria-label="السابق"
                     >
@@ -141,7 +157,7 @@ export default function ProductDetailPage({ params }) {
                     </button>
                     <button
                       type="button"
-                      className="gallery-nav gallery-nav--next"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-xs backdrop-blur-sm transition-transform active:scale-95"
                       onClick={() => setActiveImgIndex(prev => (prev < images.length - 1 ? prev + 1 : 0))}
                       aria-label="التالي"
                     >
@@ -153,123 +169,138 @@ export default function ProductDetailPage({ params }) {
 
               {/* Thumbnails */}
               {images.length > 1 && (
-                <div className="product-gallery__thumbs">
+                <div className="flex items-center gap-3 overflow-x-auto py-1">
                   {images.map((imgUrl, idx) => (
                     <button
                       key={idx}
                       type="button"
-                      className={`gallery-thumb ${activeImgIndex === idx ? "is-active" : ""}`}
+                      className={`w-16 h-16 rounded-2xl border-2 p-1 bg-white shrink-0 transition-all ${
+                        activeImgIndex === idx ? "border-lime-500 scale-105 shadow-sm" : "border-neutral-200 opacity-60 hover:opacity-100"
+                      }`}
                       onClick={() => setActiveImgIndex(idx)}
                     >
-                      <img src={imgUrl} alt={`صورة مصغرة ${idx + 1}`} />
+                      <img src={imgUrl} alt="" className="w-full h-full object-contain" />
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Information & Purchase Column */}
-            <div className="product-info-panel">
-              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "0.5rem", flexWrap: "wrap" }}>
-                <span className="badge badge--best">{product.cat}</span>
+            {/* Details & Purchase Column */}
+            <div className="lg:col-span-6 space-y-6">
+              
+              {/* Category, Audience, Stock */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge variant="outline" className="text-xs font-bold text-neutral-800 border-neutral-200 bg-neutral-100">
+                  {product.cat}
+                </Badge>
                 {product.target_audience && (
-                  <span className="badge" style={{ background: "rgba(0,0,0,0.06)", color: "var(--ink)" }}>
+                  <Badge variant="outline" className="text-xs font-bold text-neutral-800 border-neutral-200 bg-neutral-100">
                     {product.target_audience}
-                  </span>
+                  </Badge>
                 )}
-                <span style={{ fontSize: "0.78rem", color: "#16a34a", fontWeight: "700" }}>● متوفرة بالمخزن</span>
+                <span className="text-xs text-emerald-700 font-extrabold flex items-center gap-1 mr-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                  متوفرة بالمخزن وجاهزة للشحن الفوري
+                </span>
               </div>
 
-              <h1 className="product-detail__title">{product.name}</h1>
-              {product.sub && <p className="product-detail__sub">{product.sub}</p>}
+              {/* Title & Sub */}
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 leading-tight">
+                  {product.name}
+                </h1>
+                {product.sub && (
+                  <p className="text-xs sm:text-sm text-neutral-500 mt-1">
+                    {product.sub}
+                  </p>
+                )}
+              </div>
 
-              {/* Rating & Social proof */}
-              <div className="product-detail__rating">
-                <span className="stars">★★★★★</span>
-                <b>{product.rating} / 5.0</b>
-                <span style={{ color: "var(--muted)" }}>({product.reviews} تقييم موثق من المشترين)</span>
+              {/* Rating */}
+              <div className="flex items-center gap-2 text-xs text-neutral-600">
+                <span className="text-amber-500 font-bold tracking-wider text-sm">★★★★★</span>
+                <span className="font-extrabold text-neutral-900">{product.rating} / 5.0</span>
+                <span className="text-neutral-400">({product.reviews} تقييم موثق من المشترين)</span>
               </div>
 
               {/* Price Box */}
-              <div className="product-detail__price-box">
-                <div style={{ display: "flex", alignItems: "baseline", gap: "0.8rem", flexWrap: "wrap" }}>
-                  <div className="price-main">
-                    <b>{Number(product.price).toLocaleString("ar-EG")}</b>
-                    <span>ج.م</span>
-                  </div>
+              <div className="p-4 rounded-2xl bg-neutral-100/80 border border-neutral-200 space-y-1">
+                <div className="flex items-baseline gap-3 flex-wrap">
+                  <span className="text-3xl font-black text-neutral-900">
+                    {Number(product.price).toLocaleString("ar-EG")} <span className="text-sm font-bold text-neutral-500">ج.م</span>
+                  </span>
                   {product.old_price && (
-                    <s className="price-old">{Number(product.old_price).toLocaleString("ar-EG")} ج.م</s>
+                    <s className="text-sm text-neutral-400 line-through">
+                      {Number(product.old_price).toLocaleString("ar-EG")} ج.م
+                    </s>
                   )}
                 </div>
                 {discount > 0 && (
-                  <div style={{ fontSize: "0.82rem", color: "#166534", fontWeight: "700", marginTop: "4px" }}>
+                  <div className="text-xs font-bold text-emerald-800">
                     🎉 وفرت اليوم {(product.old_price - product.price).toLocaleString("ar-EG")} ج.م مع علبة هدايا جلدية فاخرة مجاناً!
                   </div>
                 )}
               </div>
 
-              {/* Guarantees Box */}
-              <div className="product-detail__trust-box">
-                <div className="trust-item">
-                  <span className="trust-item__icon">🔍</span>
+              {/* Trust Box */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl bg-emerald-50/50 border border-emerald-200/60 text-xs text-emerald-950">
+                <div className="flex items-start gap-2.5">
+                  <span className="text-base">🔍</span>
                   <div>
-                    <strong>فحص ومعاينة قبل الدفع:</strong>
-                    <small>افتح العلبة وافحص الساعة وتأكد من جودتها أمام المندوب قبل دفع قرش واحد.</small>
+                    <strong className="block font-bold">فحص ومعاينة قبل الدفع:</strong>
+                    <span className="text-[11px] text-emerald-800">افتح العلبة وافحص الساعة وتأكد من جودتها أمام المندوب.</span>
                   </div>
                 </div>
-                <div className="trust-item">
-                  <span className="trust-item__icon">🛡️</span>
+                <div className="flex items-start gap-2.5">
+                  <span className="text-base">🛡️</span>
                   <div>
-                    <strong>ضمان الوكيل المعتمد:</strong>
-                    <small>{product.warranty || "ضمان 12 شهراً استبدال فوري ضد عيوب الصناعة مع بطاقة مختومة."}</small>
+                    <strong className="block font-bold">ضمان الوكيل المعتمد:</strong>
+                    <span className="text-[11px] text-emerald-800">{product.warranty || "ضمان 12 شهراً استبدال فوري ضد عيوب الصناعة."}</span>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="product-detail__actions">
-                <button
-                  type="button"
-                  className="btn btn--green"
-                  style={{ width: "100%", padding: "1rem", fontSize: "0.95rem" }}
+              <div className="space-y-3 pt-2">
+                <Button
+                  className="w-full bg-lime-400 hover:bg-lime-500 text-black font-extrabold h-12 rounded-2xl text-base shadow-lg shadow-lime-400/25 transition-transform active:scale-[0.99] gap-2"
                   onClick={() => addToCart(product, 1)}
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <svg className="w-5 h-5 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                   </svg>
                   <span>أضف إلى السلة للمتابعة</span>
-                </button>
+                </Button>
 
-                <div className="product-detail__sub-actions">
-                  <button
-                    type="button"
-                    className="btn-wa-action"
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <Button
+                    className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-extrabold h-11 rounded-xl gap-2 shadow-sm"
                     onClick={() => sendDirectWhatsApp(product)}
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                       <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"></path>
                     </svg>
                     <span>طلب مباشر عبر واتساب</span>
-                  </button>
+                  </Button>
 
-                  <button
-                    type="button"
-                    className="btn btn--ghost"
-                    style={{ color: "var(--ink)", borderColor: "var(--line-strong)", fontWeight: "700" }}
+                  <Button
+                    variant="outline"
+                    className="w-full text-neutral-900 font-extrabold h-11 rounded-xl border-neutral-300 hover:bg-neutral-100"
                     onClick={() => openCheckoutWithProduct(product)}
                   >
-                    <span>شراء سريع فوري</span>
-                  </button>
+                    شراء سريع فوري (معاينة قبل الدفع)
+                  </Button>
                 </div>
               </div>
 
               {/* Shipping Calculator */}
-              <div className="shipping-calc-box">
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.6rem", flexWrap: "wrap", gap: "0.4rem" }}>
-                  <span style={{ fontSize: "0.85rem", fontWeight: "700" }}>🚚 مصاريف ومواعيد الشحن لمحافظتك:</span>
+              <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-2">
+                <div className="flex items-center justify-between gap-3 flex-wrap text-xs font-bold text-neutral-800">
+                  <span>🚚 مصاريف ومواعيد الشحن لمحافظتك:</span>
                   <select
-                    className="sort-select"
+                    className="h-8 px-2.5 rounded-lg border border-neutral-200 bg-white text-xs font-bold text-neutral-800 outline-none"
                     value={selectedGov.id}
                     onChange={(e) => {
                       const g = GOVERNORATES.find(gov => gov.id === e.target.value);
@@ -281,83 +312,78 @@ export default function ProductDetailPage({ params }) {
                     ))}
                   </select>
                 </div>
-                <div style={{ fontSize: "0.82rem", color: "var(--muted)", lineHeight: "1.6" }}>
-                  الشحن إلى <strong>{selectedGov.name}</strong> يستغرق <strong>{selectedGov.days}</strong> وقيمته <strong>{selectedGov.shipping} ج.م</strong> (أو مجاني للطلبات فوق 5,000 ج.م).
-                </div>
+                <p className="text-xs text-neutral-500 leading-relaxed">
+                  الشحن إلى <strong className="text-neutral-800">{selectedGov.name}</strong> يستغرق <strong className="text-neutral-800">{selectedGov.days}</strong> وقيمته <strong className="text-emerald-700">{selectedGov.shipping === 0 ? "مجاناً" : `${selectedGov.shipping} ج.م`}</strong> (أو مجاني للطلبات فوق 5,000 ج.م).
+                </p>
               </div>
+
             </div>
+
           </div>
 
           {/* Technical Specifications Section */}
-          <div className="specs-section">
-            <h2 className="specs-section__title">المواصفات التقنية الكاملة</h2>
-            <div className="specs-table-grid">
-              <div className="spec-item">
-                <span className="spec-label">نوع الساعة والتصنيف:</span>
-                <span className="spec-value">{product.cat} {product.target_audience ? `(${product.target_audience})` : ""}</span>
-              </div>
-              <div className="spec-item">
-                <span className="spec-label">ماكينة الساعة (الحركة):</span>
-                <span className="spec-value">{product.movement || "كوارتز ياباني فائق الدقة (Original Movement)"}</span>
-              </div>
-              <div className="spec-item">
-                <span className="spec-label">نوع الزجاج:</span>
-                <span className="spec-value">{product.glass || "سافاير كريستال ياقوتي مضاد للخدش مع طبقة مانعة للانعكاس"}</span>
-              </div>
-              <div className="spec-item">
-                <span className="spec-label">مادة الهيكل الخارجي:</span>
-                <span className="spec-value">{product.case_material || "فولاذ صلب ستانلس ستيل 316L مقاوم للصدأ والتحسس"}</span>
-              </div>
-              <div className="spec-item">
-                <span className="spec-label">قطر وسمك الساعة:</span>
-                <span className="spec-value">{product.diameter || "42 ملم تصميم مريح لجميع أحجام المعصم"}</span>
-              </div>
-              <div className="spec-item">
-                <span className="spec-label">مقاومة الماء:</span>
-                <span className="spec-value">{product.water_resist || "5 ATM (50 متر) - مقاومة كاملة للماء والأنشطة اليومية"}</span>
-              </div>
-              <div className="spec-item">
-                <span className="spec-label">نوع الحزام (السوار):</span>
-                <span className="spec-value">{product.strap || "سوار ستانلس ستيل متين مع قفل أمان مزدوج"}</span>
-              </div>
-              <div className="spec-item">
-                <span className="spec-label">مدة الضمان المعتمد:</span>
-                <span className="spec-value">{product.warranty || "ضمان 12 شهراً استبدال فوري"}</span>
-              </div>
+          <div className="mt-14 pt-10 border-t border-neutral-200">
+            <h2 className="text-xl sm:text-2xl font-black text-neutral-900 mb-6">
+              المواصفات التقنية الكاملة
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                { label: "نوع الساعة والتصنيف:", val: `${product.cat} ${product.target_audience ? `(${product.target_audience})` : ""}` },
+                { label: "ماكينة الساعة (الحركة):", val: product.movement || "كوارتز ياباني فائق الدقة (Original Movement)" },
+                { label: "نوع الزجاج:", val: product.glass || "سافاير كريستال ياقوتي مضاد للخدش مع طبقة مانعة للانعكاس" },
+                { label: "مادة الهيكل الخارجي:", val: product.case_material || "فولاذ صلب ستانلس ستيل 316L مقاوم للصدأ والتحسس" },
+                { label: "قطر وسمك الساعة:", val: product.diameter || "42 ملم تصميم مريح لجميع أحجام المعصم" },
+                { label: "مقاومة الماء:", val: product.water_resist || "5 ATM (50 متر) - مقاومة كاملة للماء والأنشطة اليومية" },
+                { label: "نوع الحزام (السوار):", val: product.strap || "سوار ستانلس ستيل متين مع قفل أمان مزدوج" },
+                { label: "مدة الضمان المعتمد:", val: product.warranty || "ضمان 12 شهراً استبدال فوري" },
+              ].map((spec, i) => (
+                <div key={i} className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200/80 space-y-1">
+                  <span className="text-[11px] font-bold text-neutral-400 block">{spec.label}</span>
+                  <span className="text-xs font-bold text-neutral-800 leading-snug block">{spec.val}</span>
+                </div>
+              ))}
             </div>
 
             {/* Full Detailed Description */}
             {(product.description || product.overview) && (
-              <div className="product-full-desc">
-                <h3>نظرة عامة على الساعة</h3>
-                <p>{product.description || product.overview}</p>
+              <div className="mt-6 p-6 rounded-3xl bg-neutral-50 border border-neutral-200/80 space-y-2">
+                <h3 className="font-extrabold text-sm sm:text-base text-neutral-900">نظرة عامة على الساعة</h3>
+                <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed whitespace-pre-line">
+                  {product.description || product.overview}
+                </p>
               </div>
             )}
           </div>
 
           {/* Related Watches */}
           {relatedProducts.length > 0 && (
-            <div style={{ marginTop: "3.5rem" }}>
-              <div className="section-head-flex">
+            <div className="mt-14 pt-10 border-t border-neutral-200">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
                 <div>
-                  <div className="eyebrow" style={{ marginBottom: "0.5rem" }}>تشكيلات قد تعجبك</div>
-                  <h2 className="section-title">ساعات <span>مشابهة</span> من نفس الفئة</h2>
+                  <Badge variant="outline" className="mb-2 text-xs font-bold text-emerald-800 border-emerald-300 bg-emerald-50">
+                    تشكيلات قد تعجبك
+                  </Badge>
+                  <h2 className="text-xl sm:text-2xl font-black text-neutral-900">
+                    ساعات <span className="text-emerald-700">مشابهة</span> من نفس الفئة
+                  </h2>
                 </div>
-                <Link href="/shop" className="btn-view-more">
-                  <span>تصفح كل التشكيلات</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                  </svg>
-                </Link>
+                <Button asChild variant="outline" className="border-neutral-300 rounded-full h-10 px-5 text-xs font-bold self-start sm:self-auto">
+                  <Link href="/shop" className="flex items-center gap-2">
+                    <span>تصفح كل التشكيلات</span>
+                    <span>←</span>
+                  </Link>
+                </Button>
               </div>
-              <div className="p-grid">
+
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
                 {relatedProducts.map(p => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>
             </div>
           )}
+
         </div>
       </section>
     </div>

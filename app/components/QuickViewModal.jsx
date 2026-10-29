@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function QuickViewModal() {
   const {
@@ -24,35 +26,46 @@ export default function QuickViewModal() {
     ? quickProduct.images
     : (quickProduct.image ? [quickProduct.image] : ["/img/ben10-classic-concept-01.png"]);
 
+  const discount = quickProduct.old_price
+    ? Math.round(((quickProduct.old_price - quickProduct.price) / quickProduct.old_price) * 100)
+    : 0;
+
   return (
-    <div className="modal is-open" role="dialog" aria-modal="true">
-      <div className="modal__scrim" onClick={() => setQuickProduct(null)}></div>
-      <div className="modal__panel" style={{ width: "min(760px, 100%)" }}>
-        <div className="modal__head">
-          <div className="modal__title">نظرة سريعة ومواصفات الساعة</div>
-          <button className="modal__close" type="button" onClick={() => setQuickProduct(null)} aria-label="إغلاق">✕</button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
+        onClick={() => setQuickProduct(null)}
+      />
+
+      {/* Modal Dialog */}
+      <div className="relative z-10 w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-neutral-100 overflow-hidden my-8 animate-in zoom-in-95 duration-200">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-neutral-100 bg-neutral-50/70">
+          <div className="font-extrabold text-base sm:text-lg text-neutral-900">
+            نظرة سريعة ومواصفات الساعة
+          </div>
+          <button
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-sm font-bold"
+            type="button"
+            onClick={() => setQuickProduct(null)}
+            aria-label="إغلاق"
+          >
+            ✕
+          </button>
         </div>
 
-        <div className="quick-view-grid">
-          {/* Media / Gallery */}
-          <div className="quick-view-media" style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                background: "#fff",
-                borderRadius: "12px",
-                overflow: "hidden",
-                display: "grid",
-                placeItems: "center",
-                minHeight: "260px",
-                padding: "12px"
-              }}
-            >
+        {/* Content Grid */}
+        <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[75vh] overflow-y-auto">
+          
+          {/* Media Column */}
+          <div className="flex flex-col gap-3">
+            <div className="relative aspect-square w-full rounded-2xl bg-neutral-100/70 p-4 flex items-center justify-center border border-neutral-100 overflow-hidden">
               <img
                 src={images[activeImgIndex] || quickProduct.image}
                 alt={quickProduct.name}
-                style={{ maxHeight: "260px", maxWidth: "100%", objectFit: "contain", transition: "all 0.2s ease" }}
+                className="w-full h-full object-contain"
               />
 
               {images.length > 1 && (
@@ -60,202 +73,132 @@ export default function QuickViewModal() {
                   <button
                     type="button"
                     onClick={() => setActiveImgIndex(prev => (prev > 0 ? prev - 1 : images.length - 1))}
-                    style={{
-                      position: "absolute",
-                      left: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      background: "rgba(0,0,0,0.65)",
-                      color: "#fff",
-                      border: 0,
-                      borderRadius: "50%",
-                      width: "32px",
-                      height: "32px",
-                      cursor: "pointer",
-                      display: "grid",
-                      placeItems: "center",
-                      fontSize: "0.85rem",
-                      zIndex: 3
-                    }}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-xs backdrop-blur-sm transition-transform active:scale-95"
                     aria-label="السابق"
                   >
                     ◀
                   </button>
-
                   <button
                     type="button"
                     onClick={() => setActiveImgIndex(prev => (prev < images.length - 1 ? prev + 1 : 0))}
-                    style={{
-                      position: "absolute",
-                      right: "8px",
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      background: "rgba(0,0,0,0.65)",
-                      color: "#fff",
-                      border: 0,
-                      borderRadius: "50%",
-                      width: "32px",
-                      height: "32px",
-                      cursor: "pointer",
-                      display: "grid",
-                      placeItems: "center",
-                      fontSize: "0.85rem",
-                      zIndex: 3
-                    }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-xs backdrop-blur-sm transition-transform active:scale-95"
                     aria-label="التالي"
                   >
                     ▶
                   </button>
-
-                  <span
-                    style={{
-                      position: "absolute",
-                      bottom: "8px",
-                      right: "8px",
-                      background: "rgba(0,0,0,0.75)",
-                      color: "#A3E635",
-                      fontSize: "0.7rem",
-                      fontWeight: "800",
-                      padding: "2px 8px",
-                      borderRadius: "999px"
-                    }}
-                  >
-                    {activeImgIndex + 1} / {images.length}
-                  </span>
                 </>
               )}
             </div>
 
+            {/* Thumbnails */}
             {images.length > 1 && (
-              <div style={{ display: "flex", gap: "6px", overflowX: "auto", paddingBottom: "4px" }}>
-                {images.slice(0, 10).map((imgUrl, idx) => (
+              <div className="flex items-center gap-2 overflow-x-auto py-1">
+                {images.map((img, i) => (
                   <button
-                    key={idx}
+                    key={i}
                     type="button"
-                    onClick={() => setActiveImgIndex(idx)}
-                    style={{
-                      flexShrink: 0,
-                      width: "50px",
-                      height: "50px",
-                      background: "#fff",
-                      border: activeImgIndex === idx ? "2px solid #A3E635" : "1px solid rgba(0,0,0,0.15)",
-                      borderRadius: "8px",
-                      padding: "2px",
-                      cursor: "pointer",
-                      display: "grid",
-                      placeItems: "center",
-                      boxShadow: activeImgIndex === idx ? "0 0 10px rgba(163,230,53,0.3)" : "none",
-                      transition: "all 0.15s ease"
-                    }}
+                    onClick={() => setActiveImgIndex(i)}
+                    className={`w-14 h-14 rounded-xl border-2 p-1 bg-neutral-50 shrink-0 transition-all ${
+                      activeImgIndex === i ? "border-lime-500 scale-105" : "border-neutral-200 opacity-70 hover:opacity-100"
+                    }`}
                   >
-                    <img src={imgUrl} alt={`صورة ${idx + 1}`} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                    <img src={img} alt="" className="w-full h-full object-contain" />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Details */}
-          <div className="quick-view-details">
-            <div style={{ display: "flex", gap: "6px", alignItems: "center", marginBottom: "0.4rem" }}>
-              <span className="badge badge--best">{quickProduct.cat}</span>
-              {quickProduct.badge_text && <span className="badge badge--sale">{quickProduct.badge_text}</span>}
+          {/* Details Column */}
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
+              <Badge variant="outline" className="text-xs font-semibold text-neutral-600 border-neutral-200">
+                {quickProduct.cat}
+              </Badge>
+              {quickProduct.target_audience && (
+                <Badge variant="outline" className="text-xs font-semibold text-neutral-600 border-neutral-200">
+                  {quickProduct.target_audience}
+                </Badge>
+              )}
+              {discount > 0 && (
+                <Badge className="bg-emerald-700 text-white font-bold text-xs">
+                  خصم {discount}%
+                </Badge>
+              )}
             </div>
 
-            <h2 style={{ fontSize: "1.35rem", fontWeight: "800", marginBottom: "0.4rem", color: "var(--ink)" }}>
+            <h3 className="font-extrabold text-lg sm:text-xl text-neutral-900 mb-1">
               {quickProduct.name}
-            </h2>
-            <p style={{ fontSize: "0.8rem", color: "var(--muted)", marginBottom: "0.8rem" }}>
+            </h3>
+            <p className="text-xs text-neutral-500 mb-3">
               {quickProduct.sub}
             </p>
 
-            <div style={{ display: "flex", alignItems: "baseline", gap: "0.6rem", marginBottom: "1rem" }}>
+            {/* Price */}
+            <div className="flex items-baseline gap-2 mb-4 p-3 bg-neutral-50 rounded-xl border border-neutral-100">
+              <span className="text-2xl font-black text-neutral-900">
+                {Number(quickProduct.price).toLocaleString("ar-EG")} ج.م
+              </span>
               {quickProduct.old_price && (
-                <s style={{ color: "var(--muted)", fontSize: "0.95rem" }}>
+                <s className="text-sm text-neutral-400 line-through">
                   {Number(quickProduct.old_price).toLocaleString("ar-EG")} ج.م
                 </s>
               )}
-              <span style={{ fontSize: "1.45rem", fontWeight: "800", color: "#101211" }}>
-                {Number(quickProduct.price).toLocaleString("ar-EG")} <small style={{ fontSize: "0.85rem", color: "var(--ben10-forest)" }}>ج.م</small>
-              </span>
             </div>
 
-            <ul className="specs-list">
-              <li><span>نوع الساعة:</span> <b>{quickProduct.cat}</b></li>
-              {quickProduct.target_audience && <li><span>الفئة:</span> <b>{quickProduct.target_audience}</b></li>}
-              {quickProduct.movement && <li><span>الماكينة:</span> <b>{quickProduct.movement}</b></li>}
-              {quickProduct.glass && <li><span>الزجاج:</span> <b>{quickProduct.glass}</b></li>}
-              <li><span>الضمان:</span> <b>{quickProduct.warranty || "ضمان 12 شهر استبدال فوري"}</b></li>
-            </ul>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", marginTop: "1.2rem" }}>
-              <div style={{ display: "flex", gap: "0.6rem" }}>
-                <button
-                  type="button"
-                  className="btn btn--green"
-                  style={{ flex: 1 }}
-                  onClick={() => {
-                    addToCart(quickProduct, 1);
-                    setQuickProduct(null);
-                  }}
-                >
-                  أضف إلى السلة
-                </button>
-                <button
-                  type="button"
-                  className="btn btn--ghost"
-                  style={{ color: "var(--ink)", borderColor: "var(--line-strong)" }}
-                  onClick={() => {
-                    openCheckoutWithProduct(quickProduct);
-                    setQuickProduct(null);
-                  }}
-                >
-                  طلب فوري الآن
-                </button>
+            {/* Highlights */}
+            <div className="space-y-1.5 text-xs text-neutral-600 mb-6 bg-lime-50/50 p-3 rounded-xl border border-lime-200/50">
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-700 font-bold">✓</span>
+                <span>معاينة وفحص دقيق قبل الدفع مع المندوب</span>
               </div>
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-700 font-bold">✓</span>
+                <span>ضمان معتمد 12-24 شهراً مع بطاقة الضمان</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-emerald-700 font-bold">✓</span>
+                <span>علبة تقديم فاخرة مبطنة بالمخمل مجاناً</span>
+              </div>
+            </div>
 
-              <div style={{ display: "flex", gap: "0.6rem" }}>
-                <button
-                  type="button"
+            {/* Action Buttons */}
+            <div className="space-y-2 mt-auto">
+              <Button
+                className="w-full bg-lime-400 hover:bg-lime-500 text-black font-extrabold h-11 rounded-xl text-sm shadow-md shadow-lime-400/20"
+                onClick={() => {
+                  setQuickProduct(null);
+                  openCheckoutWithProduct(quickProduct);
+                }}
+              >
+                شراء فوري بالدفع عند الاستلام
+              </Button>
+
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant="outline"
+                  className="w-full text-neutral-800 font-bold h-10 rounded-xl border-neutral-200"
+                  onClick={() => addToCart(quickProduct, 1)}
+                >
+                  🛒 أضف للسلة
+                </Button>
+
+                <Button
+                  className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold h-10 rounded-xl gap-1.5"
                   onClick={() => sendDirectWhatsApp(quickProduct)}
-                  style={{
-                    flex: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "6px",
-                    background: "#25D366",
-                    color: "#fff",
-                    border: 0,
-                    borderRadius: "10px",
-                    padding: "0.65rem 1rem",
-                    fontWeight: "700",
-                    fontSize: "0.85rem",
-                    cursor: "pointer"
-                  }}
                 >
-                  <span>طلب عبر واتساب</span>
-                </button>
-                <a
-                  href={`/product/${quickProduct.id}`}
-                  style={{
-                    padding: "0.65rem 1rem",
-                    borderRadius: "10px",
-                    background: "rgba(0,0,0,0.05)",
-                    color: "var(--ink)",
-                    fontSize: "0.82rem",
-                    fontWeight: "700",
-                    textDecoration: "none",
-                    textAlign: "center"
-                  }}
-                  onClick={() => setQuickProduct(null)}
-                >
-                  عرض صفحة التفاصيل الكاملة ←
-                </a>
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"></path>
+                  </svg>
+                  <span>واتساب</span>
+                </Button>
               </div>
             </div>
+
           </div>
+
         </div>
+
       </div>
     </div>
   );

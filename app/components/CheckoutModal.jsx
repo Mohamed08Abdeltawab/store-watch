@@ -1,6 +1,9 @@
 "use client";
 
 import { useCart, GOVERNORATES } from "../context/CartContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function CheckoutModal() {
   const {
@@ -28,160 +31,224 @@ export default function CheckoutModal() {
     handleOrderSubmit
   } = useCart();
 
+  if (!isCheckoutOpen) return null;
+
   return (
-    <div className={`modal ${isCheckoutOpen ? "is-open" : ""}`} role="dialog" aria-modal="true">
-      <div className="modal__scrim" onClick={() => setIsCheckoutOpen(false)}></div>
-      <div className="modal__panel">
-        <div className="modal__head">
-          <div className="modal__title">
-            تأكيد الطلب وحجز مرجع الفاتورة
-            <span>سجل بياناتك وسيتم إنشاء كود مرجعي فريد #B10 للطلب وتأكيده عبر واتساب فوراً</span>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
+        onClick={() => setIsCheckoutOpen(false)}
+      />
+
+      {/* Modal Dialog */}
+      <div className="relative z-10 w-full max-w-xl bg-white rounded-3xl shadow-2xl border border-neutral-100 overflow-hidden my-8 animate-in zoom-in-95 duration-200">
+        
+        {/* Header */}
+        <div className="flex items-start justify-between p-5 sm:p-6 border-b border-neutral-100 bg-neutral-50/70">
+          <div>
+            <h3 className="font-extrabold text-lg sm:text-xl text-neutral-900">
+              تأكيد الطلب وحجز مرجع الفاتورة
+            </h3>
+            <p className="text-xs text-neutral-500 mt-1">
+              سجل بياناتك وسيتم إنشاء كود مرجعي فريد #B10 للطلب وتأكيده فوراً
+            </p>
           </div>
-          <button className="modal__close" type="button" onClick={() => setIsCheckoutOpen(false)} aria-label="إغلاق">✕</button>
+          <button
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-sm font-bold shrink-0"
+            type="button"
+            onClick={() => setIsCheckoutOpen(false)}
+            aria-label="إغلاق"
+          >
+            ✕
+          </button>
         </div>
 
+        {/* Content */}
         {orderCompleted ? (
-          <div style={{ padding: "2.5rem 2rem", textAlign: "center" }}>
-            <div style={{ fontSize: "3rem", marginBottom: "0.8rem" }}>🎉</div>
-            <h3 style={{ fontSize: "1.4rem", fontWeight: "800", color: "#101211", margin: "0 0 0.5rem" }}>
+          <div className="p-6 sm:p-8 text-center space-y-4">
+            <div className="text-5xl">🎉</div>
+            <h3 className="font-extrabold text-xl text-neutral-900">
               تم استلام طلبك وتسجيله بنجاح!
             </h3>
-            <div
-              style={{
-                background: "#f0fdf4",
-                border: "2px dashed #A3E635",
-                borderRadius: "14px",
-                padding: "1.2rem",
-                margin: "1.2rem 0",
-                color: "#166534"
-              }}
-            >
-              <span style={{ fontSize: "0.85rem" }}>كود مرجع الطلب الخاص بك:</span>
-              <div style={{ fontSize: "1.8rem", fontWeight: "800", color: "#14532d", letterSpacing: "1px" }}>
+
+            <div className="bg-emerald-50 border-2 border-dashed border-lime-400 rounded-2xl p-4 my-4 text-emerald-900">
+              <span className="text-xs font-semibold text-emerald-700">كود مرجع الطلب الخاص بك:</span>
+              <div className="text-2xl sm:text-3xl font-black text-emerald-950 tracking-wider my-1">
                 #{orderCompleted.orderRef}
               </div>
-              <small style={{ display: "block", marginTop: "4px" }}>احتفظ بهذا الكود لتتبع شحنتك مع خدمة العملاء</small>
+              <small className="text-[11px] text-emerald-700">احتفظ بهذا الكود لتتبع شحنتك مع خدمة العملاء</small>
             </div>
 
-            <p style={{ fontSize: "0.86rem", color: "#64748b", lineHeight: "1.8", marginBottom: "1.5rem" }}>
+            <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed max-w-md mx-auto">
               تم تجهيز رسالة الواتساب تلقائياً مع تفاصيل طلبك وكود المرجع. إذا لم تفتح تلقائياً اضغط على الزر أدناه:
             </p>
 
-            <a
-              href={orderCompleted.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn--green"
-              style={{ width: "100%", textDecoration: "none", marginBottom: "0.8rem", display: "inline-block" }}
-            >
-              متابعة الطلب على واتساب برقم #{orderCompleted.orderRef}
-            </a>
+            <div className="space-y-2 pt-2">
+              <Button
+                asChild
+                className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-extrabold h-12 rounded-xl text-sm shadow-md"
+              >
+                <a
+                  href={orderCompleted.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  متابعة الطلب على واتساب برقم #{orderCompleted.orderRef}
+                </a>
+              </Button>
 
-            <button
-              type="button"
-              className="btn btn--ghost"
-              style={{ color: "#101211", borderColor: "#cbd5e1", width: "100%" }}
-              onClick={() => {
-                setOrderCompleted(null);
-                setIsCheckoutOpen(false);
-              }}
-            >
-              العودة للمتجر
-            </button>
+              <Button
+                variant="outline"
+                className="w-full text-neutral-700 h-10 rounded-xl border-neutral-200"
+                onClick={() => {
+                  setOrderCompleted(null);
+                  setIsCheckoutOpen(false);
+                }}
+              >
+                العودة للمتجر
+              </Button>
+            </div>
           </div>
         ) : (
-          <form className="checkout-form" onSubmit={handleOrderSubmit}>
-            <div className={`field ${formErrors.name ? "has-err" : ""}`}>
-              <label>الاسم بالكامل *</label>
-              <input
+          <form className="p-5 sm:p-6 space-y-4 max-h-[75vh] overflow-y-auto" onSubmit={handleOrderSubmit}>
+            
+            {/* Name */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-neutral-800">الاسم بالكامل *</Label>
+              <Input
                 type="text"
                 placeholder="اكتب اسمك الثلاثي هنا"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                required
+                className={`h-11 rounded-xl text-sm ${formErrors.name ? "border-rose-500 ring-rose-500" : ""}`}
               />
-              <div className="field__err">اكتب الاسم بشكل صحيح</div>
+              {formErrors.name && (
+                <span className="text-[11px] font-semibold text-rose-500">{formErrors.name}</span>
+              )}
             </div>
 
-            <div className={`field ${formErrors.phone ? "has-err" : ""}`}>
-              <label>رقم الموبايل *</label>
-              <input
+            {/* Phone */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-neutral-800">رقم الهاتف المحمول (واتساب) *</Label>
+              <Input
                 type="tel"
-                placeholder="010xxxxxxxx أو 011/012/015"
+                placeholder="01xxxxxxxxx"
                 value={customerPhone}
                 onChange={(e) => setCustomerPhone(e.target.value)}
-                required
+                className={`h-11 rounded-xl text-sm ${formErrors.phone ? "border-rose-500 ring-rose-500" : ""}`}
               />
-              <div className="field__err">رقم الموبايل يجب أن يتكون من 11 رقم ويبدأ بـ 01</div>
+              {formErrors.phone && (
+                <span className="text-[11px] font-semibold text-rose-500">{formErrors.phone}</span>
+              )}
             </div>
 
-            <div className="field">
-              <label>المحافظة (حساب الشحن التلقائي) *</label>
+            {/* Governorate */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-neutral-800">المحافظة *</Label>
               <select
-                value={selectedGov.id}
+                value={selectedGov.name}
                 onChange={(e) => {
-                  const gov = GOVERNORATES.find(g => g.id === e.target.value);
-                  if (gov) setSelectedGov(gov);
+                  const g = GOVERNORATES.find(gov => gov.name === e.target.value);
+                  if (g) setSelectedGov(g);
                 }}
+                className="w-full h-11 px-3 rounded-xl border border-neutral-200 bg-white text-sm font-medium text-neutral-800 focus:outline-none focus:ring-2 focus:ring-lime-400"
               >
                 {GOVERNORATES.map(gov => (
-                  <option key={gov.id} value={gov.id}>
-                    {gov.name} ({gov.shipping} ج.م · شحن خلال {gov.days})
+                  <option key={gov.name} value={gov.name}>
+                    {gov.name} — مصاريف الشحن: {gov.shipping === 0 ? "مجاناً" : `${gov.shipping} ج.م`}
                   </option>
                 ))}
               </select>
             </div>
 
-            <div className={`field ${formErrors.addr ? "has-err" : ""}`}>
-              <label>العنوان بالتفصيل *</label>
-              <input
+            {/* Address */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold text-neutral-800">العنوان بالتفصيل *</Label>
+              <Input
                 type="text"
-                placeholder="المنطقة - الشارع - رقم العقار / الشقة"
+                placeholder="المدينة / الحي / اسم الشارع / رقم العقار أو علامة مميزة"
                 value={customerAddress}
                 onChange={(e) => setCustomerAddress(e.target.value)}
-                required
+                className={`h-11 rounded-xl text-sm ${formErrors.address ? "border-rose-500 ring-rose-500" : ""}`}
               />
-              <div className="field__err">يرجى توضيح العنوان لضمان سرعة التسليم</div>
+              {formErrors.address && (
+                <span className="text-[11px] font-semibold text-rose-500">{formErrors.address}</span>
+              )}
             </div>
 
-            <div className="field">
-              <label>طريقة الدفع</label>
-              <div className="pay-methods">
-                <label className={`pay-opt ${paymentMethod === "cod" ? "is-active" : ""}`}>
-                  <input type="radio" name="pay" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} />
-                  <span>عند الاستلام</span>
+            {/* Payment Method */}
+            <div className="pt-2">
+              <Label className="text-xs font-bold text-neutral-800 block mb-2">طريقة السداد المعتمدة</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <label className={`flex items-center gap-2.5 p-3 rounded-xl border cursor-pointer text-xs font-bold transition-all ${
+                  paymentMethod === "cod" ? "border-lime-500 bg-lime-50/50 text-neutral-900 ring-1 ring-lime-400" : "border-neutral-200 text-neutral-600"
+                }`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="cod"
+                    checked={paymentMethod === "cod"}
+                    onChange={() => setPaymentMethod("cod")}
+                    className="accent-lime-500"
+                  />
+                  <span>الدفع عند الاستلام (بعد الفحص)</span>
                 </label>
-                <label className={`pay-opt ${paymentMethod === "instapay" ? "is-active" : ""}`}>
-                  <input type="radio" name="pay" checked={paymentMethod === "instapay"} onChange={() => setPaymentMethod("instapay")} />
-                  <span>إنستاباي / محفظة</span>
-                </label>
-                <label className={`pay-opt ${paymentMethod === "card" ? "is-active" : ""}`}>
-                  <input type="radio" name="pay" checked={paymentMethod === "card"} onChange={() => setPaymentMethod("card")} />
-                  <span>بطاقة بنكية</span>
+
+                <label className={`flex items-center gap-2.5 p-3 rounded-xl border cursor-pointer text-xs font-bold transition-all ${
+                  paymentMethod === "instapay" ? "border-lime-500 bg-lime-50/50 text-neutral-900 ring-1 ring-lime-400" : "border-neutral-200 text-neutral-600"
+                }`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="instapay"
+                    checked={paymentMethod === "instapay"}
+                    onChange={() => setPaymentMethod("instapay")}
+                    className="accent-lime-500"
+                  />
+                  <span>إنستاباي / محفظة إلكترونية</span>
                 </label>
               </div>
             </div>
 
-            <div className="order-summary">
-              <div className="summary-row">
-                <span>قيمة الساعات ({totalCartCount}):</span>
-                <b>{cartSubtotal.toLocaleString("ar-EG")} ج.م</b>
+            {/* Order Totals Card */}
+            <div className="bg-neutral-50 border border-neutral-200/80 rounded-2xl p-4 space-y-2 text-xs font-semibold text-neutral-600">
+              <div className="flex justify-between">
+                <span>إجمالي الساعات ({totalCartCount}):</span>
+                <span className="font-bold text-neutral-900">{cartSubtotal.toLocaleString("ar-EG")} ج.م</span>
               </div>
-              <div className="summary-row">
-                <span>مصاريف الشحن:</span>
-                <b>{isFreeShipping ? "شحن مجاني 🎉" : `${shippingFee} ج.م`}</b>
+              <div className="flex justify-between">
+                <span>مصاريف الشحن ({selectedGov.name}):</span>
+                <span className="font-bold text-emerald-700">
+                  {isFreeShipping || shippingFee === 0 ? "شحن مجاني 🔥" : `${shippingFee.toLocaleString("ar-EG")} ج.م`}
+                </span>
               </div>
-              <div className="summary-row summary-row--total">
-                <span>الإجمالي شامل الشحن:</span>
-                <b>{cartTotal.toLocaleString("ar-EG")} ج.م</b>
+              <div className="border-t border-neutral-200 pt-2 flex justify-between text-sm sm:text-base font-extrabold text-neutral-900">
+                <span>المبلغ الإجمالي للدفع:</span>
+                <span className="text-emerald-800 text-base sm:text-lg">{cartTotal.toLocaleString("ar-EG")} ج.م</span>
               </div>
             </div>
 
-            <button type="submit" className="btn-submit-order" disabled={submittingOrder}>
-              {submittingOrder ? "جاري إنشاء مرجع الطلب..." : `اضغط لتأكيد الطلب (${cartTotal.toLocaleString("ar-EG")} ج.م)`}
-            </button>
+            {/* Guarantees Note */}
+            <div className="bg-amber-50/70 border border-amber-200/60 rounded-xl p-3 text-[11px] text-amber-900 leading-relaxed flex items-center gap-2">
+              <span className="text-base shrink-0">🛡️</span>
+              <span>
+                حق المعاينة مكفول: يمكنك فتح الشحنة وفحص ساعتك وتجربتها أمام مندوب الشحن قبل دفع أي مبلغ.
+              </span>
+            </div>
+
+            {/* Submit CTA */}
+            <Button
+              type="submit"
+              disabled={submittingOrder}
+              className="w-full bg-lime-400 hover:bg-lime-500 text-black font-extrabold h-12 rounded-xl text-sm sm:text-base shadow-lg shadow-lime-400/25 transition-transform active:scale-[0.99]"
+            >
+              {submittingOrder ? "جاري إنشاء مرجع الطلب..." : `تأكيد الطلب الفوري (${cartTotal.toLocaleString("ar-EG")} ج.م)`}
+            </Button>
+
           </form>
         )}
+
       </div>
     </div>
   );

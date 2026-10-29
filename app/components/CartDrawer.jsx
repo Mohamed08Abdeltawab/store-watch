@@ -1,6 +1,8 @@
 "use client";
 
 import { useCart } from "../context/CartContext";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 export default function CartDrawer() {
   const {
@@ -15,65 +17,126 @@ export default function CartDrawer() {
     setIsCheckoutOpen
   } = useCart();
 
+  if (!isCartOpen) return null;
+
   return (
-    <div className={`drawer drawer--cart ${isCartOpen ? "is-open" : ""}`} role="dialog" aria-modal="true">
-      <div className="drawer__scrim" onClick={() => setIsCartOpen(false)}></div>
-      <aside className="drawer__panel drawer__panel--left">
-        <div className="drawer__head">
-          <div className="drawer__title">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <div className="fixed inset-0 z-50 overflow-hidden" role="dialog" aria-modal="true">
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
+        onClick={() => setIsCartOpen(false)}
+      />
+
+      {/* Drawer Panel (slides from left in RTL) */}
+      <aside className="fixed inset-y-0 left-0 z-50 w-full max-w-md bg-white shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-neutral-100 bg-neutral-50/50">
+          <div className="flex items-center gap-2.5 font-extrabold text-base sm:text-lg text-neutral-900">
+            <svg className="w-5 h-5 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <path d="M16 10a4 4 0 0 1-8 0"></path>
             </svg>
             <span>سلة التسوق ({totalCartCount})</span>
           </div>
-          <button className="drawer__close" type="button" onClick={() => setIsCartOpen(false)} aria-label="إغلاق السلة">✕</button>
+          <button
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-sm font-bold"
+            type="button"
+            onClick={() => setIsCartOpen(false)}
+            aria-label="إغلاق السلة"
+          >
+            ✕
+          </button>
         </div>
 
-        <div className="drawer__progress">
-          <div className="drawer__progress-text">
-            {isFreeShipping
-              ? "🎉 مبروك! طلبك مؤهل لشحن مجاني بالكامل لكافة المحافظات"
-              : `متبقي ${(5000 - cartSubtotal).toLocaleString("ar-EG")} ج.م على الشحن المجاني`}
+        {/* Free Shipping Progress */}
+        <div className="p-3.5 bg-neutral-50 border-b border-neutral-100">
+          <div className="text-xs font-semibold text-neutral-700 mb-1.5 flex items-center justify-between">
+            {isFreeShipping ? (
+              <span className="text-emerald-700 font-bold">🎉 مبروك! طلبك مؤهل لشحن مجاني بالكامل لكافة المحافظات</span>
+            ) : (
+              <span>متبقي <b className="text-emerald-700 font-bold">{(5000 - cartSubtotal).toLocaleString("ar-EG")} ج.م</b> على الشحن المجاني</span>
+            )}
           </div>
-          <div className="drawer__progress-bar">
+          <div className="w-full bg-neutral-200 rounded-full h-2 overflow-hidden">
             <div
-              className="drawer__progress-fill"
+              className="bg-lime-400 h-full rounded-full transition-all duration-300"
               style={{ width: `${Math.min(100, (cartSubtotal / 5000) * 100)}%` }}
-            ></div>
+            />
           </div>
         </div>
 
-        <div className="drawer__body">
+        {/* Cart Body */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {cart.length === 0 ? (
-            <div className="drawer__empty">
-              <div style={{ fontSize: "2.8rem", marginBottom: "0.5rem" }}>🛒</div>
-              <h3>سلتك فارغة حالياً</h3>
-              <p>تصفح كتالوج ساعات Ben10 الفاخرة واختر ساعتك المفضلة</p>
-              <a
-                href="/shop"
-                className="btn btn--green"
-                style={{ marginTop: "1rem", display: "inline-block" }}
+            <div className="flex flex-col items-center justify-center h-full text-center py-12 px-4">
+              <div className="text-5xl mb-3">🛒</div>
+              <h3 className="font-bold text-lg text-neutral-900 mb-1">سلتك فارغة حالياً</h3>
+              <p className="text-xs sm:text-sm text-neutral-500 max-w-xs mb-5">
+                تصفح كتالوج ساعات Ben10 الفاخرة واختر ساعتك المفضلة الآن
+              </p>
+              <Button
+                className="bg-lime-400 hover:bg-lime-500 text-black font-extrabold rounded-full px-6 shadow-md shadow-lime-400/20"
                 onClick={() => setIsCartOpen(false)}
+                asChild
               >
-                تصفح تشكيلات الساعات
-              </a>
+                <a href="/shop">تصفح تشكيلات الساعات</a>
+              </Button>
             </div>
           ) : (
             cart.map((item, idx) => (
-              <div className="cart-item" key={idx}>
-                <img className="cart-item__img" src={item.image} alt={item.name} />
-                <div className="cart-item__info">
-                  <h4 className="cart-item__name">{item.name}</h4>
-                  <div className="cart-item__price">{Number(item.price).toLocaleString("ar-EG")} ج.م</div>
-                  <div className="cart-item__controls">
-                    <div className="qty-stepper">
-                      <button type="button" className="qty-btn" onClick={() => updateCartQty(idx, -1)} aria-label="إنقاص">-</button>
-                      <span className="qty-val">{item.qty}</span>
-                      <button type="button" className="qty-btn" onClick={() => updateCartQty(idx, 1)} aria-label="زيادة">+</button>
+              <div
+                key={idx}
+                className="flex items-center gap-3 p-3 rounded-2xl border border-neutral-100 bg-white hover:border-neutral-200 transition-colors shadow-sm"
+              >
+                <img
+                  className="w-16 h-16 rounded-xl object-contain bg-neutral-50 p-1 border border-neutral-100 shrink-0"
+                  src={item.image}
+                  alt={item.name}
+                />
+                
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-bold text-xs sm:text-sm text-neutral-900 truncate mb-1">
+                    {item.name}
+                  </h4>
+                  <div className="text-xs font-black text-emerald-800 mb-2">
+                    {Number(item.price).toLocaleString("ar-EG")} ج.م
+                  </div>
+                  
+                  {/* Controls */}
+                  <div className="flex items-center justify-between">
+                    {/* Stepper */}
+                    <div className="flex items-center border border-neutral-200 rounded-lg overflow-hidden bg-neutral-50">
+                      <button
+                        type="button"
+                        className="w-7 h-7 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 font-bold text-xs"
+                        onClick={() => updateCartQty(idx, -1)}
+                        aria-label="إنقاص"
+                      >
+                        -
+                      </button>
+                      <span className="w-8 text-center text-xs font-bold text-neutral-900">
+                        {item.qty}
+                      </span>
+                      <button
+                        type="button"
+                        className="w-7 h-7 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 font-bold text-xs"
+                        onClick={() => updateCartQty(idx, 1)}
+                        aria-label="زيادة"
+                      >
+                        +
+                      </button>
                     </div>
-                    <button type="button" className="cart-item__del" onClick={() => removeFromCart(idx)}>حذف</button>
+
+                    {/* Delete */}
+                    <button
+                      type="button"
+                      className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 hover:underline px-2"
+                      onClick={() => removeFromCart(idx)}
+                    >
+                      حذف
+                    </button>
                   </div>
                 </div>
               </div>
@@ -81,25 +144,29 @@ export default function CartDrawer() {
           )}
         </div>
 
+        {/* Footer */}
         {cart.length > 0 && (
-          <div className="drawer__foot">
-            <div className="drawer__subtotal">
+          <div className="p-4 sm:p-5 border-t border-neutral-100 bg-neutral-50 space-y-3">
+            <div className="flex items-center justify-between text-sm sm:text-base font-bold text-neutral-800">
               <span>إجمالي الساعات:</span>
-              <b>{cartSubtotal.toLocaleString("ar-EG")} ج.م</b>
+              <span className="font-black text-lg text-neutral-900">
+                {cartSubtotal.toLocaleString("ar-EG")} ج.م
+              </span>
             </div>
-            <button
+
+            <Button
               type="button"
-              className="btn btn--green"
-              style={{ width: "100%" }}
+              className="w-full bg-lime-400 hover:bg-lime-500 text-black font-extrabold h-12 rounded-xl text-sm sm:text-base shadow-lg shadow-lime-400/25 transition-transform active:scale-[0.99]"
               onClick={() => {
                 setIsCartOpen(false);
                 setIsCheckoutOpen(true);
               }}
             >
               متابعة تأكيد الطلب الفوري (معاينة قبل الدفع)
-            </button>
+            </Button>
           </div>
         )}
+
       </aside>
     </div>
   );

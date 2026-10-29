@@ -18,8 +18,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ar" dir="rtl">
-      <body>
-        <div className="grain" aria-hidden="true"></div>
+      <body className="min-h-screen bg-[#f8faf8] text-[#131715] font-sans antialiased selection:bg-lime-400 selection:text-black">
         <CartProvider>
           <ClientStoreWrapper>
             {children}

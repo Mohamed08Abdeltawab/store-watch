@@ -5,6 +5,9 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useCart } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 function ShopContent() {
   const { products } = useCart();
@@ -91,155 +94,176 @@ function ShopContent() {
   }
 
   return (
-    <div className="shop-page">
+    <div className="pb-16">
       {/* Shop Page Banner */}
-      <section className="shop-hero">
-        <div className="container">
-          <nav className="breadcrumbs" aria-label="مسار التنقل">
-            <Link href="/">الرئيسية</Link>
+      <section className="bg-gradient-to-b from-[#0d1210] to-[#141c18] text-white py-10 sm:py-14 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+          
+          <nav className="flex items-center gap-2 text-xs text-neutral-400 font-semibold" aria-label="مسار التنقل">
+            <Link href="/" className="hover:text-lime-400 transition-colors">الرئيسية</Link>
             <span>/</span>
-            <span>كل التشكيلات (المتجر)</span>
+            <span className="text-white">المتجر وجميع التشكيلات</span>
           </nav>
 
-          <h1 className="shop-hero__title">
-            كتالوج ساعات <span>Ben10</span> الفاخرة
-          </h1>
-          <p className="shop-hero__desc">
-            تصفح التشكيلة الكاملة من الساعات الأصلية المعتمدة لعام 2026. ضمان استبدال فوري، معاينة وفحص دقيق قبل الدفع للمندوب.
-          </p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <Badge className="bg-lime-400/20 text-lime-400 border-lime-400/30 text-xs font-bold mb-2">
+                كتالوج الساعات الفاخرة 2026
+              </Badge>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+                تشكيلات ساعات <span className="text-lime-400">Ben10</span> الفاخرة
+              </h1>
+              <p className="text-xs sm:text-sm text-neutral-300 mt-1 max-w-xl">
+                تصفح جميع الموديلات الأصلية بضمان الوكيل، مع ميزة الفحص والمعاينة قبل الدفع وشحن سريع لكافة المحافظات.
+              </p>
+            </div>
+
+            {/* In-page Search */}
+            <div className="w-full md:w-80 relative">
+              <input
+                type="search"
+                placeholder="ابحث بالاسم، الموديل، الفئة..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-11 px-4 pr-10 rounded-full bg-white/10 border border-white/15 text-white placeholder-neutral-400 text-xs outline-none focus:ring-2 focus:ring-lime-400"
+              />
+              <svg className="w-4 h-4 text-lime-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* Main Catalog Area */}
-      <section className="section" style={{ paddingTop: "2rem" }}>
-        <div className="container">
-          {/* Toolbar & Filters */}
-          <div className="catalog-toolbar" style={{ flexWrap: "wrap", gap: "1rem" }}>
-            {/* Category Pills */}
-            <div className="filter-tabs" style={{ overflowX: "auto", maxWidth: "100%", paddingBottom: "4px" }}>
+      {/* Filter Bar */}
+      <section className="sticky top-16 sm:top-20 z-30 bg-white/95 backdrop-blur-md border-b border-neutral-200 py-3 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2.5">
+          
+          {/* Categories Horizontal Scroll */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+            <span className="text-xs font-bold text-neutral-400 shrink-0 ml-1">الفئات:</span>
+            {[
+              { id: "all", label: "جميع الساعات" },
+              { id: "عادية (كلاسيكية)", label: "كلاسيكية" },
+              { id: "كرونوغراف (Chronograph)", label: "كرونوغراف" },
+              { id: "أوتوماتيك", label: "أوتوماتيك" },
+              { id: "ذكية (Smartwatch)", label: "ذكية" },
+              { id: "رقمية (Digital)", label: "رقمية" }
+            ].map(cat => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setActiveCategory(cat.id)}
+                className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all ${
+                  activeCategory === cat.id
+                    ? "bg-lime-400 text-black shadow-sm"
+                    : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Sub Row: Audience, Sort, Count */}
+          <div className="flex items-center justify-between gap-3 flex-wrap pt-1 border-t border-neutral-100 text-xs">
+            {/* Audience */}
+            <div className="flex items-center gap-1.5">
+              <span className="font-bold text-neutral-400">الجمهور:</span>
               {[
-                { id: "all", label: "جميع الساعات" },
-                { id: "عادية (كلاسيكية)", label: "عادية (كلاسيكية)" },
-                { id: "كرونوغراف (Chronograph)", label: "كرونوغراف" },
-                { id: "ذكية (Smartwatch)", label: "ذكية (Smartwatch)" },
-                { id: "رقمية (Digital)", label: "رقمية (Digital)" },
-                { id: "أوتوماتيك", label: "أوتوماتيك وسكيلتون" }
-              ].map(tab => (
+                { id: "all", label: "الكل" },
+                { id: "رجالي", label: "ساعات رجالية" },
+                { id: "حريمي", label: "ساعات نسائية" }
+              ].map(aud => (
                 <button
-                  key={tab.id}
+                  key={aud.id}
                   type="button"
-                  className={`filter-tab ${activeCategory === tab.id ? "is-active" : ""}`}
-                  onClick={() => setActiveCategory(tab.id)}
+                  onClick={() => setActiveAudience(aud.id)}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                    activeAudience === aud.id
+                      ? "bg-neutral-900 text-white"
+                      : "text-neutral-600 hover:bg-neutral-100"
+                  }`}
                 >
-                  {tab.label}
+                  {aud.label}
                 </button>
               ))}
             </div>
 
-            {/* Sub Filters: Audience + Sort */}
-            <div style={{ display: "flex", gap: "0.8rem", alignItems: "center", flexWrap: "wrap" }}>
-              {/* Audience selector */}
-              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                <label style={{ fontSize: "0.78rem", fontWeight: "700", color: "var(--muted)" }}>الفئة:</label>
-                <select
-                  className="sort-select"
-                  value={activeAudience}
-                  onChange={(e) => setActiveAudience(e.target.value)}
-                >
-                  <option value="all">الكل (رجالي وحريمي)</option>
-                  <option value="رجالي">رجالي فقط</option>
-                  <option value="حريمي">حريمي فقط</option>
-                </select>
-              </div>
+            {/* Sort & Reset */}
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-neutral-400">الترتيب:</span>
+              <select
+                value={activeSort}
+                onChange={(e) => setActiveSort(e.target.value)}
+                className="h-8 px-2.5 rounded-lg border border-neutral-200 bg-white text-xs font-bold text-neutral-800 outline-none focus:ring-1 focus:ring-lime-400"
+              >
+                <option value="featured">المقترح والمميز</option>
+                <option value="bestseller">الأكثر طلباً ومبيعاً</option>
+                <option value="rating">الأعلى تقييماً</option>
+                <option value="price-low">السعر: من الأقل للأعلى</option>
+                <option value="price-high">السعر: من الأعلى للأقل</option>
+              </select>
 
-              {/* Sort selector */}
-              <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                <label style={{ fontSize: "0.78rem", fontWeight: "700", color: "var(--muted)" }}>ترتيب حسب:</label>
-                <select
-                  className="sort-select"
-                  value={activeSort}
-                  onChange={(e) => setActiveSort(e.target.value)}
-                >
-                  <option value="featured">المميز أولاً</option>
-                  <option value="bestseller">الأكثر مبيعاً 🔥</option>
-                  <option value="price-low">السعر: من الأقل للأعلى</option>
-                  <option value="price-high">السعر: من الأعلى للأقل</option>
-                  <option value="rating">الأعلى تقييماً ★</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Search & Count Bar */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "1.2rem 0 1.8rem", flexWrap: "wrap", gap: "0.8rem" }}>
-            <div style={{ fontSize: "0.9rem", color: "var(--muted)" }}>
-              تم العثور على <strong style={{ color: "var(--ben10-forest)", fontSize: "1.1rem" }}>{filtered.length}</strong> ساعة متاحة في الكتالوج
-            </div>
-
-            <div style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
-              <input
-                type="search"
-                placeholder="ابحث بالاسم أو المواصفات..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  background: "#fff",
-                  border: "1px solid var(--line-strong)",
-                  borderRadius: "10px",
-                  padding: "0.45rem 0.9rem",
-                  fontSize: "0.82rem",
-                  width: "220px"
-                }}
-              />
-              {(activeCategory !== "all" || activeAudience !== "all" || searchQuery) && (
+              {(activeCategory !== "all" || activeAudience !== "all" || searchQuery || activeSort !== "featured") && (
                 <button
                   type="button"
                   onClick={resetFilters}
-                  style={{
-                    background: "rgba(239,68,68,0.1)",
-                    color: "#ef4444",
-                    border: "1px solid rgba(239,68,68,0.2)",
-                    borderRadius: "8px",
-                    padding: "0.45rem 0.8rem",
-                    fontSize: "0.76rem",
-                    fontWeight: "700",
-                    cursor: "pointer"
-                  }}
+                  className="text-xs font-bold text-rose-500 hover:underline mr-2"
                 >
-                  إعادة ضبط الفلاتر ✕
+                  إعادة تعيين
                 </button>
               )}
             </div>
+
           </div>
 
-          {/* Products Grid */}
-          {filtered.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "4rem 1rem", background: "var(--cream)", borderRadius: "18px" }}>
-              <div style={{ fontSize: "3rem", marginBottom: "0.8rem" }}>🔍</div>
-              <h3 style={{ fontSize: "1.3rem", fontWeight: "800", marginBottom: "0.5rem" }}>لا توجد ساعات تطابق هذا البحث</h3>
-              <p style={{ color: "var(--muted)", fontSize: "0.9rem", marginBottom: "1.5rem" }}>
-                جرب تغيير خيارات التصفية أو الفئة لعرض المزيد من الموديلات
-              </p>
-              <button type="button" className="btn btn--green" onClick={resetFilters}>
-                عرض جميع ساعات المتجر
-              </button>
-            </div>
-          ) : (
-            <div className="p-grid">
-              {filtered.map(p => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          )}
         </div>
       </section>
+
+      {/* Product Results */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div className="flex items-center justify-between mb-6 text-xs text-neutral-500 font-semibold">
+          <span>عرض {filtered.length} من أصل {products.length} ساعة</span>
+        </div>
+
+        {filtered.length === 0 ? (
+          <div className="py-20 text-center bg-white rounded-3xl border border-neutral-200 p-8">
+            <div className="text-5xl mb-3">🔍</div>
+            <h3 className="font-extrabold text-lg text-neutral-900 mb-1">لم يتم العثور على ساعات مطابقة</h3>
+            <p className="text-xs text-neutral-500 max-w-sm mx-auto mb-5">
+              جرّب تغيير فئة البحث أو مسح الكلمات المكتوبة لاستعراض التشكيلات المتاحة.
+            </p>
+            <Button
+              className="bg-lime-400 hover:bg-lime-500 text-black font-extrabold rounded-full px-6"
+              onClick={resetFilters}
+            >
+              إعادة تعيين جميع الفلاتر
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            {filtered.map(p => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        )}
+      </main>
+
     </div>
   );
 }
 
 export default function ShopPage() {
   return (
-    <Suspense fallback={<div style={{ textAlign: "center", padding: "5rem" }}>جاري تحميل تشكيلات الساعات...</div>}>
+    <Suspense fallback={
+      <div className="py-24 text-center">
+        <div className="text-3xl mb-2">⌚</div>
+        <p className="text-sm font-bold text-neutral-600">جاري تحميل تشكيلات الساعات...</p>
+      </div>
+    }>
       <ShopContent />
     </Suspense>
   );
