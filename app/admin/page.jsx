@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useCart } from "../context/CartContext";
 
 const WATCH_TYPES = [
   "عادية (كلاسيكية)",
@@ -34,6 +35,7 @@ const STANDARD_COLORS = [
 
 export default function AdminDashboardPage() {
   const router = useRouter();
+  const { setIsAdmin, checkAdminAuth } = useCart();
   const [activeTab, setActiveTab] = useState("products"); // 'products' or 'orders'
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -77,10 +79,12 @@ export default function AdminDashboardPage() {
       ]);
 
       if (oRes.status === 401) {
+        setIsAdmin(false);
         router.push("/admin/login");
         return;
       }
 
+      setIsAdmin(true);
       const pData = await pRes.json();
       const oData = await oRes.json();
 
@@ -99,6 +103,7 @@ export default function AdminDashboardPage() {
 
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
+    setIsAdmin(false);
     router.push("/admin/login");
   }
 

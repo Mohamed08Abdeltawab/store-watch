@@ -13,7 +13,8 @@ export default function Navbar() {
     setIsCartOpen,
     setIsWishlistOpen,
     setIsSearchOpen,
-    setIsMobileMenuOpen
+    setIsMobileMenuOpen,
+    isAdmin
   } = useCart();
 
   const pathname = usePathname();
@@ -122,6 +123,35 @@ export default function Navbar() {
                 <span className="text-xs px-1.5 py-0.5 rounded-full bg-black text-lime-400 font-bold">{totalCartCount}</span>
               </Button>
             </div>
+
+            {/* Login / Admin Panel Button */}
+            {isAdmin ? (
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-lime-400 text-black font-black text-xs sm:text-xs shadow-md shadow-lime-400/25 hover:bg-lime-300 transition-all hover:scale-105 shrink-0"
+                title="لوحة تحكم المتجر"
+              >
+                <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>لوحة التحكم</span>
+              </Link>
+            ) : (
+              <Link
+                href="/admin/login"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold text-xs transition-all hover:scale-105 shrink-0"
+                title="تسجيل الدخول"
+              >
+                <svg className="w-3.5 h-3.5 text-lime-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>تسجيل الدخول</span>
+              </Link>
+            )}
 
           </div>
         </div>

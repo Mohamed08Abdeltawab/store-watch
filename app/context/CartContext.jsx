@@ -38,9 +38,25 @@ export function CartProvider({ children }) {
   const [formErrors, setFormErrors] = useState({});
   const [submittingOrder, setSubmittingOrder] = useState(false);
   const [orderCompleted, setOrderCompleted] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Load Initial Products
+  async function checkAdminAuth() {
+    try {
+      const res = await fetch("/api/admin/login");
+      const data = await res.json();
+      const authed = Boolean(data.authenticated);
+      setIsAdmin(authed);
+      return authed;
+    } catch (e) {
+      setIsAdmin(false);
+      return false;
+    }
+  }
+
+  // Load Initial Products & Auth Status
   useEffect(() => {
+    checkAdminAuth();
+
     fetch("/api/products")
       .then(res => res.json())
       .then(data => {
@@ -270,7 +286,10 @@ export function CartProvider({ children }) {
         submittingOrder,
         orderCompleted,
         setOrderCompleted,
-        handleOrderSubmit
+        handleOrderSubmit,
+        isAdmin,
+        setIsAdmin,
+        checkAdminAuth
       }}
     >
       {children}

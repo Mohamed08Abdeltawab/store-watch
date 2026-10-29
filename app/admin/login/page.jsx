@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useCart } from "../../context/CartContext";
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const { checkAdminAuth } = useCart();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,6 +30,7 @@ export default function AdminLoginPage() {
 
       const data = await res.json();
       if (data.success) {
+        await checkAdminAuth();
         router.push("/admin");
       } else {
         setError(data.error || "بيانات الدخول غير صحيحة");

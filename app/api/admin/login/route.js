@@ -28,3 +28,14 @@ export async function POST(req) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("ben10_admin_token");
+    const isAuthenticated = token?.value === "ben10_authorized_session";
+    return NextResponse.json({ success: true, authenticated: isAuthenticated });
+  } catch (err) {
+    return NextResponse.json({ success: false, authenticated: false });
+  }
+}

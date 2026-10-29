@@ -13,7 +13,8 @@ export default function MobileMenuDrawer() {
     setIsWishlistOpen,
     setIsSearchOpen,
     totalCartCount,
-    wishlist
+    wishlist,
+    isAdmin
   } = useCart();
 
   const pathname = usePathname();
@@ -76,6 +77,38 @@ export default function MobileMenuDrawer() {
             </svg>
             <span>ابحث عن ساعة أو ماركة...</span>
           </button>
+
+          {/* Admin / Login Button in Mobile Drawer */}
+          <div>
+            {isAdmin ? (
+              <Link
+                href="/admin"
+                onClick={closeMenu}
+                className="flex items-center justify-between p-3 rounded-xl bg-lime-400 text-black text-xs font-black shadow-md shadow-lime-400/20"
+              >
+                <span className="flex items-center gap-2">
+                  <span>⚡</span>
+                  <span>لوحة التحكم (الإدارة)</span>
+                </span>
+                <span className="text-[10px] bg-black text-lime-400 px-2 py-0.5 rounded-full font-bold">أدمن</span>
+              </Link>
+            ) : (
+              <Link
+                href="/admin/login"
+                onClick={closeMenu}
+                className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-neutral-200"
+              >
+                <span className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-lime-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  <span>تسجيل الدخول</span>
+                </span>
+                <span className="text-neutral-400 text-[11px]">دخول &larr;</span>
+              </Link>
+            )}
+          </div>
 
           {/* Quick Links */}
           <div>
