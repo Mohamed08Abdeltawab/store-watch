@@ -59,9 +59,9 @@ CREATE TABLE IF NOT EXISTS admins (
 
 -- إضافة حساب المشرف الافتراضي (مشفر بـ Bcrypt)
 INSERT INTO admins (username, password_hash)
-VALUES ('admin', '$2b$10$a5v32CH/sU13sdw47z5P0OqW.jhZukxkkOnvGQwH09YrNgM3MYl1m')
+VALUES ('admin', '$2b$10$rzmW8Z9S9SZzkc6vpTKcJeLdoghftshEu.TvIa7yaWxR8nOslVHzK')
 ON CONFLICT (username) DO UPDATE 
-SET password_hash = '$2b$10$a5v32CH/sU13sdw47z5P0OqW.jhZukxkkOnvGQwH09YrNgM3MYl1m';
+SET password_hash = '$2b$10$rzmW8Z9S9SZzkc6vpTKcJeLdoghftshEu.TvIa7yaWxR8nOslVHzK';
 
 -- 4. إدخال الساعات الأولية (Initial Seed Products)
 INSERT INTO products (
