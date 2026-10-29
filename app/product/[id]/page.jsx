@@ -2,7 +2,6 @@
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { useCart, GOVERNORATES } from "../../context/CartContext";
 import ProductCard from "../../components/ProductCard";
 
@@ -49,7 +48,7 @@ export default function ProductDetailPage({ params }) {
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "8rem 1rem" }}>
-        <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>⌚</div>
+        <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>⌚</div>
         <h3>جاري تحميل مواصفات الساعة الفاخرة...</h3>
       </div>
     );
@@ -83,22 +82,22 @@ export default function ProductDetailPage({ params }) {
     .slice(0, 4);
 
   return (
-    <div className="product-page">
-      {/* Breadcrumbs */}
-      <div className="container" style={{ paddingTop: "1.5rem" }}>
-        <nav className="breadcrumbs" aria-label="مسار التنقل">
+    <div className="product-page" style={{ paddingBottom: "6.5rem" }}>
+      {/* Breadcrumbs - clearly visible on light background */}
+      <div className="container" style={{ paddingTop: "1rem" }}>
+        <nav className="breadcrumbs product-breadcrumbs" aria-label="مسار التنقل">
           <Link href="/">الرئيسية</Link>
           <span>/</span>
           <Link href="/shop">المتجر</Link>
           <span>/</span>
           <Link href={`/shop?category=${encodeURIComponent(product.cat)}`}>{product.cat}</Link>
           <span>/</span>
-          <span style={{ color: "var(--ink)" }}>{product.name}</span>
+          <span style={{ color: "var(--ink)", fontWeight: "700" }}>{product.name}</span>
         </nav>
       </div>
 
       {/* Main Product Layout */}
-      <section className="section" style={{ paddingTop: "1rem" }}>
+      <section className="section" style={{ paddingTop: "0.5rem" }}>
         <div className="container">
           <div className="product-detail-grid">
             {/* Gallery Column */}
@@ -111,7 +110,7 @@ export default function ProductDetailPage({ params }) {
                 />
 
                 {/* Badges */}
-                <div className="p-card__badges" style={{ top: "16px", right: "16px" }}>
+                <div className="p-card__badges" style={{ top: "12px", right: "12px" }}>
                   {product.badge_text && <span className="badge badge--best">{product.badge_text}</span>}
                   {discount > 0 && <span className="badge badge--sale">خصم {discount}%</span>}
                 </div>
@@ -120,7 +119,7 @@ export default function ProductDetailPage({ params }) {
                 <button
                   type="button"
                   className={`p-card__fav ${isFav ? "is-active" : ""}`}
-                  style={{ top: "16px", left: "16px", width: "42px", height: "42px" }}
+                  style={{ top: "12px", left: "12px", width: "38px", height: "38px" }}
                   onClick={() => toggleWishlist(product.id)}
                   aria-label="المفضلة"
                 >
@@ -171,7 +170,7 @@ export default function ProductDetailPage({ params }) {
 
             {/* Information & Purchase Column */}
             <div className="product-info-panel">
-              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "0.6rem" }}>
+              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "0.5rem", flexWrap: "wrap" }}>
                 <span className="badge badge--best">{product.cat}</span>
                 {product.target_audience && (
                   <span className="badge" style={{ background: "rgba(0,0,0,0.06)", color: "var(--ink)" }}>
@@ -182,7 +181,7 @@ export default function ProductDetailPage({ params }) {
               </div>
 
               <h1 className="product-detail__title">{product.name}</h1>
-              <p className="product-detail__sub">{product.sub}</p>
+              {product.sub && <p className="product-detail__sub">{product.sub}</p>}
 
               {/* Rating & Social proof */}
               <div className="product-detail__rating">
@@ -193,7 +192,7 @@ export default function ProductDetailPage({ params }) {
 
               {/* Price Box */}
               <div className="product-detail__price-box">
-                <div style={{ display: "flex", alignItems: "baseline", gap: "0.8rem" }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: "0.8rem", flexWrap: "wrap" }}>
                   <div className="price-main">
                     <b>{Number(product.price).toLocaleString("ar-EG")}</b>
                     <span>ج.م</span>
@@ -232,7 +231,7 @@ export default function ProductDetailPage({ params }) {
                 <button
                   type="button"
                   className="btn btn--green"
-                  style={{ width: "100%", padding: "1rem" }}
+                  style={{ width: "100%", padding: "1rem", fontSize: "0.95rem" }}
                   onClick={() => addToCart(product, 1)}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -242,7 +241,7 @@ export default function ProductDetailPage({ params }) {
                   <span>أضف إلى السلة للمتابعة</span>
                 </button>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+                <div className="product-detail__sub-actions">
                   <button
                     type="button"
                     className="btn-wa-action"
@@ -267,7 +266,7 @@ export default function ProductDetailPage({ params }) {
 
               {/* Shipping Calculator */}
               <div className="shipping-calc-box">
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.6rem" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.6rem", flexWrap: "wrap", gap: "0.4rem" }}>
                   <span style={{ fontSize: "0.85rem", fontWeight: "700" }}>🚚 مصاريف ومواعيد الشحن لمحافظتك:</span>
                   <select
                     className="sort-select"
@@ -282,7 +281,7 @@ export default function ProductDetailPage({ params }) {
                     ))}
                   </select>
                 </div>
-                <div style={{ fontSize: "0.82rem", color: "var(--muted)" }}>
+                <div style={{ fontSize: "0.82rem", color: "var(--muted)", lineHeight: "1.6" }}>
                   الشحن إلى <strong>{selectedGov.name}</strong> يستغرق <strong>{selectedGov.days}</strong> وقيمته <strong>{selectedGov.shipping} ج.م</strong> (أو مجاني للطلبات فوق 5,000 ج.م).
                 </div>
               </div>
@@ -338,7 +337,7 @@ export default function ProductDetailPage({ params }) {
 
           {/* Related Watches */}
           {relatedProducts.length > 0 && (
-            <div style={{ marginTop: "4rem" }}>
+            <div style={{ marginTop: "3.5rem" }}>
               <div className="section-head-flex">
                 <div>
                   <div className="eyebrow" style={{ marginBottom: "0.5rem" }}>تشكيلات قد تعجبك</div>
