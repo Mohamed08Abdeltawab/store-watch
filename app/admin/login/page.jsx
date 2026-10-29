@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,6 +51,20 @@ export default function AdminLoginPage() {
 
       <Card className="relative z-10 w-full max-w-md bg-[#141c18] border-white/10 text-white shadow-2xl rounded-3xl p-4 sm:p-6">
         
+        {/* Top Back Link */}
+        <div className="flex items-center justify-between pb-1">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-neutral-400 hover:text-lime-400 transition-colors py-1.5 px-3 rounded-full bg-white/5 border border-white/10 hover:border-lime-400/30"
+          >
+            <svg className="w-3.5 h-3.5 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>الرجوع للشاشة الرئيسية</span>
+          </Link>
+        </div>
+
         <CardHeader className="text-center pb-6 space-y-2">
           <div className="w-14 h-14 mx-auto rounded-2xl bg-lime-400/15 border border-lime-400/40 text-lime-400 flex items-center justify-center mb-2 shadow-inner">
             <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -102,10 +117,21 @@ export default function AdminLoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-lime-400 hover:bg-lime-500 text-black font-extrabold h-12 rounded-xl text-sm shadow-lg shadow-lime-400/25 transition-transform active:scale-[0.99] mt-2"
+              className="w-full bg-lime-400 hover:bg-lime-500 text-black font-extrabold h-12 rounded-xl text-sm shadow-lg shadow-lime-400/25 transition-transform active:scale-[0.99] mt-2 cursor-pointer"
             >
               {loading ? "جاري الدخول..." : "تسجيل الدخول"}
             </Button>
+
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center gap-2 w-full h-11 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-neutral-200 hover:text-white text-xs font-bold transition-all active:scale-[0.99]"
+            >
+              <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>الرجوع للشاشة الرئيسية للمتجر</span>
+            </Link>
           </form>
 
           <div className="pt-4 mt-4 border-t border-white/10 text-center text-xs text-neutral-400 space-y-1">

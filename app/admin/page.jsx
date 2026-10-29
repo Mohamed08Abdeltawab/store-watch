@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useCart } from "../context/CartContext";
 
 const WATCH_TYPES = [
@@ -15,8 +16,7 @@ const TARGET_AUDIENCES = [
   { value: "", label: "— غير محدد — (اختياري)" },
   { value: "رجالي", label: "رجالي" },
   { value: "حريمي", label: "حريمي" },
-  { value: "للجنسين", label: "للجنسين" },
-  { value: "أطفال", label: "أطفال" }
+  { value: "للجنسين", label: "للجنسين" }
 ];
 
 const STANDARD_COLORS = [
@@ -363,156 +363,112 @@ export default function AdminDashboardPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#0b0f0d", color: "#fff", fontFamily: "'Almarai', sans-serif" }} dir="rtl">
       {/* Top Navbar */}
-      <header style={{
-        background: "#121815",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-        padding: "1rem 2rem",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center"
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <div style={{
-            width: "42px",
-            height: "42px",
-            borderRadius: "10px",
-            background: "rgba(163, 230, 53, 0.15)",
-            border: "1px solid #A3E635",
-            color: "#A3E635",
-            display: "grid",
-            placeItems: "center",
-            fontWeight: "800"
-          }}>
-            B10
-          </div>
-          <div>
-            <h1 style={{ fontSize: "1.2rem", fontWeight: "800", margin: 0 }}>
-              لوحة تحكم <span style={{ color: "#A3E635" }}>Ben10 Watches</span>
-            </h1>
-            <span style={{ fontSize: "0.68rem", color: "#94a3b8" }}>مدير المتجر المعتمد (Admin Portal)</span>
-          </div>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
-          <a
+      <header className="bg-[#121815] border-b border-white/10 px-4 py-3 sm:px-6 sm:py-4 sticky top-0 z-30 shadow-md">
+        <div className="max-w-[1340px] mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          {/* Logo & Title -> Click to return to Home Page */}
+          <Link
             href="/"
-            target="_blank"
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "999px",
-              background: "rgba(255, 255, 255, 0.08)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
-              color: "#fff",
-              fontSize: "0.8rem",
-              fontWeight: "700",
-              textDecoration: "none"
-            }}
+            title="الرجوع إلى الشاشة الرئيسية"
+            className="flex items-center gap-3 text-white no-underline group transition-opacity hover:opacity-90"
           >
-            ↗ زيارة واجهة المتجر
-          </a>
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-lime-400/15 border border-lime-400 text-lime-400 grid place-items-center font-extrabold text-sm sm:text-base transition-transform group-hover:scale-105 shadow-inner">
+              B10
+            </div>
+            <div>
+              <h1 className="text-base sm:text-lg font-black m-0 flex items-center gap-1.5 leading-tight">
+                <span>لوحة تحكم</span>
+                <span className="text-lime-400">Ben10 Watches</span>
+              </h1>
+              <span className="text-[11px] text-neutral-400 block mt-0.5">
+                مدير المتجر المعتمد · اضغط للرجوع للشاشة الرئيسية ↗
+              </span>
+            </div>
+          </Link>
 
-          <button
-            onClick={handleLogout}
-            style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "999px",
-              background: "rgba(239, 68, 68, 0.15)",
-              border: "1px solid #ef4444",
-              color: "#fca5a5",
-              fontSize: "0.8rem",
-              fontWeight: "700",
-              cursor: "pointer"
-            }}
-          >
-            تسجيل الخروج
-          </button>
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 sm:gap-3 justify-end">
+            <Link
+              href="/"
+              className="flex-1 sm:flex-initial px-3.5 sm:px-4 py-2 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 text-white text-xs sm:text-sm font-bold no-underline transition-colors flex items-center justify-center gap-1.5"
+            >
+              <svg className="w-4 h-4 rtl:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>زيارة واجهة المتجر</span>
+            </Link>
+
+            <button
+              onClick={handleLogout}
+              className="px-3.5 sm:px-4 py-2 rounded-full bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500 text-rose-300 text-xs sm:text-sm font-bold cursor-pointer transition-colors"
+            >
+              تسجيل الخروج
+            </button>
+          </div>
         </div>
       </header>
 
       {/* Main Container */}
-      <main style={{ maxWidth: "1340px", margin: "0 auto", padding: "2rem" }}>
+      <main className="max-w-[1340px] mx-auto p-3 sm:p-6 md:p-8">
         {/* Flash Notification */}
         {notification && (
-          <div style={{
-            background: "rgba(163, 230, 53, 0.15)",
-            border: "1px solid #A3E635",
-            color: "#A3E635",
-            padding: "0.85rem 1.4rem",
-            borderRadius: "12px",
-            marginBottom: "1.5rem",
-            fontWeight: "700",
-            fontSize: "0.9rem"
-          }}>
-            ✓ {notification}
+          <div className="bg-lime-400/15 border border-lime-400 text-lime-400 px-4 py-3 rounded-xl mb-5 font-bold text-xs sm:text-sm flex items-center gap-2">
+            <span>✓</span>
+            <span>{notification}</span>
           </div>
         )}
 
         {/* Stats Row */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: "1.2rem",
-          marginBottom: "2rem"
-        }}>
-          <div style={{ background: "#141c18", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "14px", padding: "1.2rem" }}>
-            <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>إجمالي الساعات المسجلة</span>
-            <div style={{ fontSize: "1.8rem", fontWeight: "800", color: "#fff", marginTop: "0.3rem" }}>
-              {products.length} <small style={{ fontSize: "0.9rem", color: "#A3E635" }}>ساعة</small>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mb-6 sm:mb-8">
+          <div className="bg-[#141c18] border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5">
+            <span className="text-[11px] sm:text-xs text-neutral-400 block">إجمالي الساعات المسجلة</span>
+            <div className="text-lg sm:text-2xl md:text-3xl font-black text-white mt-1">
+              {products.length} <small className="text-xs sm:text-sm text-lime-400 font-bold">ساعة</small>
             </div>
           </div>
 
-          <div style={{ background: "#141c18", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "14px", padding: "1.2rem" }}>
-            <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>إجمالي الطلبات المستلمة</span>
-            <div style={{ fontSize: "1.8rem", fontWeight: "800", color: "#fff", marginTop: "0.3rem" }}>
-              {orders.length} <small style={{ fontSize: "0.9rem", color: "#38bdf8" }}>طلب</small>
+          <div className="bg-[#141c18] border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5">
+            <span className="text-[11px] sm:text-xs text-neutral-400 block">إجمالي الطلبات المستلمة</span>
+            <div className="text-lg sm:text-2xl md:text-3xl font-black text-white mt-1">
+              {orders.length} <small className="text-xs sm:text-sm text-sky-400 font-bold">طلب</small>
             </div>
           </div>
 
-          <div style={{ background: "#141c18", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "14px", padding: "1.2rem" }}>
-            <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>طلبات بانتظار التأكيد</span>
-            <div style={{ fontSize: "1.8rem", fontWeight: "800", color: "#f59e0b", marginTop: "0.3rem" }}>
-              {pendingOrders} <small style={{ fontSize: "0.9rem" }}>طلب معلق</small>
+          <div className="bg-[#141c18] border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5">
+            <span className="text-[11px] sm:text-xs text-neutral-400 block">طلبات بانتظار التأكيد</span>
+            <div className="text-lg sm:text-2xl md:text-3xl font-black text-amber-400 mt-1">
+              {pendingOrders} <small className="text-xs sm:text-sm text-neutral-300 font-bold">طلب معلق</small>
             </div>
           </div>
 
-          <div style={{ background: "#141c18", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "14px", padding: "1.2rem" }}>
-            <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>حجم المبيعات الإجمالي</span>
-            <div style={{ fontSize: "1.8rem", fontWeight: "800", color: "#A3E635", marginTop: "0.3rem" }}>
-              {totalSales.toLocaleString("ar-EG")} <small style={{ fontSize: "0.9rem", color: "#fff" }}>ج.م</small>
+          <div className="bg-[#141c18] border border-white/10 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5">
+            <span className="text-[11px] sm:text-xs text-neutral-400 block">حجم المبيعات الإجمالي</span>
+            <div className="text-lg sm:text-2xl md:text-3xl font-black text-lime-400 mt-1">
+              {totalSales.toLocaleString("ar-EG")} <small className="text-xs sm:text-sm text-white font-bold">ج.م</small>
             </div>
           </div>
         </div>
 
         {/* Tab Buttons */}
-        <div style={{ display: "flex", gap: "0.8rem", marginBottom: "1.5rem", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", paddingBottom: "1rem" }}>
+        <div className="flex gap-2 sm:gap-3 mb-6 border-b border-white/10 pb-3 sm:pb-4 overflow-x-auto scrollbar-none">
           <button
             onClick={() => setActiveTab("products")}
-            style={{
-              padding: "0.6rem 1.4rem",
-              borderRadius: "999px",
-              fontWeight: "800",
-              fontSize: "0.88rem",
-              cursor: "pointer",
-              border: 0,
-              background: activeTab === "products" ? "#A3E635" : "rgba(255, 255, 255, 0.08)",
-              color: activeTab === "products" ? "#0b0f0d" : "#fff"
-            }}
+            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-extrabold text-xs sm:text-sm cursor-pointer border-0 whitespace-nowrap transition-all ${
+              activeTab === "products"
+                ? "bg-lime-400 text-black shadow-lg shadow-lime-400/20"
+                : "bg-white/10 text-white hover:bg-white/15"
+            }`}
           >
             ⌚ إدارة الساعات ({products.length})
           </button>
 
           <button
             onClick={() => setActiveTab("orders")}
-            style={{
-              padding: "0.6rem 1.4rem",
-              borderRadius: "999px",
-              fontWeight: "800",
-              fontSize: "0.88rem",
-              cursor: "pointer",
-              border: 0,
-              background: activeTab === "orders" ? "#A3E635" : "rgba(255, 255, 255, 0.08)",
-              color: activeTab === "orders" ? "#0b0f0d" : "#fff"
-            }}
+            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-extrabold text-xs sm:text-sm cursor-pointer border-0 whitespace-nowrap transition-all ${
+              activeTab === "orders"
+                ? "bg-lime-400 text-black shadow-lg shadow-lime-400/20"
+                : "bg-white/10 text-white hover:bg-white/15"
+            }`}
           >
             📋 الطلبات والواتساب ({orders.length})
           </button>
@@ -521,115 +477,97 @@ export default function AdminDashboardPage() {
         {/* TAB 1: PRODUCTS MANAGEMENT */}
         {activeTab === "products" && (
           <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem" }}>
-              <h2 style={{ fontSize: "1.2rem", fontWeight: "800", margin: 0 }}>كتالوج الساعات الحالي في قاعدة البيانات</h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <div>
+                <h2 className="text-base sm:text-lg font-black text-white m-0">كتالوج الساعات الحالي في قاعدة البيانات</h2>
+                <span className="text-xs text-neutral-400 block mt-0.5 sm:hidden">اسحب الجدول أفقياً لعرض كل التفاصيل والإجراءات ↔</span>
+              </div>
               <button
                 onClick={() => { resetForm(); setEditingProduct(null); setShowAddModal(true); }}
-                style={{
-                  background: "#A3E635",
-                  color: "#0d1210",
-                  padding: "0.6rem 1.3rem",
-                  borderRadius: "999px",
-                  fontWeight: "800",
-                  fontSize: "0.86rem",
-                  border: 0,
-                  cursor: "pointer",
-                  boxShadow: "0 4px 15px rgba(163, 230, 53, 0.3)"
-                }}
+                className="w-full sm:w-auto bg-lime-400 hover:bg-lime-500 text-black px-5 py-2.5 rounded-full font-black text-xs sm:text-sm border-0 cursor-pointer shadow-lg shadow-lime-400/25 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5"
               >
-                + إضافة ساعة جديدة
+                <span>+</span>
+                <span>إضافة ساعة جديدة</span>
               </button>
             </div>
 
-            <div style={{ background: "#141c18", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "14px", overflow: "hidden" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "right" }}>
+            {/* Table Container with horizontal scroll and preserved table width */}
+            <div
+              className="bg-[#141c18] border border-white/10 rounded-2xl overflow-x-auto shadow-xl"
+              style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}
+            >
+              <table className="w-full border-collapse text-right" style={{ minWidth: "920px" }}>
                 <thead>
-                  <tr style={{ background: "#0e1411", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", color: "#94a3b8", fontSize: "0.78rem" }}>
-                    <th style={{ padding: "1rem" }}>الصورة</th>
-                    <th style={{ padding: "1rem" }}>اسم الساعة والموديل</th>
-                    <th style={{ padding: "1rem" }}>الفئة (النوع)</th>
-                    <th style={{ padding: "1rem" }}>الفئة المستهدفة</th>
-                    <th style={{ padding: "1rem" }}>اللون</th>
-                    <th style={{ padding: "1rem" }}>السعر الحالي</th>
-                    <th style={{ padding: "1rem" }}>السعر السابق</th>
-                    <th style={{ padding: "1rem" }}>المخزون</th>
-                    <th style={{ padding: "1rem", textAlign: "center" }}>إجراءات</th>
+                  <tr className="bg-[#0e1411] border-b border-white/10 text-neutral-400 text-xs">
+                    <th className="p-3.5 sm:p-4">الصورة</th>
+                    <th className="p-3.5 sm:p-4">اسم الساعة والموديل</th>
+                    <th className="p-3.5 sm:p-4">الفئة (النوع)</th>
+                    <th className="p-3.5 sm:p-4">الفئة المستهدفة</th>
+                    <th className="p-3.5 sm:p-4">اللون</th>
+                    <th className="p-3.5 sm:p-4">السعر الحالي</th>
+                    <th className="p-3.5 sm:p-4">السعر السابق</th>
+                    <th className="p-3.5 sm:p-4">المخزون</th>
+                    <th className="p-3.5 sm:p-4 text-center">إجراءات</th>
                   </tr>
                 </thead>
                 <tbody>
                   {products.map(p => {
                     const imgCount = Array.isArray(p.images) ? p.images.length : 1;
                     return (
-                      <tr key={p.id} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.05)", fontSize: "0.85rem" }}>
-                        <td style={{ padding: "0.8rem 1rem", position: "relative" }}>
-                          <div style={{ position: "relative", width: "48px", height: "48px" }}>
-                            <img src={p.image} alt={p.name} style={{ width: "48px", height: "48px", objectFit: "contain", background: "#fff", borderRadius: "8px", padding: "2px" }} />
+                      <tr key={p.id} className="border-b border-white/5 text-xs sm:text-sm hover:bg-white/[0.02]">
+                        <td className="p-3 sm:p-3.5">
+                          <div className="relative w-12 h-12">
+                            <img src={p.image} alt={p.name} className="w-12 h-12 object-contain bg-white rounded-lg p-0.5" />
                             {imgCount > 1 && (
-                              <span style={{
-                                position: "absolute",
-                                bottom: "-4px",
-                                right: "-4px",
-                                background: "#A3E635",
-                                color: "#000",
-                                fontSize: "0.6rem",
-                                fontWeight: "800",
-                                padding: "1px 4px",
-                                borderRadius: "4px",
-                                lineHeight: "1"
-                              }}>
+                              <span className="absolute -bottom-1 -right-1 bg-lime-400 text-black text-[9px] font-extrabold px-1 rounded leading-tight shadow-sm">
                                 {imgCount} صور
                               </span>
                             )}
                           </div>
                         </td>
-                        <td style={{ padding: "0.8rem 1rem", fontWeight: "700" }}>
-                          {p.name}
-                          <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: "400" }}>{p.sub}</div>
+                        <td className="p-3 sm:p-3.5 font-bold">
+                          <div>{p.name}</div>
+                          <div className="text-[11px] text-neutral-400 font-normal mt-0.5">{p.sub}</div>
                         </td>
-                        <td style={{ padding: "0.8rem 1rem" }}>
-                          <span style={{ background: "rgba(163, 230, 53, 0.15)", color: "#A3E635", padding: "0.2rem 0.6rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "700" }}>
+                        <td className="p-3 sm:p-3.5 whitespace-nowrap">
+                          <span className="bg-lime-400/15 text-lime-400 px-2 py-1 rounded-md text-xs font-bold">
                             {p.cat}
                           </span>
                         </td>
-                        <td style={{ padding: "0.8rem 1rem" }}>
-                          <span style={{ background: "rgba(56, 189, 248, 0.15)", color: "#38bdf8", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: "700" }}>
+                        <td className="p-3 sm:p-3.5 whitespace-nowrap">
+                          <span className="bg-sky-400/15 text-sky-400 px-2 py-1 rounded-md text-xs font-bold">
                             {p.target_audience || "غير محدد"}
                           </span>
                         </td>
-                        <td style={{ padding: "0.8rem 1rem" }}>
-                          <span style={{ background: "rgba(255, 255, 255, 0.08)", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem" }}>
+                        <td className="p-3 sm:p-3.5 whitespace-nowrap">
+                          <span className="bg-white/10 px-2 py-1 rounded-md text-xs">
                             {p.color || "غير محدد"}
                           </span>
                         </td>
-                        <td style={{ padding: "0.8rem 1rem", fontWeight: "800", color: "#A3E635" }}>
+                        <td className="p-3 sm:p-3.5 font-extrabold text-lime-400 whitespace-nowrap">
                           {Number(p.price).toLocaleString("ar-EG")} ج.م
                         </td>
-                        <td style={{ padding: "0.8rem 1rem", color: "#94a3b8" }}>
+                        <td className="p-3 sm:p-3.5 text-neutral-400 whitespace-nowrap">
                           {p.old_price ? `${Number(p.old_price).toLocaleString("ar-EG")} ج.م` : "-"}
                         </td>
-                        <td style={{ padding: "0.8rem 1rem" }}>
-                          <span style={{
-                            padding: "0.2rem 0.55rem",
-                            borderRadius: "999px",
-                            fontSize: "0.72rem",
-                            fontWeight: "700",
-                            background: p.in_stock ? "rgba(163, 230, 53, 0.15)" : "rgba(239, 68, 68, 0.15)",
-                            color: p.in_stock ? "#A3E635" : "#ef4444"
-                          }}>
+                        <td className="p-3 sm:p-3.5 whitespace-nowrap">
+                          <span className={`px-2 py-1 rounded-full text-xs font-bold ${
+                            p.in_stock ? "bg-lime-400/15 text-lime-400" : "bg-rose-500/15 text-rose-400"
+                          }`}>
                             {p.in_stock ? "متوفرة" : "غير متوفرة"}
                           </span>
                         </td>
-                        <td style={{ padding: "0.8rem 1rem", textAlign: "center" }}>
-                          <div style={{ display: "inline-flex", gap: "0.4rem" }}>
+                        <td className="p-3 sm:p-3.5 text-center whitespace-nowrap">
+                          <div className="inline-flex gap-1.5">
                             <button
                               onClick={() => startEdit(p)}
-                              style={{ background: "#2563eb", color: "#fff", border: 0, padding: "0.35rem 0.75rem", borderRadius: "6px", cursor: "pointer", fontSize: "0.75rem" }}
+                              className="bg-blue-600 hover:bg-blue-700 text-white border-0 px-2.5 py-1.5 rounded-lg cursor-pointer text-xs font-bold transition-colors"
                             >
                               تعديل
                             </button>
                             <button
                               onClick={() => handleDeleteProduct(p.id, p.name)}
-                              style={{ background: "#dc2626", color: "#fff", border: 0, padding: "0.35rem 0.75rem", borderRadius: "6px", cursor: "pointer", fontSize: "0.75rem" }}
+                              className="bg-rose-600 hover:bg-rose-700 text-white border-0 px-2.5 py-1.5 rounded-lg cursor-pointer text-xs font-bold transition-colors"
                             >
                               حذف
                             </button>
@@ -647,27 +585,33 @@ export default function AdminDashboardPage() {
         {/* TAB 2: ORDERS MANAGEMENT & WHATSAPP TRACKING */}
         {activeTab === "orders" && (
           <div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem" }}>
-              <h2 style={{ fontSize: "1.2rem", fontWeight: "800", margin: 0 }}>سجل طلبات العملاء وأكواد المرجع</h2>
-              <span style={{ fontSize: "0.8rem", color: "#94a3b8" }}>مرتبة من الأحدث إلى الأقدم</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+              <div>
+                <h2 className="text-base sm:text-lg font-black text-white m-0">سجل طلبات العملاء وأكواد المرجع</h2>
+                <span className="text-xs text-neutral-400 block mt-0.5 sm:hidden">اسحب الجدول أفقياً لعرض كل تفاصيل الطلبات ↔</span>
+              </div>
+              <span className="text-xs text-neutral-400">مرتبة من الأحدث إلى الأقدم</span>
             </div>
 
             {orders.length === 0 ? (
-              <div style={{ background: "#141c18", padding: "3rem", textAlign: "center", borderRadius: "14px", color: "#94a3b8" }}>
+              <div className="bg-[#141c18] p-8 sm:p-12 text-center rounded-2xl text-neutral-400 text-sm">
                 لا توجد طلبات مسجلة بعد. عند قيام العميل بالطلب ستظهر هنا فوراً مع كود المرجع الفريد.
               </div>
             ) : (
-              <div style={{ background: "#141c18", border: "1px solid rgba(255, 255, 255, 0.08)", borderRadius: "14px", overflow: "hidden" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "right" }}>
+              <div
+                className="bg-[#141c18] border border-white/10 rounded-2xl overflow-x-auto shadow-xl"
+                style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}
+              >
+                <table className="w-full border-collapse text-right" style={{ minWidth: "980px" }}>
                   <thead>
-                    <tr style={{ background: "#0e1411", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", color: "#94a3b8", fontSize: "0.78rem" }}>
-                      <th style={{ padding: "1rem" }}>مرجع الطلب (Order Ref)</th>
-                      <th style={{ padding: "1rem" }}>العميل والهاتف</th>
-                      <th style={{ padding: "1rem" }}>المحافظة والعنوان</th>
-                      <th style={{ padding: "1rem" }}>الساعات المطلوبة</th>
-                      <th style={{ padding: "1rem" }}>المبلغ الإجمالي</th>
-                      <th style={{ padding: "1rem" }}>حالة الطلب</th>
-                      <th style={{ padding: "1rem", textAlign: "center" }}>مراسلة واتساب</th>
+                    <tr className="bg-[#0e1411] border-b border-white/10 text-neutral-400 text-xs">
+                      <th className="p-3.5 sm:p-4">مرجع الطلب (Order Ref)</th>
+                      <th className="p-3.5 sm:p-4">العميل والهاتف</th>
+                      <th className="p-3.5 sm:p-4">المحافظة والعنوان</th>
+                      <th className="p-3.5 sm:p-4">الساعات المطلوبة</th>
+                      <th className="p-3.5 sm:p-4">المبلغ الإجمالي</th>
+                      <th className="p-3.5 sm:p-4">حالة الطلب</th>
+                      <th className="p-3.5 sm:p-4 text-center">مراسلة واتساب</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -676,52 +620,35 @@ export default function AdminDashboardPage() {
                       const waLink = `https://wa.me/2${o.customer_phone.replace(/^0/, "")}?text=${waText}`;
 
                       return (
-                        <tr key={o.id} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.05)", fontSize: "0.85rem" }}>
-                          <td style={{ padding: "0.8rem 1rem" }}>
-                            <span style={{
-                              background: "rgba(163, 230, 53, 0.15)",
-                              border: "1px solid #A3E635",
-                              color: "#A3E635",
-                              padding: "0.25rem 0.6rem",
-                              borderRadius: "6px",
-                              fontWeight: "800",
-                              fontSize: "0.8rem",
-                              display: "inline-block"
-                            }}>
+                        <tr key={o.id} className="border-b border-white/5 text-xs sm:text-sm hover:bg-white/[0.02]">
+                          <td className="p-3 sm:p-3.5 whitespace-nowrap">
+                            <span className="bg-lime-400/15 border border-lime-400 text-lime-400 px-2 py-1 rounded-md font-extrabold text-xs inline-block">
                               #{o.order_ref}
                             </span>
                           </td>
-                          <td style={{ padding: "0.8rem 1rem" }}>
-                            <b>{o.customer_name}</b>
-                            <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>{o.customer_phone}</div>
+                          <td className="p-3 sm:p-3.5 whitespace-nowrap">
+                            <div className="font-bold">{o.customer_name}</div>
+                            <div className="text-[11px] text-neutral-400 font-mono mt-0.5">{o.customer_phone}</div>
                           </td>
-                          <td style={{ padding: "0.8rem 1rem", fontSize: "0.78rem" }}>
-                            <b style={{ color: "#38bdf8" }}>{o.governorate}</b>
-                            <div style={{ color: "#94a3b8" }}>{o.address}</div>
+                          <td className="p-3 sm:p-3.5 max-w-[200px]">
+                            <div className="font-bold text-sky-400">{o.governorate}</div>
+                            <div className="text-[11px] text-neutral-400 line-clamp-2 mt-0.5">{o.address}</div>
                           </td>
-                          <td style={{ padding: "0.8rem 1rem", fontSize: "0.75rem" }}>
+                          <td className="p-3 sm:p-3.5 text-xs">
                             {Array.isArray(o.items) ? o.items.map((it, idx) => (
-                              <div key={idx} style={{ marginBottom: "2px" }}>
-                                • {it.name} <small>({it.qty}x)</small>
+                              <div key={idx} className="mb-0.5">
+                                • {it.name} <small className="text-neutral-400">({it.qty}x)</small>
                               </div>
                             )) : "-"}
                           </td>
-                          <td style={{ padding: "0.8rem 1rem", fontWeight: "800", color: "#A3E635" }}>
+                          <td className="p-3 sm:p-3.5 font-black text-lime-400 whitespace-nowrap">
                             {Number(o.total).toLocaleString("ar-EG")} ج.م
                           </td>
-                          <td style={{ padding: "0.8rem 1rem" }}>
+                          <td className="p-3 sm:p-3.5 whitespace-nowrap">
                             <select
                               value={o.status}
                               onChange={(e) => handleUpdateOrderStatus(o.order_ref, e.target.value)}
-                              style={{
-                                background: "#0b0f0d",
-                                border: "1px solid rgba(255, 255, 255, 0.2)",
-                                color: "#fff",
-                                padding: "0.3rem 0.6rem",
-                                borderRadius: "6px",
-                                fontSize: "0.75rem",
-                                outline: "none"
-                              }}
+                              className="bg-[#0b0f0d] border border-white/20 text-white px-2.5 py-1 rounded-lg text-xs outline-none cursor-pointer"
                             >
                               <option value="قيد المراجعة">قيد المراجعة</option>
                               <option value="تم التأكيد">تم التأكيد</option>
@@ -730,25 +657,14 @@ export default function AdminDashboardPage() {
                               <option value="ملغي">ملغي</option>
                             </select>
                           </td>
-                          <td style={{ padding: "0.8rem 1rem", textAlign: "center" }}>
+                          <td className="p-3 sm:p-3.5 text-center whitespace-nowrap">
                             <a
                               href={waLink}
                               target="_blank"
-                              style={{
-                                background: "rgba(37, 211, 102, 0.15)",
-                                border: "1px solid #25d366",
-                                color: "#25d366",
-                                padding: "0.35rem 0.75rem",
-                                borderRadius: "999px",
-                                fontSize: "0.75rem",
-                                fontWeight: "700",
-                                textDecoration: "none",
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "0.3rem"
-                              }}
+                              rel="noreferrer"
+                              className="bg-[#25d366]/15 hover:bg-[#25d366]/25 border border-[#25d366] text-[#25d366] px-3 py-1.5 rounded-full text-xs font-bold no-underline inline-flex items-center gap-1.5 transition-colors"
                             >
-                              واتساب العميل
+                              <span>واتساب العميل</span>
                             </a>
                           </td>
                         </tr>
@@ -763,224 +679,152 @@ export default function AdminDashboardPage() {
 
         {/* MODAL: ADD / EDIT PRODUCT */}
         {showAddModal && (
-          <div style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.85)",
-            backdropFilter: "blur(5px)",
-            zIndex: 100,
-            display: "grid",
-            placeItems: "center",
-            padding: "1rem"
-          }}>
-            <div style={{
-              background: "#141c18",
-              border: "1px solid rgba(163, 230, 53, 0.4)",
-              borderRadius: "16px",
-              width: "min(720px, 100%)",
-              maxHeight: "92vh",
-              overflowY: "auto",
-              padding: "1.8rem",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.7)"
-            }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.4rem" }}>
-                <h3 style={{ fontSize: "1.2rem", fontWeight: "800", margin: 0 }}>
+          <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto">
+            <div className="bg-[#141c18] border border-lime-400/40 rounded-2xl sm:rounded-3xl w-full max-w-2xl max-h-[92vh] overflow-y-auto p-4 sm:p-7 shadow-2xl my-auto">
+              <div className="flex justify-between items-center pb-3.5 mb-4 border-b border-white/10">
+                <h3 className="text-base sm:text-lg font-black text-white m-0">
                   {editingProduct ? "تعديل بيانات الساعة" : "إضافة ساعة جديدة للكتالوج"}
                 </h3>
-                <button onClick={() => setShowAddModal(false)} style={{ background: "transparent", border: 0, color: "#fff", fontSize: "1.2rem", cursor: "pointer" }}>✕</button>
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm font-bold border-0 cursor-pointer transition-colors"
+                >
+                  ✕
+                </button>
               </div>
 
-              <form onSubmit={handleSaveProduct}>
+              <form onSubmit={handleSaveProduct} className="space-y-4">
                 {/* Watch Name */}
-                <div style={{ marginBottom: "1rem" }}>
-                  <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>اسم الساعة *</label>
+                <div>
+                  <label className="block text-xs font-bold text-neutral-300 mb-1.5">اسم الساعة *</label>
                   <input
                     type="text"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     required
                     placeholder="مثال: ساعة Ben10 رويال هيريتدج كلاسيك"
-                    style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                    className="w-full h-11 bg-[#090d0b] border border-white/15 focus:border-lime-400 rounded-xl text-white px-3.5 text-xs sm:text-sm outline-none transition-all"
                   />
                 </div>
 
                 {/* Categories & Target Audience */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-                  {/* Category (Types from Image 2) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  {/* Category */}
                   <div>
-                    <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>الفئة (نوع الساعة) *</label>
+                    <label className="block text-xs font-bold text-neutral-300 mb-1.5">الفئة (نوع الساعة) *</label>
                     <select
                       value={form.cat}
                       onChange={(e) => setForm({ ...form, cat: e.target.value })}
-                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                      className="w-full h-11 bg-[#090d0b] border border-white/15 focus:border-lime-400 rounded-xl text-white px-3.5 text-xs sm:text-sm outline-none cursor-pointer"
                     >
                       {WATCH_TYPES.map(type => (
-                        <option key={type} value={type}>{type}</option>
+                        <option key={type} value={type} className="bg-[#141c18] text-white">{type}</option>
                       ))}
                     </select>
                   </div>
 
-                  {/* Target Audience (from Image 4) */}
+                  {/* Target Audience */}
                   <div>
-                    <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>الفئة المستهدفة</label>
+                    <label className="block text-xs font-bold text-neutral-300 mb-1.5">الفئة المستهدفة</label>
                     <select
                       value={form.target_audience}
                       onChange={(e) => setForm({ ...form, target_audience: e.target.value })}
-                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                      className="w-full h-11 bg-[#090d0b] border border-white/15 focus:border-lime-400 rounded-xl text-white px-3.5 text-xs sm:text-sm outline-none cursor-pointer"
                     >
                       {TARGET_AUDIENCES.map(aud => (
-                        <option key={aud.value} value={aud.value}>{aud.label}</option>
+                        <option key={aud.value} value={aud.value} className="bg-[#141c18] text-white">{aud.label}</option>
                       ))}
                     </select>
                   </div>
                 </div>
 
-                {/* Color Selection (from Image 3) */}
-                <div style={{ marginBottom: "1rem" }}>
-                  <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>لون الساعة</label>
+                {/* Color Selection */}
+                <div>
+                  <label className="block text-xs font-bold text-neutral-300 mb-1.5">لون الساعة</label>
                   <select
                     value={form.color}
                     onChange={(e) => setForm({ ...form, color: e.target.value })}
-                    style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                    className="w-full h-11 bg-[#090d0b] border border-white/15 focus:border-lime-400 rounded-xl text-white px-3.5 text-xs sm:text-sm outline-none cursor-pointer"
                   >
                     {STANDARD_COLORS.map(col => (
-                      <option key={col.value} value={col.value}>{col.label}</option>
+                      <option key={col.value} value={col.value} className="bg-[#141c18] text-white">{col.label}</option>
                     ))}
                   </select>
 
                   {form.color === "custom" && (
-                    <div style={{ marginTop: "0.5rem" }}>
+                    <div className="mt-2">
                       <input
                         type="text"
                         placeholder="اكتب اسم اللون المخصص هنا..."
                         value={form.custom_color}
                         onChange={(e) => setForm({ ...form, custom_color: e.target.value })}
                         required={form.color === "custom"}
-                        style={{ width: "100%", height: "38px", background: "#090d0b", border: "1px solid #A3E635", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                        className="w-full h-10 bg-[#090d0b] border border-lime-400 rounded-xl text-white px-3.5 text-xs sm:text-sm outline-none"
                       />
                     </div>
                   )}
                 </div>
 
                 {/* Multi-Image Gallery Section (Up to 10 Images) */}
-                <div style={{
-                  marginBottom: "1.2rem",
-                  background: "#0d1410",
-                  border: "1px solid rgba(163, 230, 53, 0.35)",
-                  borderRadius: "12px",
-                  padding: "1.2rem"
-                }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.8rem" }}>
+                <div className="bg-[#0d1410] border border-lime-400/35 rounded-xl p-3 sm:p-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-3">
                     <div>
-                      <span style={{ fontSize: "0.85rem", fontWeight: "800", color: "#A3E635" }}>
+                      <span className="text-xs sm:text-sm font-black text-lime-400 block">
                         📷 صور الساعة (يمكنك رفع حتى 10 صور للساعة الواحدة)
                       </span>
-                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", marginTop: "2px" }}>
+                      <span className="text-[11px] text-neutral-400 block mt-0.5">
                         الصورة الأولى هي صورة الغلاف الرئيسية التي تظهر في المتجر
-                      </div>
+                      </span>
                     </div>
-                    <span style={{
-                      background: form.images.length >= 10 ? "rgba(239, 68, 68, 0.2)" : "rgba(163, 230, 53, 0.15)",
-                      color: form.images.length >= 10 ? "#ef4444" : "#A3E635",
-                      border: `1px solid ${form.images.length >= 10 ? "#ef4444" : "#A3E635"}`,
-                      fontSize: "0.75rem",
-                      fontWeight: "800",
-                      padding: "0.2rem 0.6rem",
-                      borderRadius: "999px"
-                    }}>
+                    <span className={`self-start sm:self-auto text-xs font-extrabold px-2.5 py-1 rounded-full border ${
+                      form.images.length >= 10
+                        ? "bg-rose-500/20 text-rose-400 border-rose-500"
+                        : "bg-lime-400/15 text-lime-400 border-lime-400"
+                    }`}>
                       {form.images.length} / 10 صور
                     </span>
                   </div>
 
                   {/* Thumbnails Gallery Grid */}
-                  <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))",
-                    gap: "0.75rem",
-                    marginBottom: "1rem"
-                  }}>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-2.5 mb-3">
                     {form.images.map((imgUrl, idx) => (
                       <div
                         key={idx}
-                        style={{
-                          background: "#080c0a",
-                          border: idx === 0 ? "2px solid #A3E635" : "1px solid rgba(255,255,255,0.15)",
-                          borderRadius: "10px",
-                          padding: "6px",
-                          position: "relative",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center"
-                        }}
+                        className={`bg-[#080c0a] rounded-xl p-1.5 relative flex flex-col items-center ${
+                          idx === 0 ? "border-2 border-lime-400" : "border border-white/15"
+                        }`}
                       >
-                        <div style={{ position: "relative", width: "100%", height: "80px", background: "#fff", borderRadius: "6px", overflow: "hidden", display: "grid", placeItems: "center" }}>
-                          <img src={imgUrl} alt={`صورة ${idx + 1}`} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                        <div className="relative w-full h-16 sm:h-20 bg-white rounded-lg overflow-hidden grid place-items-center">
+                          <img src={imgUrl} alt={`صورة ${idx + 1}`} className="max-w-full max-h-full object-contain" />
                           {idx === 0 ? (
-                            <span style={{
-                              position: "absolute",
-                              top: "3px",
-                              right: "3px",
-                              background: "#A3E635",
-                              color: "#000",
-                              fontSize: "0.6rem",
-                              fontWeight: "800",
-                              padding: "2px 5px",
-                              borderRadius: "4px"
-                            }}>
+                            <span className="absolute top-1 right-1 bg-lime-400 text-black text-[10px] font-extrabold px-1.5 py-0.5 rounded leading-tight shadow-sm">
                               الغلاف ★
                             </span>
                           ) : (
-                            <span style={{
-                              position: "absolute",
-                              top: "3px",
-                              right: "3px",
-                              background: "rgba(0,0,0,0.6)",
-                              color: "#fff",
-                              fontSize: "0.6rem",
-                              padding: "1px 4px",
-                              borderRadius: "4px"
-                            }}>
+                            <span className="absolute top-1 right-1 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded leading-tight">
                               #{idx + 1}
                             </span>
                           )}
                         </div>
 
                         {/* Actions for this photo */}
-                        <div style={{ display: "flex", gap: "4px", width: "100%", marginTop: "6px" }}>
+                        <div className="flex gap-1 w-full mt-1.5">
                           {idx !== 0 && (
                             <button
                               type="button"
                               onClick={() => handleSetAsCover(idx)}
                               title="تعيين كغلاف رئيسي"
-                              style={{
-                                flex: 1,
-                                background: "rgba(163, 230, 53, 0.15)",
-                                border: "1px solid #A3E635",
-                                color: "#A3E635",
-                                borderRadius: "4px",
-                                fontSize: "0.62rem",
-                                padding: "2px 0",
-                                cursor: "pointer",
-                                fontWeight: "700"
-                              }}
+                              className="flex-1 bg-lime-400/15 hover:bg-lime-400/25 border border-lime-400 text-lime-400 rounded text-[10px] py-1 cursor-pointer font-bold transition-colors"
                             >
                               غلاف
                             </button>
                           )}
-
                           <button
                             type="button"
                             onClick={() => handleRemoveImage(idx)}
                             title="حذف الصورة"
-                            style={{
-                              background: "rgba(239, 68, 68, 0.2)",
-                              border: "1px solid #ef4444",
-                              color: "#fca5a5",
-                              borderRadius: "4px",
-                              fontSize: "0.65rem",
-                              padding: "2px 6px",
-                              cursor: "pointer"
-                            }}
+                            className="bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500 text-rose-300 rounded text-[11px] px-2 py-1 cursor-pointer transition-colors"
                           >
                             ✕
                           </button>
@@ -992,19 +836,8 @@ export default function AdminDashboardPage() {
                   {/* Upload More Images Controls */}
                   {form.images.length < 10 ? (
                     <div>
-                      <div style={{ display: "flex", gap: "0.8rem", alignItems: "center", flexWrap: "wrap" }}>
-                        <label style={{
-                          background: "#A3E635",
-                          color: "#0b0f0d",
-                          padding: "0.55rem 1.1rem",
-                          borderRadius: "8px",
-                          fontWeight: "800",
-                          fontSize: "0.78rem",
-                          cursor: uploadingImage ? "not-allowed" : "pointer",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "0.4rem"
-                        }}>
+                      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-stretch sm:items-center">
+                        <label className="bg-lime-400 hover:bg-lime-500 text-black px-4 py-2.5 rounded-xl font-black text-xs cursor-pointer flex items-center justify-center gap-1.5 transition-colors shadow-sm text-center">
                           <span>+ رفع صور من الجهاز (متبقي {10 - form.images.length})</span>
                           <input
                             type="file"
@@ -1012,32 +845,23 @@ export default function AdminDashboardPage() {
                             multiple
                             onChange={handleMultipleImageUpload}
                             disabled={uploadingImage}
-                            style={{ display: "none" }}
+                            className="hidden"
                           />
                         </label>
 
                         {/* Manual URL input option */}
-                        <div style={{ display: "flex", gap: "0.4rem", flex: 1, minWidth: "220px" }}>
+                        <div className="flex gap-1.5 flex-1">
                           <input
                             type="text"
                             placeholder="أو اكتب رابط/مسار صورة مباشرة..."
                             value={manualImageUrl}
                             onChange={(e) => setManualImageUrl(e.target.value)}
-                            style={{ flex: 1, height: "36px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "6px", color: "#fff", paddingInline: "0.6rem", fontSize: "0.75rem" }}
+                            className="flex-1 h-9 sm:h-10 bg-[#090d0b] border border-white/15 focus:border-lime-400 rounded-xl text-white px-3 text-xs outline-none"
                           />
                           <button
                             type="button"
                             onClick={handleAddManualImage}
-                            style={{
-                              background: "rgba(255,255,255,0.1)",
-                              border: "1px solid rgba(255,255,255,0.2)",
-                              color: "#fff",
-                              borderRadius: "6px",
-                              paddingInline: "0.8rem",
-                              fontSize: "0.75rem",
-                              fontWeight: "700",
-                              cursor: "pointer"
-                            }}
+                            className="bg-white/10 hover:bg-white/15 border border-white/20 text-white rounded-xl px-3.5 text-xs font-bold cursor-pointer transition-colors whitespace-nowrap"
                           >
                             إضافة
                           </button>
@@ -1045,120 +869,101 @@ export default function AdminDashboardPage() {
                       </div>
 
                       {uploadingImage && (
-                        <div style={{ fontSize: "0.75rem", color: "#A3E635", marginTop: "0.5rem" }}>
-                          ⏳ جاري رفع الصور وتخزينها في السورس كود...
+                        <div className="text-xs text-lime-400 mt-2 font-bold flex items-center gap-1.5">
+                          <span>⏳ جاري رفع الصور وتخزينها في السورس كود...</span>
                         </div>
                       )}
                       {uploadError && (
-                        <div style={{ fontSize: "0.75rem", color: "#ef4444", marginTop: "0.5rem" }}>
+                        <div className="text-xs text-rose-400 mt-2 font-bold">
                           ✕ {uploadError}
                         </div>
                       )}
                     </div>
                   ) : (
-                    <div style={{ fontSize: "0.78rem", color: "#94a3b8", textAlign: "center", padding: "0.4rem" }}>
+                    <div className="text-xs text-neutral-400 text-center py-1">
                       ✓ تم الوصول للحد الأقصى (10 صور). لحذف صورة اضغط ✕ فوقها لإتاحة مكان لصورة أخرى.
                     </div>
                   )}
                 </div>
 
                 {/* Price & Old Price */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>السعر الحالي (ج.م) *</label>
+                    <label className="block text-xs font-bold text-neutral-300 mb-1.5">السعر الحالي (ج.م) *</label>
                     <input
                       type="number"
                       value={form.price}
                       onChange={(e) => setForm({ ...form, price: e.target.value })}
                       required
-                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                      placeholder="مثال: 1250"
+                      className="w-full h-11 bg-[#090d0b] border border-white/15 focus:border-lime-400 rounded-xl text-white px-3.5 text-xs sm:text-sm outline-none"
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>السعر القديم قبل الخصم (اختياري)</label>
+                    <label className="block text-xs font-bold text-neutral-300 mb-1.5">السعر القديم قبل الخصم (اختياري)</label>
                     <input
                       type="number"
                       value={form.old_price}
                       onChange={(e) => setForm({ ...form, old_price: e.target.value })}
                       placeholder="اتركه فارغاً إن لم يكن هناك خصم"
-                      style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                      className="w-full h-11 bg-[#090d0b] border border-white/15 focus:border-lime-400 rounded-xl text-white px-3.5 text-xs sm:text-sm outline-none"
                     />
                   </div>
                 </div>
 
                 {/* Short Subtitle */}
-                <div style={{ marginBottom: "1rem" }}>
-                  <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>وصف مختصر / سطر فرعي</label>
+                <div>
+                  <label className="block text-xs font-bold text-neutral-300 mb-1.5">وصف مختصر / سطر فرعي</label>
                   <input
                     type="text"
                     value={form.sub}
                     onChange={(e) => setForm({ ...form, sub: e.target.value })}
                     placeholder="ستانلس ستيل 316L مصقول · زجاج ياقوتي مقاوم للخدش"
-                    style={{ width: "100%", height: "42px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", paddingInline: "0.8rem", outline: "none" }}
+                    className="w-full h-11 bg-[#090d0b] border border-white/15 focus:border-lime-400 rounded-xl text-white px-3.5 text-xs sm:text-sm outline-none"
                   />
                 </div>
 
-                {/* Full Description (الوصف الكامل بتاع الساعة) */}
-                <div style={{ marginBottom: "1.2rem" }}>
-                  <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", marginBottom: "0.3rem" }}>الوصف الكامل بتاع الساعة</label>
+                {/* Full Description */}
+                <div>
+                  <label className="block text-xs font-bold text-neutral-300 mb-1.5">الوصف الكامل بتاع الساعة</label>
                   <textarea
                     rows={4}
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
                     placeholder="اكتب هنا الوصف التفصيلي والكامل للساعة، المميزات، الخامات، والاستخدام..."
-                    style={{ width: "100%", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "8px", color: "#fff", padding: "0.8rem", outline: "none", resize: "vertical", fontFamily: "inherit", fontSize: "0.82rem", lineHeight: "1.6" }}
+                    className="w-full bg-[#090d0b] border border-white/15 focus:border-lime-400 rounded-xl text-white p-3 text-xs sm:text-sm outline-none resize-y leading-relaxed font-sans"
                   />
                 </div>
 
                 {/* Stock Status */}
-                <div style={{ marginBottom: "1.2rem", display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                <div className="flex items-center gap-2 pt-1">
                   <input
                     type="checkbox"
                     id="stockCheck"
                     checked={form.in_stock}
                     onChange={(e) => setForm({ ...form, in_stock: e.target.checked })}
-                    style={{ width: "18px", height: "18px", accentColor: "#A3E635", cursor: "pointer" }}
+                    className="w-4 h-4 rounded accent-lime-400 cursor-pointer"
                   />
-                  <label htmlFor="stockCheck" style={{ fontSize: "0.82rem", fontWeight: "700", cursor: "pointer" }}>
+                  <label htmlFor="stockCheck" className="text-xs sm:text-sm font-bold text-neutral-200 cursor-pointer">
                     الساعة متوفرة في المخزن وقابلة للطلب
                   </label>
                 </div>
 
                 {/* Submit / Cancel Buttons */}
-                <div style={{ display: "flex", gap: "0.8rem", marginTop: "1.5rem" }}>
-                  <button
-                    type="submit"
-                    style={{
-                      flex: 1,
-                      height: "46px",
-                      background: "#A3E635",
-                      color: "#0d1210",
-                      fontWeight: "800",
-                      border: 0,
-                      borderRadius: "999px",
-                      cursor: "pointer",
-                      fontSize: "0.92rem",
-                      boxShadow: "0 4px 15px rgba(163, 230, 53, 0.25)"
-                    }}
-                  >
-                    {editingProduct ? "تحديث الساعة" : "حفظ وإضافة الساعة"}
-                  </button>
+                <div className="flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-3 pt-3">
                   <button
                     type="button"
                     onClick={() => setShowAddModal(false)}
-                    style={{
-                      paddingInline: "1.5rem",
-                      height: "46px",
-                      background: "rgba(255,255,255,0.1)",
-                      color: "#fff",
-                      border: 0,
-                      borderRadius: "999px",
-                      cursor: "pointer",
-                      fontSize: "0.92rem"
-                    }}
+                    className="w-full sm:w-auto px-6 h-11 bg-white/10 hover:bg-white/15 text-white font-bold rounded-xl text-xs sm:text-sm border-0 cursor-pointer transition-colors"
                   >
                     إلغاء
+                  </button>
+                  <button
+                    type="submit"
+                    className="w-full sm:flex-1 h-11 bg-lime-400 hover:bg-lime-500 text-black font-black rounded-xl text-xs sm:text-sm border-0 cursor-pointer shadow-lg shadow-lime-400/25 transition-all active:scale-[0.98]"
+                  >
+                    {editingProduct ? "تحديث الساعة" : "حفظ وإضافة الساعة"}
                   </button>
                 </div>
               </form>
