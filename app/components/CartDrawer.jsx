@@ -111,7 +111,10 @@ export default function CartDrawer() {
                       <button
                         type="button"
                         className="w-7 h-7 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 font-bold text-xs"
-                        onClick={() => updateCartQty(idx, -1)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          updateCartQty(idx, -1);
+                        }}
                         aria-label="إنقاص"
                       >
                         -
@@ -122,7 +125,10 @@ export default function CartDrawer() {
                       <button
                         type="button"
                         className="w-7 h-7 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 font-bold text-xs"
-                        onClick={() => updateCartQty(idx, 1)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          updateCartQty(idx, 1);
+                        }}
                         aria-label="زيادة"
                       >
                         +

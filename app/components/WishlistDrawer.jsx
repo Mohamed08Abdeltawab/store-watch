@@ -18,7 +18,10 @@ export default function WishlistDrawer() {
 
   if (!isWishlistOpen) return null;
 
-  const favoriteProducts = products.filter(p => wishlist.includes(p.id));
+  // Filter and deduplicate favorite products by ID
+  const favoriteProducts = products
+    .filter(p => wishlist.includes(p.id))
+    .filter((p, index, self) => index === self.findIndex(t => t.id === p.id));
 
   function addAllToCart() {
     favoriteProducts.forEach(p => {
@@ -134,7 +137,10 @@ export default function WishlistDrawer() {
                       <button
                         type="button"
                         className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 hover:underline mr-auto"
-                        onClick={() => toggleWishlist(p.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleWishlist(p.id);
+                        }}
                       >
                         حذف
                       </button>

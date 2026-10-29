@@ -56,7 +56,12 @@ export function CartProvider({ children }) {
 
     try {
       const savedWish = localStorage.getItem("ben10_wishlist");
-      if (savedWish) setWishlist(JSON.parse(savedWish));
+      if (savedWish) {
+        const parsed = JSON.parse(savedWish);
+        if (Array.isArray(parsed)) {
+          setWishlist([...new Set(parsed)]);
+        }
+      }
     } catch (e) {}
 
     setIsLoaded(true);
@@ -69,16 +74,16 @@ export function CartProvider({ children }) {
     }
   }, [cart, isLoaded]);
 
-  // Save Wishlist to LocalStorage
+  // Save Wishlist to LocalStorage (always deduplicated)
   useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem("ben10_wishlist", JSON.stringify(wishlist));
+      localStorage.setItem("ben10_wishlist", JSON.stringify([...new Set(wishlist)]));
     }
   }, [wishlist, isLoaded]);
 
   // Toast notifications
   function showToast(msg) {
-    const id = Date.now();
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     setToasts(prev => [...prev, { id, msg }]);
     setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== id));
@@ -109,12 +114,14 @@ export function CartProvider({ children }) {
 
   function updateCartQty(index, delta) {
     setCart(prev => {
-      const copy = [...prev];
-      copy[index].qty += delta;
-      if (copy[index].qty <= 0) {
-        copy.splice(index, 1);
-      }
-      return copy;
+      return prev
+        .map((item, i) => {
+          if (i === index) {
+            return { ...item, qty: item.qty + delta };
+          }
+          return item;
+        })
+        .filter(item => item.qty > 0);
     });
   }
 
@@ -125,16 +132,17 @@ export function CartProvider({ children }) {
 
   // Wishlist Management
   function toggleWishlist(productId) {
-    setWishlist(prev => {
-      const exists = prev.includes(productId);
-      if (exists) {
-        showToast("تمت الإزالة من المفضلة");
-        return prev.filter(id => id !== productId);
-      } else {
-        showToast("تمت الإضافة إلى المفضلة ❤️");
+    const isCurrentlyFav = wishlist.includes(productId);
+    if (isCurrentlyFav) {
+      setWishlist(prev => prev.filter(id => id !== productId));
+      showToast("تمت الإزالة من المفضلة");
+    } else {
+      setWishlist(prev => {
+        if (prev.includes(productId)) return prev;
         return [...prev, productId];
-      }
-    });
+      });
+      showToast("تمت الإضافة إلى المفضلة ❤️");
+    }
   }
 
   function isWishlisted(productId) {

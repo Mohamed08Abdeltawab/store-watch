@@ -57,6 +57,7 @@ export default function ProductCard({ product }) {
           }`}
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             toggleWishlist(product.id);
           }}
           aria-label={isFav ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
