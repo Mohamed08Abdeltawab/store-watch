@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ben10 | متجر الساعات الفاخرة والعصرية بضمان الوكيل المعتمد</title>
+  <meta name="description" content="متجر Ben10 المتخصص حصرياً في بيع الساعات الرجالية والحريمية والرياضية والذكية. منتجات أصلية 100%، معاينة وفحص قبل الدفع، شحن سريع لجميع محافظات مصر، وضمان استبدال معتمد.">
+  <meta name="theme-color" content="#0d1210">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23A3E635'><circle cx='12' cy='12' r='9' stroke='%23101211' stroke-width='2'/><polyline points='12 7 12 12 15 14' stroke='%23101211' stroke-width='2'/></svg>">
+  
+  <!-- Master Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Subtle Texture Overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Announcement Bar -->
+  <aside class="announcement" aria-label="شريط الإعلانات">
+    <div class="container announcement__inner">
+      <div class="announcement__group">
+        <span>⌚ <strong>متجر Ben10 للساعات:</strong> معاينة وفحص الساعة بالكامل مع المندوب قبل دفع أي مليم!</span>
+        <span class="announcement__dot"></span>
+        <span style="color: rgba(255,255,255,0.7);">شحن مجاني للطلبات الأكثر من 5,000 ج.م</span>
+      </div>
+      <div class="announcement__group">
+        <a class="announcement__link" href="tel:+201065712366">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>خدمة العملاء: 0106 571 2366</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sticky Site Header -->
+  <header class="site-header" id="siteHeader">
+    <div class="container">
+      <div class="header-main">
+        <!-- Brand Logo -->
+        <a class="brand" href="#" aria-label="Ben10 الرئيسية">
+          <span class="brand__mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"></circle>
+              <polyline points="12 7 12 12 15 14"></polyline>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+            </svg>
+          </span>
+          <span class="brand__text">
+            <span class="brand__name">BEN<span>10</span></span>
+            <span class="brand__sub">WATCHES & CHRONO</span>
+          </span>
+        </a>
+
+        <!-- Fast Live Search Trigger -->
+        <button class="simple-search-trigger" type="button" id="searchTrigger" aria-label="ابحث في الساعات">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span>ابحث عن ساعة، كرونوغراف، أوتوماتيك، ذكية...</span>
+        </button>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <a class="header-action header-action--wa" href="https://wa.me/201065712366?text=مرحباً%20Ben10،%20أريد%20الاستفسار%20عن%20الساعات%20المتاحة" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"></path>
+            </svg>
+            <span>طلب واتساب</span>
+          </a>
+
+          <button class="header-action header-action--cart" type="button" id="cartTrigger" aria-label="سلة التسوق">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span>السلة</span>
+            <span class="header-action__count" id="cartCount" style="display: none;">0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Bar -->
+      <nav class="simple-desktop-nav" aria-label="أقسام الساعات">
+        <a href="#hero" class="is-active">الرئيسية</a>
+        <a href="#categories">أقسام الساعات</a>
+        <a href="#catalog">تشكيلات Ben10</a>
+        <a href="#deal" class="is-hot">🔥 عروض اليوم</a>
+        <a href="#guarantees">لماذا Ben10؟</a>
+        <a href="#reviews">آراء العملاء</a>
+        <a href="tel:+201065712366">تواصل معنا</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+      <div class="container hero__inner">
+        <div class="hero__copy">
+          <div class="eyebrow">
+            <span class="eyebrow__dot"></span>
+            <span>تشكيلات الساعات الحصرية لعام 2026</span>
+          </div>
+
+          <h1 class="hero__title">
+            ساعات تصنع الفرق،<br>
+            <span class="accent">وفخامة تليق بمعصمك</span>
+          </h1>
+
+          <p class="hero__lead">
+            استكشف عالم Ben10 للساعات الفاخرة؛ تصاميم ميكانيكية وكلاسيكية ورياضية متقنة الصنع بزجاج ياقوتي لا يخدش، مع ميزة الفحص والمعاينة الكاملة قبل الدفع وضمان استبدال معتمد.
+          </p>
+
+          <div class="hero__actions">
+            <a href="#catalog" class="btn btn--green">
+              <span>تصفح تشكيلات الساعات</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </a>
+            <a href="#deal" class="btn btn--ghost">
+              <span>عروض التخفيض الحصرية</span>
+            </a>
+          </div>
+
+          <div class="hero__proof">
+            <div class="hero__stars">
+              ★★★★★
+            </div>
+            <div class="hero__proof-text">
+              <b>4.9 / 5 تقييم العملاء</b> · أكثر من 15,000 عميل راضٍ في جميع محافظات مصر
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Visual Showcase -->
+        <div class="hero__visual">
+          <div class="hero__ring"></div>
+          
+          <div class="float-chip float-chip--top">
+            <div class="float-chip__icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <div>
+              <b>ضمان معتمد 12 شهر</b>
+              <small>استبدال فوري بدون تعقيد</small>
+            </div>
+          </div>
+
+          <div class="hero__arch">
+            <div class="hero__arch-inner">
+              <img src="img/ben10-classic-concept-01.png" alt="ساعة Ben10 رويال كلاسيك">
+            </div>
+          </div>
+
+          <div class="float-chip float-chip--bottom">
+            <div class="float-chip__icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </div>
+            <div>
+              <b>شحن سريع 48 ساعة</b>
+              <small>معاينة وفحص قبل الاستلام</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee Ticker -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker__track">
+        <div class="ticker__group">
+          <span class="ticker__item">فحص ومعاينة الساعة قبل الدفع للمندوب</span>
+          <span class="ticker__item">ساعات أصلية 100% بضمان الوكيل المعتمد</span>
+          <span class="ticker__item">زجاج ياقوتي سافاير فائق الصلابة ومقاوم للخدش</span>
+          <span class="ticker__item">شحن سريع لجميع محافظات مصر خلال 24 - 48 ساعة</span>
+          <span class="ticker__item">علبة هدايا جلدية فاخرة مجانية مع كل ساعة</span>
+          <span class="ticker__item">دفع عند الاستلام أو عبر إنستاباي والمحافظ الذكية</span>
+        </div>
+        <div class="ticker__group">
+          <span class="ticker__item">فحص ومعاينة الساعة قبل الدفع للمندوب</span>
+          <span class="ticker__item">ساعات أصلية 100% بضمان الوكيل المعتمد</span>
+          <span class="ticker__item">زجاج ياقوتي سافاير فائق الصلابة ومقاوم للخدش</span>
+          <span class="ticker__item">شحن سريع لجميع محافظات مصر خلال 24 - 48 ساعة</span>
+          <span class="ticker__item">علبة هدايا جلدية فاخرة مجانية مع كل ساعة</span>
+          <span class="ticker__item">دفع عند الاستلام أو عبر إنستاباي والمحافظ الذكية</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <section class="stats" aria-label="إحصائيات المتجر">
+      <div class="container">
+        <div class="stats__grid">
+          <div class="stats__item">
+            <div class="stats__num">15,000<span>+</span></div>
+            <div class="stats__label">ساعة تم تسليمها بنجاح</div>
+          </div>
+          <div class="stats__item">
+            <div class="stats__num">100<span>%</span></div>
+            <div class="stats__label">منتجات أصلية بضمان موثق</div>
+          </div>
+          <div class="stats__item">
+            <div class="stats__num">48<span>ساعة</span></div>
+            <div class="stats__label">متوسط زمن التوصيل المنزلي</div>
+          </div>
+          <div class="stats__item">
+            <div class="stats__num">4.9<span>★</span></div>
+            <div class="stats__label">معدل رضا وتقييم العملاء</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bento Categories Section -->
+    <section class="section" id="categories" aria-label="أقسام الساعات">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow" style="margin-bottom: 0.6rem;">تشكيلات الساعات المتخصصة</div>
+            <h2 class="section-title">اختر فئتك المفضلة من <span>Ben10</span></h2>
+          </div>
+          <p class="section-note">
+            صُممت كل مجموعة لتلبي احتياجات متباينة، من الساعات الكلاسيكية للمناسبات الرسمية إلى كرونوغراف السرعة وساعات المغامرات الرياضية.
+          </p>
+        </div>
+
+        <div class="cat-grid-bento">
+          <!-- Bento 1: Classic Large -->
+          <div class="cat-card-bento" onclick="window.ben10App.resetFilters(); document.querySelector('[data-category=classic]')?.click(); location.href='#catalog';">
+            <img src="img/ben10-classic-concept-01.png" alt="ساعات كلاسيكية">
+            <div class="cat-card-bento__content">
+              <span class="cat-card-bento__tag">الأكثر شهرة وفخامة</span>
+              <h3 class="cat-card-bento__title">الساعات الكلاسيكية الملكية</h3>
+              <p class="cat-card-bento__sub">تصاميم هادئة وأناقة أبدية بلمسات الستانلس ستيل المصقول والجلد الطبيعي</p>
+            </div>
+          </div>
+
+          <!-- Bento 2: Chronograph -->
+          <div class="cat-card-bento" onclick="window.ben10App.resetFilters(); document.querySelector('[data-category=chrono]')?.click(); location.href='#catalog';">
+            <img src="img/ben10-chronograph-concept-01.png" alt="ساعات كرونوغراف">
+            <div class="cat-card-bento__content">
+              <span class="cat-card-bento__tag">دقة هندسية فائقة</span>
+              <h3 class="cat-card-bento__title">ساعات الكرونوغراف</h3>
+              <p class="cat-card-bento__sub">3 مواني فرعية وتاكيميتر سرعة</p>
+            </div>
+          </div>
+
+          <!-- Bento 3: Sports -->
+          <div class="cat-card-bento" onclick="window.ben10App.resetFilters(); document.querySelector('[data-category=sport]')?.click(); location.href='#catalog';">
+            <img src="img/ben10-sport-concept-01.png" alt="ساعات رياضية">
+            <div class="cat-card-bento__content">
+              <span class="cat-card-bento__tag">قوة وتحمل</span>
+              <h3 class="cat-card-bento__title">الساعات الرياضية</h3>
+              <p class="cat-card-bento__sub">مقاومة للصدمات والماء حتى 100M</p>
+            </div>
+          </div>
+
+          <!-- Bento 4: Automatic -->
+          <div class="cat-card-bento" onclick="window.ben10App.resetFilters(); document.querySelector('[data-category=automatic]')?.click(); location.href='#catalog';">
+            <img src="img/ben10-chronograph-concept-01.png" alt="ساعات أوتوماتيك">
+            <div class="cat-card-bento__content">
+              <span class="cat-card-bento__tag">بدون بطارية</span>
+              <h3 class="cat-card-bento__title">ساعات أوتوماتيك</h3>
+              <p class="cat-card-bento__sub">تروس ميكانيكية وهيكل سكيلتون كاشف</p>
+            </div>
+          </div>
+
+          <!-- Bento 5: Smart -->
+          <div class="cat-card-bento" onclick="window.ben10App.resetFilters(); document.querySelector('[data-category=smart]')?.click(); location.href='#catalog';">
+            <img src="img/ben10-sport-concept-01.png" alt="ساعات ذكية">
+            <div class="cat-card-bento__content">
+              <span class="cat-card-bento__tag">شاشة AMOLED ومكالمات</span>
+              <h3 class="cat-card-bento__title">الساعات الذكية Omni</h3>
+              <p class="cat-card-bento__sub">تتبع الصحة والنشاط وبطارية تدوم 10 أيام</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Product Catalog Section -->
+    <section class="section catalog-section" id="catalog" aria-label="كتالوج الساعات">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow" style="margin-bottom: 0.6rem;">الكتالوج الكامل</div>
+            <h2 class="section-title">تشكيلات ساعات <span>Ben10</span> الحصرية</h2>
+          </div>
+          <p class="section-note">
+            جميع الساعات مصحوبة ببطاقة ضمان رسمية، علبة فاخرة مناسبة للإهداء، ومشمولة بسياسة المعاينة قبل الاستلام.
+          </p>
+        </div>
+
+        <!-- Filter & Sorting Toolbar -->
+        <div class="catalog-toolbar">
+          <div class="filter-tabs" id="filterTabs">
+            <button type="button" class="filter-tab is-active" data-category="all">جميع الساعات</button>
+            <button type="button" class="filter-tab" data-category="classic">ساعات كلاسيكية</button>
+            <button type="button" class="filter-tab" data-category="chrono">كرونوغراف</button>
+            <button type="button" class="filter-tab" data-category="sport">ساعات رياضية</button>
+            <button type="button" class="filter-tab" data-category="automatic">أوتوماتيك</button>
+            <button type="button" class="filter-tab" data-category="smart">ساعات ذكية</button>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <label for="sortSelect" style="font-size: 0.78rem; font-weight: 700; color: var(--muted);">ترتيب حسب:</label>
+            <select class="sort-select" id="sortSelect">
+              <option value="featured">المميز أولاً</option>
+              <option value="price-low">السعر: من الأقل للأعلى</option>
+              <option value="price-high">السعر: من الأعلى للأقل</option>
+              <option value="rating">الأعلى تقييماً</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Products Grid Container -->
+        <div class="p-grid" id="productsGrid">
+          <!-- Dynamically populated by js/app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Deal of the Day Section -->
+    <section class="section deal-section" id="deal" aria-label="عرض اليوم الحصري">
+      <div class="container deal__inner">
+        <div>
+          <div class="eyebrow" style="background: rgba(163,230,53,0.18);">عرض لفترة محدودة</div>
+          <h2 class="deal__title">
+            ساعة Ben10 أبكس كرونوغراف سبيد<br>
+            <span>بخصم استثنائي 700 ج.م</span>
+          </h2>
+          <p class="deal__desc">
+            احصل على أقوى ساعات الكرونوغراف بهيكل التيتانيوم المقاوم للخدش وزجاج السافاير الياقوتي، مع شحن مجاني لكافة المحافظات وعلبة خشبية فاخرة للإهداء. ينتهي العرض فور نفاد الكمية!
+          </p>
+
+          <!-- Countdown Boxes -->
+          <div class="countdown">
+            <div class="cd-box">
+              <b id="cd-hours">18</b>
+              <span>ساعة</span>
+            </div>
+            <div class="cd-box">
+              <b id="cd-mins">42</b>
+              <span>دقيقة</span>
+            </div>
+            <div class="cd-box">
+              <b id="cd-secs">15</b>
+              <span>ثانية</span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.9rem; margin-top: 2rem;">
+            <button type="button" class="btn btn--green" onclick="window.ben10App.openCheckoutModal('ben10-apex-chrono')">
+              اطلب العرض الآن بـ 4,890 ج.م
+            </button>
+            <button type="button" class="btn btn--ghost" onclick="window.ben10App.openQuickView('ben10-apex-chrono')">
+              مواصفات الساعة
+            </button>
+          </div>
+        </div>
+
+        <div class="deal__poster">
+          <div class="deal__stamp">
+            <b>وفر</b>
+            <span>700 ج.م</span>
+          </div>
+          <img src="img/ben10-chronograph-concept-01.png" alt="ساعة Ben10 أبكس كرونوغراف">
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Ben10 Guarantees Section -->
+    <section class="section" id="guarantees" aria-label="ضمانات المتجر">
+      <div class="container">
+        <div class="section-head" style="text-align: center; justify-content: center;">
+          <div style="max-width: 600px; margin-inline: auto;">
+            <div class="eyebrow" style="margin-bottom: 0.6rem;">ضمان وثقة تامة</div>
+            <h2 class="section-title">لماذا تشتري ساعتك من <span>Ben10</span>؟</h2>
+            <p class="section-note" style="margin-inline: auto;">
+              نحرص على تقديم تجربة شراء إلكترونية آمنة بنسبة 100% وبدون أي مخاطرة على الإطلاق.
+            </p>
+          </div>
+        </div>
+
+        <div class="values-grid">
+          <div class="value-card">
+            <span class="value-card__num">01</span>
+            <div class="value-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <h3>ساعات أصلية بضمان معتمد</h3>
+            <p>جميع الساعات أصلية ومفحوصة بدقة مع بطاقة ضمان رسمية مختومة لمدة 12 إلى 24 شهراً ضد عيوب الصناعة.</p>
+          </div>
+
+          <div class="value-card">
+            <span class="value-card__num">02</span>
+            <div class="value-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <h3>معاينة وفحص قبل الدفع</h3>
+            <p>من حقك فحص الساعة وفتح العلبة وتجربتها على معصمك أمام مندوب الشحن قبل سداد أي مبلغ مالي.</p>
+          </div>
+
+          <div class="value-card">
+            <span class="value-card__num">03</span>
+            <div class="value-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+            </div>
+            <h3>شحن سريع 24-48 ساعة</h3>
+            <p>شبكة شحن تغطي كافة مدن ومحافظات مصر مع إمكانية تتبع مسار الشحنة خطوة بخطوة حتى باب منزلك.</p>
+          </div>
+
+          <div class="value-card">
+            <span class="value-card__num">04</span>
+            <div class="value-card__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </div>
+            <h3>تغليف هدايا فاخر مجاناً</h3>
+            <p>تصلك الساعة داخل علبة فخمة مبطنة بالمخمل ومحكمة الغلق مع حقيبة ورقية فاخرة تناسب تقديمها كهدية راقية.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Customer Reviews Section -->
+    <section class="section" id="reviews" style="background: var(--cream);" aria-label="تقييمات المشترين">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow" style="margin-bottom: 0.6rem;">تجارب حقيقية</div>
+            <h2 class="section-title">ماذا يقول عملاء <span>Ben10</span>؟</h2>
+          </div>
+          <p class="section-note">
+            شهادات موثقة من عملاء قاموا بمعاينة واستلام ساعاتهم في مختلف المحافظات.
+          </p>
+        </div>
+
+        <div class="t-grid">
+          <div class="t-card">
+            <div class="t-card__stars">★★★★★</div>
+            <p class="t-card__quote">
+              "الساعة وصلتني في أقل من 36 ساعة، التغليف فخم جداً وعلبة شيك تليق كهدية. عاينت الساعة وجربتها قبل ما أدفع قرش للمندوب، الكواليتي والخامات أنضف بكتير من الصور. شكراً Ben10!"
+            </p>
+            <div class="t-card__author">
+              <div class="t-avatar">أ.ش</div>
+              <div>
+                <div class="t-name">م. أحمد الشناوي</div>
+                <div class="t-city">التجمع الخامس، القاهرة · اشترى ساعة أبكس كرونوغراف</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="t-card">
+            <div class="t-card__stars">★★★★★</div>
+            <p class="t-card__quote">
+              "كنت متردد أشتري ساعة أونلاين، لكن ميزة المعاينة قبل الدفع شجعتني. الساعة رويال كلاسيك تحفة فنية بكل معنى الكلمة، وزنها محترم على الإيد والزجاج السافاير حقيقي مش بلاستيك. تقييمي 10 من 10."
+            </p>
+            <div class="t-card__author">
+              <div class="t-avatar">ك.ع</div>
+              <div>
+                <div class="t-name">د. كريم عبد العزيز</div>
+                <div class="t-city">سموحة، الإسكندرية · اشترى ساعة رويال هيريتدج</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="t-card">
+            <div class="t-card__stars">★★★★★</div>
+            <p class="t-card__quote">
+              "الساعة الرياضية أكتيف إكستريم ممتازة في الجيم والجري ومقاومة للعرق والمياه بشكل رائع. خدمة العملاء على الواتساب سريعة ومحترمة جداً في المتابعة بعد البيع."
+            </p>
+            <div class="t-card__author">
+              <div class="t-avatar">ع.ج</div>
+              <div>
+                <div class="t-name">كابتن عمر الجيار</div>
+                <div class="t-city">الشيخ زايد، الجيزة · اشترى ساعة أكتيف سبورت</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer__brand">
+          <a class="brand" href="#">
+            <span class="brand__mark">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="9"></circle>
+                <polyline points="12 7 12 12 15 14"></polyline>
+              </svg>
+            </span>
+            <span class="brand__text">
+              <span class="brand__name">BEN<span>10</span></span>
+              <span class="brand__sub">WATCHES & CHRONO</span>
+            </span>
+          </a>
+          <p>
+            علامة Ben10 الرائدة في الساعات الأصلية الفاخرة والعصرية. نحرص على تقديم أرقى التصاميم وأدق الماكينات مع أعلى معايير الأمان والمعاينة قبل الدفع.
+          </p>
+        </div>
+
+        <div>
+          <h3>روابط سريعة</h3>
+          <ul class="footer-links">
+            <li><a href="#hero">الرئيسية</a></li>
+            <li><a href="#catalog">تشكيلات الساعات</a></li>
+            <li><a href="#deal">عروض التخفيض</a></li>
+            <li><a href="#guarantees">شروط الضمان</a></li>
+            <li><a href="#reviews">آراء المشترين</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>خدمة العملاء</h3>
+          <ul class="footer-links">
+            <li><a href="tel:+201065712366">اتصل بنا: 0106 571 2366</a></li>
+            <li><a href="https://wa.me/201065712366" target="_blank">المحادثة عبر واتساب</a></li>
+            <li><a href="#guarantees">سياسة الاستبدال خلال 14 يوماً</a></li>
+            <li><a href="#guarantees">فحص ومعاينة المنتج</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>بيانات الاتصال</h3>
+          <ul class="footer-contact">
+            <li>
+              <span>📍 القاهرة الجديدة، التجمع الخامس، جمهورية مصر العربية</span>
+            </li>
+            <li>
+              <span>📞 هاتف: 0106 571 2366</span>
+            </li>
+            <li>
+              <span>✉️ البريد: care@ben10watches.com</span>
+            </li>
+            <li>
+              <span>⏰ المواعيد: يومياً من 10:00 صباحاً حتى 11:00 مساءً</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 Ben10 Watches — جميع الحقوق محفوظة. جميع الساعات أصلية 100% والدفع بعد المعاينة.</div>
+        <div style="display: flex; gap: 0.6rem; color: rgba(255,255,255,0.7); font-weight: 700;">
+          <span>الدفع عند الاستلام</span> · <span>إنستاباي / InstaPay</span> · <span>محافظ إلكترونية</span> · <span>بطاقات بنكية</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Slide-Out Cart Drawer -->
+  <div class="drawer" id="cartDrawer" aria-hidden="true" role="dialog" aria-label="سلة التسوق">
+    <div class="drawer__scrim"></div>
+    <aside class="drawer__panel">
+      <div class="drawer__head">
+        <div class="drawer__title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>سلة التسوق</span>
+        </div>
+        <button class="drawer__close" type="button" id="cartClose" aria-label="إغلاق السلة">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Free shipping progress -->
+      <div class="drawer__progress" id="cartShippingBar">
+        <div class="drawer__progress-text" id="cartShippingText"></div>
+        <div class="drawer__progress-bar">
+          <div class="drawer__progress-fill" id="cartShippingFill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Cart Items Body -->
+      <div class="drawer__body" id="cartBody">
+        <!-- Dynamically rendered by js/app.js -->
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="drawer__foot">
+        <div class="drawer__subtotal">
+          <span>إجمالي الساعات:</span>
+          <b id="cartSubtotal">0 ج.م</b>
+        </div>
+        <button type="button" class="btn btn--green" id="btnCheckoutDrawer" style="width: 100%;">
+          متابعة إتمام الطلب (معاينة قبل الدفع)
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Direct Fast Checkout Modal -->
+  <div class="modal" id="checkoutModal" aria-hidden="true" role="dialog" aria-label="تأكيد الطلب الفوري">
+    <div class="modal__scrim"></div>
+    <div class="modal__panel">
+      <div class="modal__head">
+        <div class="modal__title">
+          تأكيد الطلب الفوري
+          <span>اكتب بياناتك وسنتصل بك فوراً لتأكيد ميعاد التسليم</span>
+        </div>
+        <button class="modal__close" type="button" id="checkoutClose" aria-label="إغلاق">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form class="checkout-form" id="checkoutForm" novalidate>
+        <div class="field" id="field-name">
+          <label for="co-name">الاسم بالكامل *</label>
+          <input id="co-name" type="text" placeholder="اكتب اسمك الثلاثي هنا" required autocomplete="name">
+          <div class="field__err">يرجى كتابة الاسم بشكل صحيح</div>
+        </div>
+
+        <div class="field" id="field-phone">
+          <label for="co-phone">رقم الموبايل *</label>
+          <input id="co-phone" type="tel" placeholder="010xxxxxxxx أو 011/012/015" required autocomplete="tel" inputmode="tel">
+          <div class="field__err">يرجى كتابة رقم موبايل صحيح (11 رقم يبدأ بـ 01)</div>
+        </div>
+
+        <div class="field">
+          <label for="co-governorate">المحافظة (حساب الشحن التلقائي) *</label>
+          <select id="co-governorate">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <div class="field" id="field-addr">
+          <label for="co-addr">العنوان بالتفصيل *</label>
+          <input id="co-addr" type="text" placeholder="المنطقة - اسم الشارع - رقم العقار / الشقة" required autocomplete="street-address">
+          <div class="field__err">يرجى كتابة العنوان بالتفصيل لضمان سرعة الوصول</div>
+        </div>
+
+        <div class="field">
+          <label>طريقة الدفع المتاحة</label>
+          <div class="pay-methods">
+            <label class="pay-opt is-active">
+              <input type="radio" name="pay" value="cod" checked>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
+              </svg>
+              <span>عند الاستلام</span>
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="pay" value="instapay">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+              <span>إنستاباي / محفظة</span>
+            </label>
+            <label class="pay-opt">
+              <input type="radio" name="pay" value="card">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+              <span>بطاقة بنكية</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Dynamic Invoice Summary -->
+        <div class="order-summary">
+          <div class="summary-row">
+            <span>قيمة الساعات:</span>
+            <b id="co-subtotal">0 ج.م</b>
+          </div>
+          <div class="summary-row">
+            <span>مصاريف الشحن:</span>
+            <span id="co-shipping">50 ج.م</span>
+          </div>
+          <div class="summary-row summary-row--total">
+            <span>الإجمالي المستحق للدفع:</span>
+            <b id="co-total">0 ج.م</b>
+          </div>
+        </div>
+
+        <button class="btn-submit-order" type="submit" id="btnSubmitOrder">
+          اضغط لتأكيد الطلب
+        </button>
+
+        <button class="btn-wa-order" type="button" id="btnWaOrder">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"></path>
+          </svg>
+          <span>أو أرسل تفاصيل الطلب فوراً عبر واتساب</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div class="modal" id="quickViewModal" aria-hidden="true" role="dialog" aria-label="نظرة سريعة على الساعة">
+    <div class="modal__scrim"></div>
+    <div class="modal__panel" style="width: min(740px, 100%);">
+      <div class="modal__head">
+        <div class="modal__title">تفاصيل ومواصفات الساعة</div>
+        <button class="modal__close" type="button" id="quickViewClose" aria-label="إغلاق">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div id="quickViewContent">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Search Overlay -->
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true" role="dialog" aria-label="البحث عن ساعة">
+    <div class="search-panel">
+      <div class="search-panel__head">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ben10-green)" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="search" id="searchInput" placeholder="اكتب اسم الساعة أو الموديل..." autocomplete="off">
+        <button type="button" id="searchClose" style="color: #fff; padding: 0.5rem;" aria-label="إغلاق البحث">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="search-popular">
+        <span>كلمات شائعة:</span>
+        <button type="button">كرونوغراف</button>
+        <button type="button">رويال كلاسيك</button>
+        <button type="button">تيتانيوم</button>
+        <button type="button">أوتوماتيك سكيلتون</button>
+        <button type="button">ساعة ذكية AMOLED</button>
+        <button type="button">مقاومة ماء 300M</button>
+      </div>
+
+      <div class="search-results-grid" id="searchResults">
+        <!-- Populated live -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+  <!-- Floating Buttons -->
+  <div class="floating-actions">
+    <a class="btn-float btn-float--wa" href="https://wa.me/201065712366" target="_blank" rel="noopener" aria-label="تواصل عبر واتساب">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"></path>
+      </svg>
+    </a>
+    <button class="btn-float btn-float--top" id="scrollTopBtn" type="button" aria-label="الرجوع للأعلى">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Next.js build output
+/.next/
+/out/
+
+# SQLite Database & Write-Ahead Logs
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# REA tool folder (tool repository)
+/rea/
+
+# Environment variables
+.env
+.env*.local
+!.env.example
+
+# Debug and Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Production build
+/build
+/dist
+
+# OS & IDE Files
+.DS_Store
+*.pem
+Thumbs.db
+.vscode/
+.idea/

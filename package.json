@@ -1,0 +1,27 @@
+{
+  "name": "ben10-watch-store",
+  "version": "1.0.0",
+  "description": "Ben10 Luxury Watch E-Commerce Store - Reverse engineered from high-conversion architecture",
+  "main": "server.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [
+    "watches",
+    "ecommerce",
+    "ben10",
+    "luxury-watches",
+    "egypt"
+  ],
+  "author": "Ben10 Watches",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^13.0.3",
+    "next": "^16.4.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  }
+}
