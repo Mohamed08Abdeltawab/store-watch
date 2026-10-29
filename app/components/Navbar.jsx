@@ -198,12 +198,26 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <a href="/#guarantees" className="px-3 py-1.5 text-neutral-400 hover:text-white transition-colors">
+            <Link
+              href="/why-ben10"
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                pathname === "/why-ben10" || pathname === "/why-us"
+                  ? "text-lime-400 bg-white/10"
+                  : "text-neutral-400 hover:text-white"
+              }`}
+            >
               لماذا Ben10؟
-            </a>
-            <a href="/#contact" className="px-3 py-1.5 text-neutral-400 hover:text-white transition-colors">
+            </Link>
+            <Link
+              href="/customer-service"
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                pathname === "/customer-service" || pathname === "/contact"
+                  ? "text-lime-400 bg-white/10"
+                  : "text-neutral-400 hover:text-white"
+              }`}
+            >
               خدمة العملاء
-            </a>
+            </Link>
           </div>
         </nav>
       </div>

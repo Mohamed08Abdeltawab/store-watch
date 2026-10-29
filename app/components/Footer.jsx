@@ -66,10 +66,10 @@ export default function Footer() {
               خدمة العملاء والضمان
             </h3>
             <ul className="space-y-2 text-xs">
+              <li><Link href="/customer-service" className="hover:text-lime-400 transition-colors font-bold text-white">مركز خدمة العملاء وتتبع الطلب</Link></li>
+              <li><Link href="/why-ben10" className="hover:text-lime-400 transition-colors font-bold text-white">لماذا Ben10؟ (معايير الأصالة والضمان)</Link></li>
               <li><a href="tel:+201065712366" className="hover:text-lime-400 transition-colors">اتصل بنا: 0106 571 2366</a></li>
               <li><a href="https://wa.me/201065712366" target="_blank" rel="noopener noreferrer" className="hover:text-lime-400 transition-colors">المحادثة والمساعدة عبر واتساب</a></li>
-              <li><a href="/#guarantees" className="hover:text-lime-400 transition-colors">فحص ومعاينة المنتج قبل الدفع</a></li>
-              <li><a href="/#guarantees" className="hover:text-lime-400 transition-colors">سياسة الاستبدال خلال 14 يوماً</a></li>
               <li><Link href="/admin" className="hover:text-lime-400 transition-colors">لوحة تحكم الإدارة (الأدمن)</Link></li>
             </ul>
           </div>

@@ -124,6 +124,8 @@ export default function MobileMenuDrawer() {
                 { href: "/shop?category=chrono", label: "كرونوغراف ورياضية", icon: "⏱️" },
                 { href: "/shop?category=smart", label: "ساعات ذكية", icon: "⚡" },
                 { href: "/shop?category=automatic", label: "أوتوماتيك ميكانيكية", icon: "⚙️" },
+                { href: "/why-ben10", label: "لماذا Ben10؟ (الضمانات)", icon: "🛡️" },
+                { href: "/customer-service", label: "خدمة العملاء والدعم", icon: "💬" },
               ].map(item => (
                 <li key={item.href}>
                   <Link
