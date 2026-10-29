@@ -43,8 +43,9 @@ export default function AdminDashboardPage() {
   const [notification, setNotification] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadError, setUploadError] = useState("");
+  const [manualImageUrl, setManualImageUrl] = useState("");
 
-  // Product Form State
+  // Product Form State (Up to 10 images)
   const [form, setForm] = useState({
     name: "",
     sub: "",
@@ -57,6 +58,7 @@ export default function AdminDashboardPage() {
     tag: "best",
     badge_text: "الأكثر طلباً",
     image: "/img/ben10-classic-concept-01.png",
+    images: ["/img/ben10-classic-concept-01.png"],
     description: "",
     in_stock: true
   });
@@ -100,16 +102,30 @@ export default function AdminDashboardPage() {
     router.push("/admin/login");
   }
 
-  // Handle Image Upload from device into source code (public/uploads)
-  async function handleImageUpload(e) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Handle Multi-Image Upload (Up to 10 images) into source files (public/uploads)
+  async function handleMultipleImageUpload(e) {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const currentCount = form.images.length;
+    const remainingSlots = 10 - currentCount;
+
+    if (remainingSlots <= 0) {
+      alert("وصلت للحد الأقصى المسموح به (10 صور للساعة الواحدة)");
+      e.target.value = "";
+      return;
+    }
+
+    const filesToUpload = files.slice(0, remainingSlots);
+    if (files.length > remainingSlots) {
+      notify(`تم أخذ أول ${remainingSlots} صور فقط للوصول إلى الحد الأقصى (10 صور)`);
+    }
 
     setUploadingImage(true);
     setUploadError("");
 
     const formData = new FormData();
-    formData.append("file", file);
+    filesToUpload.forEach(f => formData.append("files", f));
 
     try {
       const res = await fetch("/api/upload", {
@@ -117,17 +133,90 @@ export default function AdminDashboardPage() {
         body: formData
       });
       const data = await res.json();
-      if (data.success) {
-        setForm(prev => ({ ...prev, image: data.url }));
-        notify("تم رفع الصورة وحفظها في مجلد الملفات بنجاح");
+      if (data.success && Array.isArray(data.urls)) {
+        setForm(prev => {
+          const combined = [...prev.images, ...data.urls].slice(0, 10);
+          return {
+            ...prev,
+            images: combined,
+            image: combined[0] || prev.image
+          };
+        });
+        notify(`تم رفع وتخزين ${data.urls.length} صور في ملفات المتجر بنجاح`);
       } else {
-        setUploadError(data.error || "فشل رفع الصورة");
+        setUploadError(data.error || "فشل رفع الصور");
       }
     } catch (err) {
-      setUploadError("حدث خطأ في الاتصال أثناء رفع الصورة");
+      setUploadError("حدث خطأ أثناء رفع الصور");
     } finally {
       setUploadingImage(false);
+      e.target.value = "";
     }
+  }
+
+  // Add image by manual URL
+  function handleAddManualImage() {
+    const url = manualImageUrl.trim();
+    if (!url) return;
+    if (form.images.length >= 10) {
+      alert("وصلت للحد الأقصى (10 صور)");
+      return;
+    }
+    setForm(prev => {
+      const combined = [...prev.images, url].slice(0, 10);
+      return {
+        ...prev,
+        images: combined,
+        image: combined[0] || prev.image
+      };
+    });
+    setManualImageUrl("");
+    notify("تمت إضافة رابط الصورة بنجاح");
+  }
+
+  // Set any image as primary cover (index 0)
+  function handleSetAsCover(idx) {
+    if (idx === 0) return;
+    setForm(prev => {
+      const imgs = [...prev.images];
+      const [chosen] = imgs.splice(idx, 1);
+      imgs.unshift(chosen);
+      return {
+        ...prev,
+        images: imgs,
+        image: imgs[0]
+      };
+    });
+    notify("تم تعيين الصورة كغلاف رئيسي للساعة");
+  }
+
+  // Remove an image from the list
+  function handleRemoveImage(idx) {
+    setForm(prev => {
+      const imgs = prev.images.filter((_, i) => i !== idx);
+      return {
+        ...prev,
+        images: imgs,
+        image: imgs[0] || "/img/ben10-classic-concept-01.png"
+      };
+    });
+  }
+
+  // Move image order left / right
+  function handleMoveImage(idx, dir) {
+    const targetIdx = idx + dir;
+    if (targetIdx < 0 || targetIdx >= form.images.length) return;
+    setForm(prev => {
+      const imgs = [...prev.images];
+      const temp = imgs[idx];
+      imgs[idx] = imgs[targetIdx];
+      imgs[targetIdx] = temp;
+      return {
+        ...prev,
+        images: imgs,
+        image: imgs[0]
+      };
+    });
   }
 
   async function handleDeleteProduct(id, name) {
@@ -150,6 +239,11 @@ export default function AdminDashboardPage() {
   async function handleSaveProduct(e) {
     e.preventDefault();
 
+    if (form.images.length === 0) {
+      alert("يرجى إضافة صورة واحدة على الأقل للساعة");
+      return;
+    }
+
     const selectedColor = form.color === "custom"
       ? (form.custom_color.trim() || "")
       : form.color;
@@ -157,6 +251,8 @@ export default function AdminDashboardPage() {
     const payload = {
       ...form,
       color: selectedColor,
+      image: form.images[0] || form.image,
+      images: form.images.slice(0, 10),
       price: parseFloat(form.price),
       old_price: form.old_price ? parseFloat(form.old_price) : null
     };
@@ -216,9 +312,11 @@ export default function AdminDashboardPage() {
       tag: "best",
       badge_text: "الأكثر طلباً",
       image: "/img/ben10-classic-concept-01.png",
+      images: ["/img/ben10-classic-concept-01.png"],
       description: "",
       in_stock: true
     });
+    setManualImageUrl("");
     setUploadError("");
   }
 
@@ -228,6 +326,10 @@ export default function AdminDashboardPage() {
     const isStdColor = STANDARD_COLORS.some(c => c.value !== "custom" && c.value === p.color);
     const colorVal = !p.color ? "" : (isStdColor ? p.color : "custom");
     const customColorVal = isStdColor ? "" : (p.color || "");
+
+    const initialImages = Array.isArray(p.images) && p.images.length > 0
+      ? p.images.slice(0, 10)
+      : (p.image ? [p.image] : ["/img/ben10-classic-concept-01.png"]);
 
     setForm({
       name: p.name,
@@ -240,10 +342,12 @@ export default function AdminDashboardPage() {
       old_price: p.old_price || "",
       tag: p.tag || "best",
       badge_text: p.badge_text || "",
-      image: p.image,
+      image: initialImages[0],
+      images: initialImages,
       description: p.description || p.overview || "",
       in_stock: p.in_stock === 1 || p.in_stock === true
     });
+    setManualImageUrl("");
     setUploadError("");
     setShowAddModal(true);
   }
@@ -448,66 +552,87 @@ export default function AdminDashboardPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map(p => (
-                    <tr key={p.id} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.05)", fontSize: "0.85rem" }}>
-                      <td style={{ padding: "0.8rem 1rem" }}>
-                        <img src={p.image} alt={p.name} style={{ width: "48px", height: "48px", objectFit: "contain", background: "#fff", borderRadius: "8px", padding: "2px" }} />
-                      </td>
-                      <td style={{ padding: "0.8rem 1rem", fontWeight: "700" }}>
-                        {p.name}
-                        <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: "400" }}>{p.sub}</div>
-                      </td>
-                      <td style={{ padding: "0.8rem 1rem" }}>
-                        <span style={{ background: "rgba(163, 230, 53, 0.15)", color: "#A3E635", padding: "0.2rem 0.6rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "700" }}>
-                          {p.cat}
-                        </span>
-                      </td>
-                      <td style={{ padding: "0.8rem 1rem" }}>
-                        <span style={{ background: "rgba(56, 189, 248, 0.15)", color: "#38bdf8", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: "700" }}>
-                          {p.target_audience || "غير محدد"}
-                        </span>
-                      </td>
-                      <td style={{ padding: "0.8rem 1rem" }}>
-                        <span style={{ background: "rgba(255, 255, 255, 0.08)", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem" }}>
-                          {p.color || "غير محدد"}
-                        </span>
-                      </td>
-                      <td style={{ padding: "0.8rem 1rem", fontWeight: "800", color: "#A3E635" }}>
-                        {Number(p.price).toLocaleString("ar-EG")} ج.م
-                      </td>
-                      <td style={{ padding: "0.8rem 1rem", color: "#94a3b8" }}>
-                        {p.old_price ? `${Number(p.old_price).toLocaleString("ar-EG")} ج.م` : "-"}
-                      </td>
-                      <td style={{ padding: "0.8rem 1rem" }}>
-                        <span style={{
-                          padding: "0.2rem 0.55rem",
-                          borderRadius: "999px",
-                          fontSize: "0.72rem",
-                          fontWeight: "700",
-                          background: p.in_stock ? "rgba(163, 230, 53, 0.15)" : "rgba(239, 68, 68, 0.15)",
-                          color: p.in_stock ? "#A3E635" : "#ef4444"
-                        }}>
-                          {p.in_stock ? "متوفرة" : "غير متوفرة"}
-                        </span>
-                      </td>
-                      <td style={{ padding: "0.8rem 1rem", textAlign: "center" }}>
-                        <div style={{ display: "inline-flex", gap: "0.4rem" }}>
-                          <button
-                            onClick={() => startEdit(p)}
-                            style={{ background: "#2563eb", color: "#fff", border: 0, padding: "0.35rem 0.75rem", borderRadius: "6px", cursor: "pointer", fontSize: "0.75rem" }}
-                          >
-                            تعديل
-                          </button>
-                          <button
-                            onClick={() => handleDeleteProduct(p.id, p.name)}
-                            style={{ background: "#dc2626", color: "#fff", border: 0, padding: "0.35rem 0.75rem", borderRadius: "6px", cursor: "pointer", fontSize: "0.75rem" }}
-                          >
-                            حذف
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {products.map(p => {
+                    const imgCount = Array.isArray(p.images) ? p.images.length : 1;
+                    return (
+                      <tr key={p.id} style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.05)", fontSize: "0.85rem" }}>
+                        <td style={{ padding: "0.8rem 1rem", position: "relative" }}>
+                          <div style={{ position: "relative", width: "48px", height: "48px" }}>
+                            <img src={p.image} alt={p.name} style={{ width: "48px", height: "48px", objectFit: "contain", background: "#fff", borderRadius: "8px", padding: "2px" }} />
+                            {imgCount > 1 && (
+                              <span style={{
+                                position: "absolute",
+                                bottom: "-4px",
+                                right: "-4px",
+                                background: "#A3E635",
+                                color: "#000",
+                                fontSize: "0.6rem",
+                                fontWeight: "800",
+                                padding: "1px 4px",
+                                borderRadius: "4px",
+                                lineHeight: "1"
+                              }}>
+                                {imgCount} صور
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td style={{ padding: "0.8rem 1rem", fontWeight: "700" }}>
+                          {p.name}
+                          <div style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: "400" }}>{p.sub}</div>
+                        </td>
+                        <td style={{ padding: "0.8rem 1rem" }}>
+                          <span style={{ background: "rgba(163, 230, 53, 0.15)", color: "#A3E635", padding: "0.2rem 0.6rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "700" }}>
+                            {p.cat}
+                          </span>
+                        </td>
+                        <td style={{ padding: "0.8rem 1rem" }}>
+                          <span style={{ background: "rgba(56, 189, 248, 0.15)", color: "#38bdf8", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem", fontWeight: "700" }}>
+                            {p.target_audience || "غير محدد"}
+                          </span>
+                        </td>
+                        <td style={{ padding: "0.8rem 1rem" }}>
+                          <span style={{ background: "rgba(255, 255, 255, 0.08)", padding: "0.2rem 0.55rem", borderRadius: "6px", fontSize: "0.72rem" }}>
+                            {p.color || "غير محدد"}
+                          </span>
+                        </td>
+                        <td style={{ padding: "0.8rem 1rem", fontWeight: "800", color: "#A3E635" }}>
+                          {Number(p.price).toLocaleString("ar-EG")} ج.م
+                        </td>
+                        <td style={{ padding: "0.8rem 1rem", color: "#94a3b8" }}>
+                          {p.old_price ? `${Number(p.old_price).toLocaleString("ar-EG")} ج.م` : "-"}
+                        </td>
+                        <td style={{ padding: "0.8rem 1rem" }}>
+                          <span style={{
+                            padding: "0.2rem 0.55rem",
+                            borderRadius: "999px",
+                            fontSize: "0.72rem",
+                            fontWeight: "700",
+                            background: p.in_stock ? "rgba(163, 230, 53, 0.15)" : "rgba(239, 68, 68, 0.15)",
+                            color: p.in_stock ? "#A3E635" : "#ef4444"
+                          }}>
+                            {p.in_stock ? "متوفرة" : "غير متوفرة"}
+                          </span>
+                        </td>
+                        <td style={{ padding: "0.8rem 1rem", textAlign: "center" }}>
+                          <div style={{ display: "inline-flex", gap: "0.4rem" }}>
+                            <button
+                              onClick={() => startEdit(p)}
+                              style={{ background: "#2563eb", color: "#fff", border: 0, padding: "0.35rem 0.75rem", borderRadius: "6px", cursor: "pointer", fontSize: "0.75rem" }}
+                            >
+                              تعديل
+                            </button>
+                            <button
+                              onClick={() => handleDeleteProduct(p.id, p.name)}
+                              style={{ background: "#dc2626", color: "#fff", border: 0, padding: "0.35rem 0.75rem", borderRadius: "6px", cursor: "pointer", fontSize: "0.75rem" }}
+                            >
+                              حذف
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -647,8 +772,8 @@ export default function AdminDashboardPage() {
               background: "#141c18",
               border: "1px solid rgba(163, 230, 53, 0.4)",
               borderRadius: "16px",
-              width: "min(680px, 100%)",
-              maxHeight: "90vh",
+              width: "min(720px, 100%)",
+              maxHeight: "92vh",
               overflowY: "auto",
               padding: "1.8rem",
               boxShadow: "0 20px 40px rgba(0,0,0,0.7)"
@@ -732,75 +857,204 @@ export default function AdminDashboardPage() {
                   )}
                 </div>
 
-                {/* Image Upload from Device & Storage in Source Code */}
+                {/* Multi-Image Gallery Section (Up to 10 Images) */}
                 <div style={{
-                  marginBottom: "1rem",
-                  background: "#0e1512",
-                  border: "1px dashed rgba(163, 230, 53, 0.4)",
-                  borderRadius: "10px",
-                  padding: "1rem"
+                  marginBottom: "1.2rem",
+                  background: "#0d1410",
+                  border: "1px solid rgba(163, 230, 53, 0.35)",
+                  borderRadius: "12px",
+                  padding: "1.2rem"
                 }}>
-                  <label style={{ display: "block", fontSize: "0.78rem", fontWeight: "700", color: "#A3E635", marginBottom: "0.5rem" }}>
-                    📷 رفع صورة الساعة من جهازك (يتم تخزينها في ملفات السورس كود)
-                  </label>
-                  
-                  <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                    <div style={{ flex: 1 }}>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.8rem" }}>
+                    <div>
+                      <span style={{ fontSize: "0.85rem", fontWeight: "800", color: "#A3E635" }}>
+                        📷 صور الساعة (يمكنك رفع حتى 10 صور للساعة الواحدة)
+                      </span>
+                      <div style={{ fontSize: "0.7rem", color: "#94a3b8", marginTop: "2px" }}>
+                        الصورة الأولى هي صورة الغلاف الرئيسية التي تظهر في المتجر
+                      </div>
+                    </div>
+                    <span style={{
+                      background: form.images.length >= 10 ? "rgba(239, 68, 68, 0.2)" : "rgba(163, 230, 53, 0.15)",
+                      color: form.images.length >= 10 ? "#ef4444" : "#A3E635",
+                      border: `1px solid ${form.images.length >= 10 ? "#ef4444" : "#A3E635"}`,
+                      fontSize: "0.75rem",
+                      fontWeight: "800",
+                      padding: "0.2rem 0.6rem",
+                      borderRadius: "999px"
+                    }}>
+                      {form.images.length} / 10 صور
+                    </span>
+                  </div>
+
+                  {/* Thumbnails Gallery Grid */}
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(110px, 1fr))",
+                    gap: "0.75rem",
+                    marginBottom: "1rem"
+                  }}>
+                    {form.images.map((imgUrl, idx) => (
+                      <div
+                        key={idx}
                         style={{
-                          width: "100%",
-                          fontSize: "0.8rem",
-                          color: "#94a3b8",
-                          cursor: "pointer"
+                          background: "#080c0a",
+                          border: idx === 0 ? "2px solid #A3E635" : "1px solid rgba(255,255,255,0.15)",
+                          borderRadius: "10px",
+                          padding: "6px",
+                          position: "relative",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center"
                         }}
-                      />
+                      >
+                        <div style={{ position: "relative", width: "100%", height: "80px", background: "#fff", borderRadius: "6px", overflow: "hidden", display: "grid", placeItems: "center" }}>
+                          <img src={imgUrl} alt={`صورة ${idx + 1}`} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                          {idx === 0 ? (
+                            <span style={{
+                              position: "absolute",
+                              top: "3px",
+                              right: "3px",
+                              background: "#A3E635",
+                              color: "#000",
+                              fontSize: "0.6rem",
+                              fontWeight: "800",
+                              padding: "2px 5px",
+                              borderRadius: "4px"
+                            }}>
+                              الغلاف ★
+                            </span>
+                          ) : (
+                            <span style={{
+                              position: "absolute",
+                              top: "3px",
+                              right: "3px",
+                              background: "rgba(0,0,0,0.6)",
+                              color: "#fff",
+                              fontSize: "0.6rem",
+                              padding: "1px 4px",
+                              borderRadius: "4px"
+                            }}>
+                              #{idx + 1}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Actions for this photo */}
+                        <div style={{ display: "flex", gap: "4px", width: "100%", marginTop: "6px" }}>
+                          {idx !== 0 && (
+                            <button
+                              type="button"
+                              onClick={() => handleSetAsCover(idx)}
+                              title="تعيين كغلاف رئيسي"
+                              style={{
+                                flex: 1,
+                                background: "rgba(163, 230, 53, 0.15)",
+                                border: "1px solid #A3E635",
+                                color: "#A3E635",
+                                borderRadius: "4px",
+                                fontSize: "0.62rem",
+                                padding: "2px 0",
+                                cursor: "pointer",
+                                fontWeight: "700"
+                              }}
+                            >
+                              غلاف
+                            </button>
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(idx)}
+                            title="حذف الصورة"
+                            style={{
+                              background: "rgba(239, 68, 68, 0.2)",
+                              border: "1px solid #ef4444",
+                              color: "#fca5a5",
+                              borderRadius: "4px",
+                              fontSize: "0.65rem",
+                              padding: "2px 6px",
+                              cursor: "pointer"
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Upload More Images Controls */}
+                  {form.images.length < 10 ? (
+                    <div>
+                      <div style={{ display: "flex", gap: "0.8rem", alignItems: "center", flexWrap: "wrap" }}>
+                        <label style={{
+                          background: "#A3E635",
+                          color: "#0b0f0d",
+                          padding: "0.55rem 1.1rem",
+                          borderRadius: "8px",
+                          fontWeight: "800",
+                          fontSize: "0.78rem",
+                          cursor: uploadingImage ? "not-allowed" : "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "0.4rem"
+                        }}>
+                          <span>+ رفع صور من الجهاز (متبقي {10 - form.images.length})</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handleMultipleImageUpload}
+                            disabled={uploadingImage}
+                            style={{ display: "none" }}
+                          />
+                        </label>
+
+                        {/* Manual URL input option */}
+                        <div style={{ display: "flex", gap: "0.4rem", flex: 1, minWidth: "220px" }}>
+                          <input
+                            type="text"
+                            placeholder="أو اكتب رابط/مسار صورة مباشرة..."
+                            value={manualImageUrl}
+                            onChange={(e) => setManualImageUrl(e.target.value)}
+                            style={{ flex: 1, height: "36px", background: "#090d0b", border: "1px solid rgba(255,255,255,0.15)", borderRadius: "6px", color: "#fff", paddingInline: "0.6rem", fontSize: "0.75rem" }}
+                          />
+                          <button
+                            type="button"
+                            onClick={handleAddManualImage}
+                            style={{
+                              background: "rgba(255,255,255,0.1)",
+                              border: "1px solid rgba(255,255,255,0.2)",
+                              color: "#fff",
+                              borderRadius: "6px",
+                              paddingInline: "0.8rem",
+                              fontSize: "0.75rem",
+                              fontWeight: "700",
+                              cursor: "pointer"
+                            }}
+                          >
+                            إضافة
+                          </button>
+                        </div>
+                      </div>
+
                       {uploadingImage && (
-                        <div style={{ fontSize: "0.75rem", color: "#A3E635", marginTop: "0.4rem" }}>
-                          ⏳ جاري رفع وحفظ الصورة في ملفات السورس كود...
+                        <div style={{ fontSize: "0.75rem", color: "#A3E635", marginTop: "0.5rem" }}>
+                          ⏳ جاري رفع الصور وتخزينها في السورس كود...
                         </div>
                       )}
                       {uploadError && (
-                        <div style={{ fontSize: "0.75rem", color: "#ef4444", marginTop: "0.4rem" }}>
+                        <div style={{ fontSize: "0.75rem", color: "#ef4444", marginTop: "0.5rem" }}>
                           ✕ {uploadError}
                         </div>
                       )}
                     </div>
-
-                    {/* Image Preview */}
-                    {form.image && (
-                      <div style={{ textAlign: "center" }}>
-                        <img
-                          src={form.image}
-                          alt="معاينة الصورة"
-                          style={{
-                            width: "56px",
-                            height: "56px",
-                            objectFit: "contain",
-                            background: "#fff",
-                            borderRadius: "8px",
-                            padding: "3px",
-                            border: "1px solid #A3E635"
-                          }}
-                        />
-                        <div style={{ fontSize: "0.62rem", color: "#94a3b8", marginTop: "2px" }}>معاينة</div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div style={{ marginTop: "0.6rem" }}>
-                    <label style={{ display: "block", fontSize: "0.68rem", color: "#94a3b8", marginBottom: "0.2rem" }}>مسار ملف الصورة المخزن:</label>
-                    <input
-                      type="text"
-                      value={form.image}
-                      onChange={(e) => setForm({ ...form, image: e.target.value })}
-                      required
-                      placeholder="/uploads/watch-xxx.png أو /img/ben10-classic-concept-01.png"
-                      style={{ width: "100%", height: "34px", fontSize: "0.75rem", background: "#090d0b", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px", color: "#fff", paddingInline: "0.6rem" }}
-                    />
-                  </div>
+                  ) : (
+                    <div style={{ fontSize: "0.78rem", color: "#94a3b8", textAlign: "center", padding: "0.4rem" }}>
+                      ✓ تم الوصول للحد الأقصى (10 صور). لحذف صورة اضغط ✕ فوقها لإتاحة مكان لصورة أخرى.
+                    </div>
+                  )}
                 </div>
 
                 {/* Price & Old Price */}

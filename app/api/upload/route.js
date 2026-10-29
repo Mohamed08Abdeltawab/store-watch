@@ -12,34 +12,42 @@ export async function POST(req) {
     }
 
     const formData = await req.formData();
-    const file = formData.get("file");
+    // Support both single "file" or multiple "files" / multiple "file"
+    const files = formData.getAll("files").concat(formData.getAll("file")).filter(f => f && typeof f !== "string");
 
-    if (!file || typeof file === "string") {
-      return NextResponse.json({ success: false, error: "يرجى اختيار ملف صورة صالح" }, { status: 400 });
+    if (files.length === 0) {
+      return NextResponse.json({ success: false, error: "يرجى اختيار ملف صورة صالح على الأقل" }, { status: 400 });
     }
 
     const uploadsDir = path.join(process.cwd(), "public", "uploads");
     await fs.mkdir(uploadsDir, { recursive: true });
 
-    const rawExt = path.extname(file.name) || ".png";
     const allowedExts = [".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif"];
-    const ext = allowedExts.includes(rawExt.toLowerCase()) ? rawExt.toLowerCase() : ".png";
+    const uploadedUrls = [];
 
-    const cleanBase = path.basename(file.name, rawExt).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 30);
-    const filename = `watch-${Date.now()}-${cleanBase || "img"}${ext}`;
-    const destination = path.join(uploadsDir, filename);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const rawExt = path.extname(file.name) || ".png";
+      const ext = allowedExts.includes(rawExt.toLowerCase()) ? rawExt.toLowerCase() : ".png";
 
-    const bytes = await file.arrayBuffer();
-    await fs.writeFile(destination, Buffer.from(bytes));
+      const cleanBase = path.basename(file.name, rawExt).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 25);
+      const filename = `watch-${Date.now()}-${i}-${cleanBase || "img"}${ext}`;
+      const destination = path.join(uploadsDir, filename);
 
-    const publicUrl = `/uploads/${filename}`;
+      const bytes = await file.arrayBuffer();
+      await fs.writeFile(destination, Buffer.from(bytes));
+
+      uploadedUrls.push(`/uploads/${filename}`);
+    }
+
     return NextResponse.json({
       success: true,
-      url: publicUrl,
-      filename
+      url: uploadedUrls[0],
+      urls: uploadedUrls,
+      count: uploadedUrls.length
     });
   } catch (err) {
     console.error("Upload error:", err);
-    return NextResponse.json({ success: false, error: "فشل حفظ الصورة: " + err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: "فشل حفظ الصور: " + err.message }, { status: 500 });
   }
 }

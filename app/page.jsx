@@ -25,6 +25,7 @@ export default function StorefrontPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [quickProduct, setQuickProduct] = useState(null);
+  const [quickImgIndex, setQuickImgIndex] = useState(0);
   const [toasts, setToasts] = useState([]);
 
   // Checkout Form State
@@ -519,7 +520,7 @@ export default function StorefrontPage() {
                         </svg>
                       </button>
                       <div className="p-card__hover-bar">
-                        <button type="button" className="p-card__btn-quick" onClick={() => setQuickProduct(p)}>
+                        <button type="button" className="p-card__btn-quick" onClick={() => { setQuickProduct(p); setQuickImgIndex(0); }}>
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                             <circle cx="12" cy="12" r="3"></circle>
@@ -537,7 +538,7 @@ export default function StorefrontPage() {
                         </span>
                       </div>
 
-                      <h3 className="p-card__title" onClick={() => setQuickProduct(p)} style={{ cursor: "pointer" }}>
+                      <h3 className="p-card__title" onClick={() => { setQuickProduct(p); setQuickImgIndex(0); }} style={{ cursor: "pointer" }}>
                         {p.name}
                       </h3>
                       <p className="p-card__sub">{p.sub}</p>
@@ -870,8 +871,113 @@ export default function StorefrontPage() {
               <button className="modal__close" type="button" onClick={() => setQuickProduct(null)}>✕</button>
             </div>
             <div className="quick-view-grid">
-              <div className="quick-view-media">
-                <img src={quickProduct.image} alt={quickProduct.name} />
+              <div className="quick-view-media" style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                <div style={{ position: "relative", width: "100%", background: "#fff", borderRadius: "12px", overflow: "hidden", display: "grid", placeItems: "center", minHeight: "260px", padding: "10px" }}>
+                  <img
+                    src={(quickProduct.images && quickProduct.images[quickImgIndex]) || quickProduct.image}
+                    alt={quickProduct.name}
+                    style={{ maxHeight: "260px", maxWidth: "100%", objectFit: "contain", transition: "all 0.2s ease" }}
+                  />
+
+                  {quickProduct.images && quickProduct.images.length > 1 && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setQuickImgIndex(prev => (prev > 0 ? prev - 1 : quickProduct.images.length - 1))}
+                        style={{
+                          position: "absolute",
+                          left: "8px",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          background: "rgba(0,0,0,0.65)",
+                          color: "#fff",
+                          border: 0,
+                          borderRadius: "50%",
+                          width: "32px",
+                          height: "32px",
+                          cursor: "pointer",
+                          display: "grid",
+                          placeItems: "center",
+                          fontSize: "0.85rem",
+                          zIndex: 3
+                        }}
+                      >
+                        ◀
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setQuickImgIndex(prev => (prev < quickProduct.images.length - 1 ? prev + 1 : 0))}
+                        style={{
+                          position: "absolute",
+                          right: "8px",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          background: "rgba(0,0,0,0.65)",
+                          color: "#fff",
+                          border: 0,
+                          borderRadius: "50%",
+                          width: "32px",
+                          height: "32px",
+                          cursor: "pointer",
+                          display: "grid",
+                          placeItems: "center",
+                          fontSize: "0.85rem",
+                          zIndex: 3
+                        }}
+                      >
+                        ▶
+                      </button>
+
+                      <span style={{
+                        position: "absolute",
+                        bottom: "8px",
+                        right: "8px",
+                        background: "rgba(0,0,0,0.75)",
+                        color: "#A3E635",
+                        fontSize: "0.7rem",
+                        fontWeight: "800",
+                        padding: "2px 8px",
+                        borderRadius: "999px"
+                      }}>
+                        {quickImgIndex + 1} / {quickProduct.images.length}
+                      </span>
+                    </>
+                  )}
+                </div>
+
+                {quickProduct.images && quickProduct.images.length > 1 && (
+                  <div style={{
+                    display: "flex",
+                    gap: "6px",
+                    overflowX: "auto",
+                    paddingBottom: "4px"
+                  }}>
+                    {quickProduct.images.slice(0, 10).map((imgUrl, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setQuickImgIndex(idx)}
+                        style={{
+                          flexShrink: 0,
+                          width: "50px",
+                          height: "50px",
+                          background: "#fff",
+                          border: quickImgIndex === idx ? "2px solid #A3E635" : "1px solid rgba(0,0,0,0.15)",
+                          borderRadius: "8px",
+                          padding: "2px",
+                          cursor: "pointer",
+                          display: "grid",
+                          placeItems: "center",
+                          boxShadow: quickImgIndex === idx ? "0 0 10px rgba(163,230,53,0.3)" : "none",
+                          transition: "all 0.15s ease"
+                        }}
+                      >
+                        <img src={imgUrl} alt={`صورة ${idx + 1}`} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="quick-view-details">
                 <h2 style={{ fontSize: "1.35rem", fontWeight: "800", marginBottom: "0.4rem" }}>{quickProduct.name}</h2>
