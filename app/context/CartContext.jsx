@@ -23,6 +23,7 @@ export function CartProvider({ children }) {
   // Modals & Overlays
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [quickProduct, setQuickProduct] = useState(null);
@@ -236,6 +237,8 @@ export function CartProvider({ children }) {
         setIsCartOpen,
         isWishlistOpen,
         setIsWishlistOpen,
+        isMobileMenuOpen,
+        setIsMobileMenuOpen,
         isCheckoutOpen,
         setIsCheckoutOpen,
         isSearchOpen,

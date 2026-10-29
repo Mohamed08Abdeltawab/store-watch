@@ -26,9 +26,9 @@ export default function WishlistDrawer() {
   }
 
   return (
-    <div className={`drawer ${isWishlistOpen ? "is-open" : ""}`} role="dialog" aria-modal="true">
+    <div className={`drawer drawer--wishlist ${isWishlistOpen ? "is-open" : ""}`} role="dialog" aria-modal="true">
       <div className="drawer__scrim" onClick={() => setIsWishlistOpen(false)}></div>
-      <aside className="drawer__panel">
+      <aside className="drawer__panel drawer__panel--right">
         <div className="drawer__head">
           <div className="drawer__title" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" strokeWidth="2">

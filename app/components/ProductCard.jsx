@@ -90,7 +90,7 @@ export default function ProductCard({ product }) {
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: "6px" }}>
+          <div className="p-card__actions">
             {/* Quick WhatsApp order button */}
             <button
               type="button"

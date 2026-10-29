@@ -5,6 +5,8 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import CartDrawer from "./CartDrawer";
 import WishlistDrawer from "./WishlistDrawer";
+import MobileMenuDrawer from "./MobileMenuDrawer";
+import MobileBottomNav from "./MobileBottomNav";
 import CheckoutModal from "./CheckoutModal";
 import QuickViewModal from "./QuickViewModal";
 import SearchModal from "./SearchModal";
@@ -25,6 +27,8 @@ export default function ClientStoreWrapper({ children }) {
       <Footer />
       <CartDrawer />
       <WishlistDrawer />
+      <MobileMenuDrawer />
+      <MobileBottomNav />
       <CheckoutModal />
       <QuickViewModal />
       <SearchModal />

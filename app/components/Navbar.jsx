@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
@@ -9,8 +10,11 @@ export default function Navbar() {
     wishlist,
     setIsCartOpen,
     setIsWishlistOpen,
-    setIsSearchOpen
+    setIsSearchOpen,
+    setIsMobileMenuOpen
   } = useCart();
+
+  const pathname = usePathname();
 
   return (
     <>
@@ -38,6 +42,21 @@ export default function Navbar() {
       <header className="site-header" id="siteHeader">
         <div className="container">
           <div className="header-main">
+            {/* Mobile Hamburger Menu Toggle Button */}
+            <button
+              type="button"
+              className="mobile-hamburger-btn"
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label="فتح القائمة الرئيسية"
+              title="القائمة"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+
             {/* Brand Logo */}
             <Link className="brand" href="/">
               <span className="brand__mark">
@@ -77,7 +96,7 @@ export default function Navbar() {
                 <span className="action-label">طلب واتساب</span>
               </a>
 
-              {/* Wishlist Drawer Trigger */}
+              {/* Wishlist Drawer Trigger (Slides in from RIGHT) */}
               <button
                 className="header-action header-action--wishlist"
                 type="button"
@@ -94,7 +113,7 @@ export default function Navbar() {
                 )}
               </button>
 
-              {/* Cart Drawer Trigger */}
+              {/* Cart Drawer Trigger (Slides in from LEFT) */}
               <button
                 className="header-action header-action--cart"
                 type="button"
@@ -115,20 +134,17 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Desktop & Mobile Navigation Links */}
+          {/* Comprehensive Desktop & Tablet Navigation */}
           <nav className="simple-desktop-nav" aria-label="أقسام المتجر والتنقل">
-            <Link href="/">الرئيسية</Link>
-            <Link href="/shop">كل التشكيلات (المتجر)</Link>
+            <Link href="/" className={pathname === "/" ? "is-active" : ""}>الرئيسية</Link>
+            <Link href="/shop" className={pathname === "/shop" ? "is-active" : ""}>كل التشكيلات (المتجر)</Link>
             <Link href="/shop?filter=bestseller" className="is-hot">🔥 الأكثر مبيعاً</Link>
             <Link href="/shop?audience=men">ساعات رجالية</Link>
             <Link href="/shop?audience=women">ساعات نسائية</Link>
-            <button
-              type="button"
-              onClick={() => setIsWishlistOpen(true)}
-              className="nav-btn-link"
-            >
-              قائمة المفضلة ({wishlist.length})
-            </button>
+            <Link href="/shop?category=classic">كلاسيكية</Link>
+            <Link href="/shop?category=chrono">كرونوغراف</Link>
+            <Link href="/shop?category=smart">ذكية</Link>
+            <Link href="/shop?category=automatic">أوتوماتيك</Link>
             <a href="/#guarantees">لماذا Ben10؟</a>
             <a href="/#contact">تواصل معنا</a>
           </nav>

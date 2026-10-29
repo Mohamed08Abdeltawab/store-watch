@@ -16,9 +16,9 @@ export default function CartDrawer() {
   } = useCart();
 
   return (
-    <div className={`drawer ${isCartOpen ? "is-open" : ""}`} role="dialog" aria-modal="true">
+    <div className={`drawer drawer--cart ${isCartOpen ? "is-open" : ""}`} role="dialog" aria-modal="true">
       <div className="drawer__scrim" onClick={() => setIsCartOpen(false)}></div>
-      <aside className="drawer__panel">
+      <aside className="drawer__panel drawer__panel--left">
         <div className="drawer__head">
           <div className="drawer__title">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

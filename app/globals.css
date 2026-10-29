@@ -65,6 +65,8 @@ html {
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
   -webkit-text-size-adjust: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -76,7 +78,9 @@ body {
   margin: 0;
   font-size: 1rem;
   line-height: 1.7;
-  overflow-x: clip;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
 body.no-scroll {
@@ -1613,20 +1617,40 @@ button {
   position: absolute;
   top: 0;
   bottom: 0;
-  right: 0 !important;
-  left: auto !important;
   width: min(420px, 92vw);
   background: var(--white);
-  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  transform: translateX(100%);
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 2;
 }
 
-.drawer.is-open .drawer__panel {
-  transform: translateX(0);
+/* Cart Drawer -> Slides in from LEFT (الجانب الأيسر) */
+.drawer--cart .drawer__panel,
+.drawer__panel--left {
+  left: 0 !important;
+  right: auto !important;
+  transform: translateX(-100%) !important;
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.25);
+}
+
+.drawer--cart.is-open .drawer__panel,
+.drawer--cart.is-open .drawer__panel--left {
+  transform: translateX(0) !important;
+}
+
+/* Wishlist Drawer -> Slides in from RIGHT (الجانب الأيمن) */
+.drawer--wishlist .drawer__panel,
+.drawer__panel--right {
+  right: 0 !important;
+  left: auto !important;
+  transform: translateX(100%) !important;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
+}
+
+.drawer--wishlist.is-open .drawer__panel,
+.drawer--wishlist.is-open .drawer__panel--right {
+  transform: translateX(0) !important;
 }
 
 .drawer__head {
@@ -3575,5 +3599,210 @@ button {
 
   .drawer__panel {
     width: 94vw !important;
+  }
+}
+
+/* ==========================================================================
+   Mobile Bottom Navigation Bar & Mobile Menu Drawer Styles
+   ========================================================================== */
+
+/* Hamburger Button: hidden on desktop, visible on mobile */
+.mobile-hamburger-btn {
+  display: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.mobile-hamburger-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--ben10-green);
+  color: var(--ben10-green);
+}
+
+/* Mobile Bottom Navigation: hidden on desktop, visible on mobile */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  inset-inline: 0;
+  height: 62px;
+  background: rgba(13, 18, 16, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 45;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.mobile-bottom-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: none;
+  border: 0;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0.4rem 0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.mobile-bottom-tab svg {
+  transition: transform 0.2s ease;
+}
+
+.mobile-bottom-tab:hover svg,
+.mobile-bottom-tab.is-active svg {
+  transform: translateY(-2px);
+}
+
+.mobile-bottom-tab:hover,
+.mobile-bottom-tab.is-active {
+  color: var(--ben10-green);
+}
+
+.bottom-tab-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  padding: 0 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+/* Mobile Menu Drawer Styling */
+.mobile-menu-search {
+  width: 100%;
+  height: 44px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-inline: 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  text-align: right;
+  transition: border-color 0.2s;
+}
+
+.mobile-menu-search:hover {
+  border-color: var(--ben10-forest);
+  color: var(--ink);
+}
+
+.mobile-menu-section {
+  margin-bottom: 1.5rem;
+}
+
+.mobile-menu-section__title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 0.6rem;
+  padding-inline-start: 0.4rem;
+}
+
+.mobile-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.mobile-menu-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.mobile-menu-link:hover,
+.mobile-menu-link.is-active {
+  background: var(--cream);
+  color: var(--ben10-forest);
+  padding-inline-start: 1rem;
+}
+
+.mobile-menu-link.is-hot {
+  color: #dc2626;
+}
+
+.mobile-menu-link .menu-icon {
+  font-size: 1.1rem;
+  margin-inline-end: 0.6rem;
+}
+
+/* Product Card Actions */
+.p-card__actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  /* Show hamburger button and bottom bar */
+  .mobile-hamburger-btn {
+    display: inline-flex;
+  }
+
+  .mobile-bottom-nav {
+    display: flex;
+  }
+
+  /* Add bottom padding to body on mobile so bottom bar does not overlap content */
+  body {
+    padding-bottom: 68px;
+  }
+
+  /* Footer on mobile adjustments */
+  .footer {
+    padding-bottom: 2rem;
+  }
+
+  /* Fix Product card foot on mobile */
+  .p-card__foot {
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+  }
+
+  .p-card__add-btn {
+    width: 34px;
+    height: 34px;
   }
 }
