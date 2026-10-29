@@ -1,3 +1,4 @@
+import * as React from "react"
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva } from "class-variance-authority";
 import { cn } from "cn"
@@ -39,18 +40,41 @@ const buttonVariants = cva(
   }
 )
 
+
 function Button({
   className,
   variant = "default",
   size = "default",
+  asChild = false,
+  children,
   ...props
 }) {
+  const combinedClassName = cn(buttonVariants({ variant, size, className }))
+
+  if (asChild && React.isValidElement(children)) {
+    const childProps = children.props
+    const mergedOnClick = (e) => {
+      if (typeof props.onClick === "function") props.onClick(e)
+      if (typeof childProps.onClick === "function") childProps.onClick(e)
+    }
+
+    return React.cloneElement(children, {
+      ...props,
+      ...childProps,
+      onClick: (props.onClick || childProps.onClick) ? mergedOnClick : undefined,
+      className: cn(combinedClassName, childProps.className),
+      "data-slot": "button",
+    })
+  }
+
   return (
     <ButtonPrimitive
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={combinedClassName}
       {...props}
-    />
+    >
+      {children}
+    </ButtonPrimitive>
   )
 }
 
