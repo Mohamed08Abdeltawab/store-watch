@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 export async function GET(req, { params }) {
   try {
     const { ref } = await params;
-    const order = getOrderByRef(ref);
+    const order = await getOrderByRef(ref);
     if (!order) {
       return NextResponse.json({ success: false, error: "الطلب غير موجود" }, { status: 404 });
     }
@@ -29,12 +29,12 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ success: false, error: "حالة الطلب مطلوبة" }, { status: 400 });
     }
 
-    const updated = updateOrderStatus(ref, body.status);
+    const updated = await updateOrderStatus(ref, body.status);
     if (!updated) {
       return NextResponse.json({ success: false, error: "فشل تحديث الطلب" }, { status: 404 });
     }
 
-    const order = getOrderByRef(ref);
+    const order = await getOrderByRef(ref);
     return NextResponse.json({ success: true, order });
   } catch (err) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });

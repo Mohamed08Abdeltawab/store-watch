@@ -11,7 +11,7 @@ async function isAuthorized() {
 export async function GET(req, { params }) {
   try {
     const { id } = await params;
-    const product = getProductById(id);
+    const product = await getProductById(id);
     if (!product) {
       return NextResponse.json({ success: false, error: "الساعة غير موجودة" }, { status: 404 });
     }
@@ -29,7 +29,7 @@ export async function PUT(req, { params }) {
 
     const { id } = await params;
     const body = await req.json();
-    const updated = updateProduct(id, body);
+    const updated = await updateProduct(id, body);
     if (!updated) {
       return NextResponse.json({ success: false, error: "فشل تحديث الساعة" }, { status: 404 });
     }
@@ -46,7 +46,7 @@ export async function DELETE(req, { params }) {
     }
 
     const { id } = await params;
-    const deleted = deleteProduct(id);
+    const deleted = await deleteProduct(id);
     if (!deleted) {
       return NextResponse.json({ success: false, error: "الساعة غير موجودة أو تم حذفها بالفعل" }, { status: 404 });
     }

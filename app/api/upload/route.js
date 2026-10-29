@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { getSupabaseAdmin, isSupabaseConfigured } from "../../../lib/supabase";
 
 export async function POST(req) {
   try {
@@ -19,11 +20,11 @@ export async function POST(req) {
       return NextResponse.json({ success: false, error: "يرجى اختيار ملف صورة صالح على الأقل" }, { status: 400 });
     }
 
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    await fs.mkdir(uploadsDir, { recursive: true });
-
     const allowedExts = [".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif"];
     const uploadedUrls = [];
+
+    const bucketName = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET || "watches";
+    const useSupabase = isSupabaseConfigured();
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -32,12 +33,39 @@ export async function POST(req) {
 
       const cleanBase = path.basename(file.name, rawExt).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 25);
       const filename = `watch-${Date.now()}-${i}-${cleanBase || "img"}${ext}`;
-      const destination = path.join(uploadsDir, filename);
 
       const bytes = await file.arrayBuffer();
-      await fs.writeFile(destination, Buffer.from(bytes));
+      const buffer = Buffer.from(bytes);
 
-      uploadedUrls.push(`/uploads/${filename}`);
+      if (useSupabase) {
+        const supabase = getSupabaseAdmin();
+        const mimeType = file.type || (ext === ".png" ? "image/png" : ext === ".webp" ? "image/webp" : "image/jpeg");
+
+        const { data, error } = await supabase.storage
+          .from(bucketName)
+          .upload(filename, buffer, {
+            contentType: mimeType,
+            upsert: true
+          });
+
+        if (error) {
+          console.error("[Supabase Storage Upload Error]:", error);
+          throw new Error("فشل الرفع إلى Supabase Storage: " + error.message);
+        }
+
+        const { data: publicUrlData } = supabase.storage
+          .from(bucketName)
+          .getPublicUrl(filename);
+
+        uploadedUrls.push(publicUrlData.publicUrl);
+      } else {
+        // Local filesystem fallback
+        const uploadsDir = path.join(process.cwd(), "public", "uploads");
+        await fs.mkdir(uploadsDir, { recursive: true });
+        const destination = path.join(uploadsDir, filename);
+        await fs.writeFile(destination, buffer);
+        uploadedUrls.push(`/uploads/${filename}`);
+      }
     }
 
     return NextResponse.json({

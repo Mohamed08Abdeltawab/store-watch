@@ -10,7 +10,7 @@ export async function POST(req) {
       return NextResponse.json({ success: false, error: "يرجى إدخال اسم المستخدم وكلمة المرور" }, { status: 400 });
     }
 
-    const isValid = verifyAdmin(username, password);
+    const isValid = await verifyAdmin(username, password);
     if (!isValid) {
       return NextResponse.json({ success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" }, { status: 401 });
     }

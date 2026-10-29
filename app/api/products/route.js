@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 
 export async function GET() {
   try {
-    const products = getAllProducts();
+    const products = await getAllProducts();
     return NextResponse.json({ success: true, products });
   } catch (err) {
     console.error("GET /api/products error:", err);
@@ -25,7 +25,7 @@ export async function POST(req) {
       return NextResponse.json({ success: false, error: "البيانات الأساسية مطلوبة (الاسم، السعر، الفئة)" }, { status: 400 });
     }
 
-    const product = createProduct(body);
+    const product = await createProduct(body);
     return NextResponse.json({ success: true, product }, { status: 201 });
   } catch (err) {
     console.error("POST /api/products error:", err);

@@ -12,7 +12,7 @@ export async function GET() {
       return NextResponse.json({ success: false, error: "غير مصرح" }, { status: 401 });
     }
 
-    const orders = getAllOrders();
+    const orders = await getAllOrders();
     return NextResponse.json({ success: true, orders });
   } catch (err) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
@@ -27,8 +27,8 @@ export async function POST(req) {
       return NextResponse.json({ success: false, error: "يرجى ملء جميع البيانات المطلوبة والمنتجات" }, { status: 400 });
     }
 
-    // Create order in SQLite database
-    const order = createOrder(body);
+    // Create order in database
+    const order = await createOrder(body);
 
     // Format WhatsApp message with unique Order Reference
     let itemsList = "";
