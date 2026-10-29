@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useCart } from "../context/CartContext";
 
 export default function Footer() {
+  const { setIsWishlistOpen } = useCart();
+
   return (
     <footer className="footer" id="footer">
       <div className="container">
@@ -35,7 +38,15 @@ export default function Footer() {
               <li><Link href="/shop?filter=bestseller">الأكثر مبيعاً</Link></li>
               <li><Link href="/shop?audience=men">ساعات رجالية</Link></li>
               <li><Link href="/shop?audience=women">ساعات نسائية</Link></li>
-              <li><Link href="/wishlist">قائمة المفضلة ❤️</Link></li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => setIsWishlistOpen(true)}
+                  style={{ background: "none", border: 0, padding: 0, color: "inherit", font: "inherit", cursor: "pointer", textAlign: "right" }}
+                >
+                  قائمة المفضلة ❤️
+                </button>
+              </li>
             </ul>
           </div>
 

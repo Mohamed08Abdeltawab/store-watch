@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import CartDrawer from "./CartDrawer";
+import WishlistDrawer from "./WishlistDrawer";
 import CheckoutModal from "./CheckoutModal";
 import QuickViewModal from "./QuickViewModal";
 import SearchModal from "./SearchModal";
@@ -23,6 +24,7 @@ export default function ClientStoreWrapper({ children }) {
       <main id="main">{children}</main>
       <Footer />
       <CartDrawer />
+      <WishlistDrawer />
       <CheckoutModal />
       <QuickViewModal />
       <SearchModal />
