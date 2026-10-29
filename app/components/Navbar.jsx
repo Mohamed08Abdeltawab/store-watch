@@ -124,11 +124,11 @@ export default function Navbar() {
               </Button>
             </div>
 
-            {/* Login / Admin Panel Button */}
+            {/* Login / Admin Panel Button (Hidden on small screens) */}
             {isAdmin ? (
               <Link
                 href="/admin"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-lime-400 text-black font-black text-xs sm:text-xs shadow-md shadow-lime-400/25 hover:bg-lime-300 transition-all hover:scale-105 shrink-0"
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-lime-400 text-black font-black text-xs sm:text-xs shadow-md shadow-lime-400/25 hover:bg-lime-300 transition-all hover:scale-105 shrink-0"
                 title="لوحة تحكم المتجر"
               >
                 <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -142,7 +142,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/admin/login"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold text-xs transition-all hover:scale-105 shrink-0"
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-bold text-xs transition-all hover:scale-105 shrink-0"
                 title="تسجيل الدخول"
               >
                 <svg className="w-3.5 h-3.5 text-lime-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
