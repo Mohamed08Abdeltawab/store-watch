@@ -1,4 +1,6 @@
 import "./globals.css";
+import { CartProvider } from "./context/CartContext";
+import ClientStoreWrapper from "./components/ClientStoreWrapper";
 
 export const metadata = {
   title: "Ben10 | متجر الساعات الفاخرة والعصرية بضمان الوكيل المعتمد",
@@ -18,7 +20,11 @@ export default function RootLayout({ children }) {
     <html lang="ar" dir="rtl">
       <body>
         <div className="grain" aria-hidden="true"></div>
-        {children}
+        <CartProvider>
+          <ClientStoreWrapper>
+            {children}
+          </ClientStoreWrapper>
+        </CartProvider>
       </body>
     </html>
   );
