@@ -54,7 +54,7 @@ export default function SearchModal() {
           <button
             type="button"
             onClick={() => setIsSearchOpen(false)}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300 hover:text-white flex items-center justify-center text-sm font-bold transition-colors"
+            className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300 hover:text-white flex items-center justify-center text-base font-bold transition-colors shrink-0 cursor-pointer"
             aria-label="إغلاق"
           >
             ✕
@@ -69,7 +69,7 @@ export default function SearchModal() {
               key={tag}
               type="button"
               onClick={() => setQuery(tag)}
-              className="px-2.5 py-1 rounded-full bg-white/5 hover:bg-lime-400 hover:text-black text-neutral-300 font-medium transition-colors border border-white/5"
+              className="px-3 py-1.5 min-h-[36px] rounded-full bg-white/5 hover:bg-lime-400 hover:text-black text-neutral-300 font-medium transition-colors border border-white/5 flex items-center justify-center cursor-pointer"
             >
               {tag}
             </button>

@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0d1210] text-white flex items-center justify-center p-4" dir="rtl">
+    <div className="relative overflow-hidden min-h-screen bg-[#0d1210] text-white flex items-center justify-center p-4" dir="rtl">
       
       {/* Background Glow */}
       <div className="absolute w-96 h-96 rounded-full bg-lime-400/10 blur-3xl pointer-events-none" />

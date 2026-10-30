@@ -51,7 +51,7 @@ export default function MobileMenuDrawer() {
           </Link>
 
           <button
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300 hover:text-white transition-colors text-sm font-bold"
+            className="flex items-center justify-center w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-neutral-300 hover:text-white transition-colors text-base font-bold shrink-0 cursor-pointer"
             type="button"
             onClick={closeMenu}
             aria-label="إغلاق القائمة"
@@ -65,7 +65,7 @@ export default function MobileMenuDrawer() {
           {/* Search Trigger */}
           <button
             type="button"
-            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-400 text-xs transition-colors"
+            className="w-full flex items-center gap-3 px-3.5 py-3 min-h-[44px] rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-400 text-xs transition-colors"
             onClick={() => {
               closeMenu();
               setIsSearchOpen(true);
@@ -84,7 +84,7 @@ export default function MobileMenuDrawer() {
               <Link
                 href="/admin"
                 onClick={closeMenu}
-                className="flex items-center justify-between p-3 rounded-xl bg-lime-400 text-black text-xs font-black shadow-md shadow-lime-400/20"
+                className="flex items-center justify-between p-3 min-h-[44px] rounded-xl bg-lime-400 text-black text-xs font-black shadow-md shadow-lime-400/20"
               >
                 <span className="flex items-center gap-2">
                   <span>⚡</span>
@@ -96,7 +96,7 @@ export default function MobileMenuDrawer() {
               <Link
                 href="/admin/login"
                 onClick={closeMenu}
-                className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-neutral-200"
+                className="flex items-center justify-between p-3 min-h-[44px] rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-neutral-200"
               >
                 <span className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-lime-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -131,7 +131,7 @@ export default function MobileMenuDrawer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-colors ${
+                    className={`flex items-center gap-2.5 px-3 py-2.5 min-h-[44px] rounded-xl text-xs font-bold transition-colors ${
                       pathname === item.href ? "bg-lime-400 text-black" : "text-neutral-300 hover:bg-white/5 hover:text-white"
                     }`}
                     onClick={closeMenu}
@@ -148,7 +148,7 @@ export default function MobileMenuDrawer() {
           <div className="space-y-2 pt-2 border-t border-white/10">
             <button
               type="button"
-              className="w-full flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-white transition-colors"
+              className="w-full flex items-center justify-between p-3 min-h-[44px] rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-white transition-colors cursor-pointer"
               onClick={() => {
                 closeMenu();
                 setIsWishlistOpen(true);
@@ -165,7 +165,7 @@ export default function MobileMenuDrawer() {
 
             <button
               type="button"
-              className="w-full flex items-center justify-between p-3 rounded-xl bg-lime-400 hover:bg-lime-500 text-black text-xs font-extrabold transition-colors shadow-md shadow-lime-400/20"
+              className="w-full flex items-center justify-between p-3 min-h-[44px] rounded-xl bg-lime-400 hover:bg-lime-500 text-black text-xs font-extrabold transition-colors shadow-md shadow-lime-400/20 cursor-pointer"
               onClick={() => {
                 closeMenu();
                 setIsCartOpen(true);
@@ -188,7 +188,7 @@ export default function MobileMenuDrawer() {
               href="https://wa.me/201065712366"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full p-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold shadow-md transition-colors"
+              className="flex items-center justify-center gap-2 w-full h-11 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold shadow-md transition-colors"
             >
               <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                 <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2z"></path>

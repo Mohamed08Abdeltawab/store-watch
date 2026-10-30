@@ -41,7 +41,7 @@ export default function CartDrawer() {
             <span>سلة التسوق ({totalCartCount})</span>
           </div>
           <button
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-sm font-bold"
+            className="flex items-center justify-center w-11 h-11 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-base font-bold shrink-0 cursor-pointer"
             type="button"
             onClick={() => setIsCartOpen(false)}
             aria-label="إغلاق السلة"
@@ -110,7 +110,7 @@ export default function CartDrawer() {
                     <div className="flex items-center border border-neutral-200 rounded-lg overflow-hidden bg-neutral-50">
                       <button
                         type="button"
-                        className="w-7 h-7 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 font-bold text-xs"
+                        className="w-9 h-9 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 font-bold text-sm cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation();
                           updateCartQty(idx, -1);
@@ -119,12 +119,12 @@ export default function CartDrawer() {
                       >
                         -
                       </button>
-                      <span className="w-8 text-center text-xs font-bold text-neutral-900">
+                      <span className="w-9 text-center text-xs font-bold text-neutral-900">
                         {item.qty}
                       </span>
                       <button
                         type="button"
-                        className="w-7 h-7 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 font-bold text-xs"
+                        className="w-9 h-9 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 font-bold text-sm cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation();
                           updateCartQty(idx, 1);
@@ -138,7 +138,7 @@ export default function CartDrawer() {
                     {/* Delete */}
                     <button
                       type="button"
-                      className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 hover:underline px-2"
+                      className="text-xs font-semibold text-rose-500 hover:text-rose-700 hover:underline py-1.5 px-3 min-h-[36px] flex items-center cursor-pointer"
                       onClick={() => removeFromCart(idx)}
                     >
                       حذف

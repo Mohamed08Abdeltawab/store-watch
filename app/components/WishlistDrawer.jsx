@@ -51,7 +51,7 @@ export default function WishlistDrawer() {
             <span>قائمة المفضلة ({favoriteProducts.length})</span>
           </div>
           <button
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-sm font-bold"
+            className="flex items-center justify-center w-11 h-11 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-base font-bold shrink-0 cursor-pointer"
             type="button"
             onClick={() => setIsWishlistOpen(false)}
             aria-label="إغلاق المفضلة"
@@ -116,7 +116,7 @@ export default function WishlistDrawer() {
                     <div className="flex items-center gap-2 flex-wrap">
                       <Button
                         size="sm"
-                        className="bg-lime-400 hover:bg-lime-500 text-black font-extrabold text-[11px] h-7 px-2.5 rounded-lg"
+                        className="bg-lime-400 hover:bg-lime-500 text-black font-extrabold text-xs h-9 px-3 rounded-lg flex items-center"
                         onClick={() => addToCart(p, 1)}
                       >
                         + أضف للسلة
@@ -124,7 +124,7 @@ export default function WishlistDrawer() {
 
                       <button
                         type="button"
-                        className="flex items-center gap-1 bg-[#25D366] hover:bg-[#20ba59] text-white text-[11px] font-bold h-7 px-2 rounded-lg transition-colors"
+                        className="flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold h-9 px-3 rounded-lg transition-colors cursor-pointer"
                         onClick={() => sendDirectWhatsApp(p)}
                         title="طلب عبر واتساب"
                       >
@@ -136,7 +136,7 @@ export default function WishlistDrawer() {
 
                       <button
                         type="button"
-                        className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 hover:underline mr-auto"
+                        className="text-xs font-semibold text-rose-500 hover:text-rose-700 hover:underline p-2 min-h-[36px] flex items-center mr-auto cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleWishlist(p.id);

@@ -561,13 +561,13 @@ export default function AdminDashboardPage() {
                           <div className="inline-flex gap-1.5">
                             <button
                               onClick={() => startEdit(p)}
-                              className="bg-blue-600 hover:bg-blue-700 text-white border-0 px-2.5 py-1.5 rounded-lg cursor-pointer text-xs font-bold transition-colors"
+                              className="bg-blue-600 hover:bg-blue-700 text-white border-0 px-3 py-2 min-h-[36px] rounded-lg cursor-pointer text-xs font-bold transition-colors inline-flex items-center justify-center"
                             >
                               تعديل
                             </button>
                             <button
                               onClick={() => handleDeleteProduct(p.id, p.name)}
-                              className="bg-rose-600 hover:bg-rose-700 text-white border-0 px-2.5 py-1.5 rounded-lg cursor-pointer text-xs font-bold transition-colors"
+                              className="bg-rose-600 hover:bg-rose-700 text-white border-0 px-3 py-2 min-h-[36px] rounded-lg cursor-pointer text-xs font-bold transition-colors inline-flex items-center justify-center"
                             >
                               حذف
                             </button>
@@ -648,7 +648,7 @@ export default function AdminDashboardPage() {
                             <select
                               value={o.status}
                               onChange={(e) => handleUpdateOrderStatus(o.order_ref, e.target.value)}
-                              className="bg-[#0b0f0d] border border-white/20 text-white px-2.5 py-1 rounded-lg text-xs outline-none cursor-pointer"
+                              className="bg-[#0b0f0d] border border-white/20 text-white px-2.5 py-1.5 min-h-[36px] rounded-lg text-xs outline-none cursor-pointer"
                             >
                               <option value="قيد المراجعة">قيد المراجعة</option>
                               <option value="تم التأكيد">تم التأكيد</option>
@@ -662,7 +662,7 @@ export default function AdminDashboardPage() {
                               href={waLink}
                               target="_blank"
                               rel="noreferrer"
-                              className="bg-[#25d366]/15 hover:bg-[#25d366]/25 border border-[#25d366] text-[#25d366] px-3 py-1.5 rounded-full text-xs font-bold no-underline inline-flex items-center gap-1.5 transition-colors"
+                              className="bg-[#25d366]/15 hover:bg-[#25d366]/25 border border-[#25d366] text-[#25d366] px-3 py-2 min-h-[36px] rounded-full text-xs font-bold no-underline inline-flex items-center gap-1.5 transition-colors"
                             >
                               <span>واتساب العميل</span>
                             </a>
@@ -688,7 +688,8 @@ export default function AdminDashboardPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm font-bold border-0 cursor-pointer transition-colors"
+                  className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-base font-bold border-0 cursor-pointer transition-colors shrink-0"
+                  aria-label="إغلاق النافذة"
                 >
                   ✕
                 </button>
@@ -787,7 +788,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   {/* Thumbnails Gallery Grid */}
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-2.5 mb-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-2.5 mb-3">
                     {form.images.map((imgUrl, idx) => (
                       <div
                         key={idx}

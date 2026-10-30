@@ -16,12 +16,12 @@ export default function MobileBottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#0d1210]/95 backdrop-blur-md border-t border-white/10 px-2 py-1.5 shadow-2xl flex items-center justify-around" aria-label="شريط التنقل السفلي للموبايل">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-[#0d1210]/95 backdrop-blur-md border-t border-white/10 px-2 py-1 pb-[calc(env(safe-area-inset-bottom,0px)+6px)] shadow-2xl flex items-center justify-around" aria-label="شريط التنقل السفلي للموبايل">
       
       {/* Home */}
       <Link
         href="/"
-        className={`flex flex-col items-center gap-1 p-1 text-[11px] font-bold transition-colors ${
+        className={`min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-1 p-1 text-[11px] font-bold transition-colors ${
           pathname === "/" ? "text-lime-400" : "text-neutral-400 hover:text-white"
         }`}
       >
@@ -35,7 +35,7 @@ export default function MobileBottomNav() {
       {/* Shop */}
       <Link
         href="/shop"
-        className={`flex flex-col items-center gap-1 p-1 text-[11px] font-bold transition-colors ${
+        className={`min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-1 p-1 text-[11px] font-bold transition-colors ${
           pathname.startsWith("/shop") ? "text-lime-400" : "text-neutral-400 hover:text-white"
         }`}
       >
@@ -51,7 +51,7 @@ export default function MobileBottomNav() {
       {/* Search Trigger */}
       <button
         type="button"
-        className="flex flex-col items-center gap-1 p-1 text-[11px] font-bold text-neutral-400 hover:text-white transition-colors"
+        className="min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-1 p-1 text-[11px] font-bold text-neutral-400 hover:text-white transition-colors"
         onClick={() => setIsSearchOpen(true)}
       >
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -64,7 +64,7 @@ export default function MobileBottomNav() {
       {/* Wishlist Trigger */}
       <button
         type="button"
-        className="flex flex-col items-center gap-1 p-1 text-[11px] font-bold text-neutral-400 hover:text-white transition-colors relative"
+        className="min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-1 p-1 text-[11px] font-bold text-neutral-400 hover:text-white transition-colors relative"
         onClick={() => setIsWishlistOpen(true)}
       >
         <div className="relative">
@@ -83,7 +83,7 @@ export default function MobileBottomNav() {
       {/* Cart Trigger */}
       <button
         type="button"
-        className="flex flex-col items-center gap-1 p-1 text-[11px] font-bold text-neutral-400 hover:text-white transition-colors relative"
+        className="min-h-[44px] min-w-[44px] flex flex-col items-center justify-center gap-1 p-1 text-[11px] font-bold text-neutral-400 hover:text-white transition-colors relative"
         onClick={() => setIsCartOpen(true)}
       >
         <div className="relative">

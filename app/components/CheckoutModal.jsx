@@ -55,7 +55,7 @@ export default function CheckoutModal() {
             </p>
           </div>
           <button
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-sm font-bold shrink-0"
+            className="flex items-center justify-center w-11 h-11 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-base font-bold shrink-0 cursor-pointer"
             type="button"
             onClick={() => setIsCheckoutOpen(false)}
             aria-label="إغلاق"

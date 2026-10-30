@@ -133,7 +133,7 @@ export default function ProductDetailPage({ params }) {
                 {/* Wishlist toggle */}
                 <button
                   type="button"
-                  className={`absolute top-4 left-4 z-10 flex items-center justify-center w-10 h-10 rounded-full bg-white/90 shadow-md backdrop-blur-sm transition-all hover:scale-110 ${
+                  className={`absolute top-4 left-4 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-white/90 shadow-md backdrop-blur-sm transition-all hover:scale-110 cursor-pointer ${
                     isFav ? "text-rose-500" : "text-neutral-400 hover:text-neutral-700"
                   }`}
                   onClick={(e) => {
@@ -153,7 +153,7 @@ export default function ProductDetailPage({ params }) {
                   <>
                     <button
                       type="button"
-                      className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-xs backdrop-blur-sm transition-transform active:scale-95"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-sm backdrop-blur-sm transition-transform active:scale-95 cursor-pointer"
                       onClick={() => setActiveImgIndex(prev => (prev > 0 ? prev - 1 : images.length - 1))}
                       aria-label="السابق"
                     >
@@ -161,7 +161,7 @@ export default function ProductDetailPage({ params }) {
                     </button>
                     <button
                       type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-xs backdrop-blur-sm transition-transform active:scale-95"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-sm backdrop-blur-sm transition-transform active:scale-95 cursor-pointer"
                       onClick={() => setActiveImgIndex(prev => (prev < images.length - 1 ? prev + 1 : 0))}
                       aria-label="التالي"
                     >
@@ -304,7 +304,7 @@ export default function ProductDetailPage({ params }) {
                 <div className="flex items-center justify-between gap-3 flex-wrap text-xs font-bold text-neutral-800">
                   <span>🚚 مصاريف ومواعيد الشحن لمحافظتك:</span>
                   <select
-                    className="h-8 px-2.5 rounded-lg border border-neutral-200 bg-white text-xs font-bold text-neutral-800 outline-none"
+                    className="h-10 px-3 rounded-lg border border-neutral-200 bg-white text-xs font-bold text-neutral-800 outline-none cursor-pointer"
                     value={selectedGov.id}
                     onChange={(e) => {
                       const g = GOVERNORATES.find(gov => gov.id === e.target.value);
@@ -380,7 +380,7 @@ export default function ProductDetailPage({ params }) {
                 </Button>
               </div>
 
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
                 {relatedProducts.map(p => (
                   <ProductCard key={p.id} product={p} />
                 ))}

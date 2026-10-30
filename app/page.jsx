@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "./context/CartContext";
 import ProductCard from "./components/ProductCard";
-import AudienceSection from "./components/AudienceSection";
+import MarqueeTicker from "./components/MarqueeTicker";
+import MensCollectionSection from "./components/MensCollectionSection";
+import WomensCollectionSection from "./components/WomensCollectionSection";
 import CollectionCTA from "./components/CollectionCTA";
 import WhatsAppSection from "./components/WhatsAppSection";
 import GuaranteesSection from "./components/GuaranteesSection";
@@ -44,6 +46,16 @@ export default function HomePage() {
     .sort((a, b) => (b.rating || 0) - (a.rating || 0))
     .slice(0, 4);
   const displayTopRated = topRated.length > 0 ? topRated : products.slice(2, 6);
+
+  // Filter 4 Men's Collection watches
+  const menProducts = products
+    .filter(p => p.target_audience && (p.target_audience === "رجالي" || p.target_audience.includes("رجالي")))
+    .slice(0, 4);
+
+  // Filter 4 Women's Collection watches
+  const womenProducts = products
+    .filter(p => p.target_audience && (p.target_audience === "حريمي" || p.target_audience.includes("حريمي")))
+    .slice(0, 4);
 
   // Deal product
   const dealProduct = products.find(p => p.id === "ben10-apex-chrono") || products[0];
@@ -109,15 +121,15 @@ export default function HomePage() {
                 <div className="absolute inset-6 rounded-full bg-lime-400/10 blur-2xl pointer-events-none" />
 
                 {/* Floating Chip Top */}
-                <div className="absolute -top-3 -right-2 z-20 flex items-center gap-2.5 p-2.5 rounded-2xl bg-black/80 border border-white/15 backdrop-blur-md shadow-xl text-xs">
-                  <div className="w-8 h-8 rounded-xl bg-lime-400/20 text-lime-400 flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <div className="absolute -top-3 -right-2 z-20 flex items-center gap-2 sm:gap-2.5 p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-black/80 border border-white/15 backdrop-blur-md shadow-xl text-xs">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-lime-400/20 text-lime-400 flex items-center justify-center shrink-0">
+                    <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
                   </div>
                   <div>
-                    <div className="font-extrabold text-white text-[11px]">ضمان معتمد 12-24 شهر</div>
-                    <div className="text-[9px] text-neutral-400">استبدال فوري بدون تعقيد</div>
+                    <div className="font-extrabold text-white text-[10px] sm:text-[11px]">ضمان معتمد 12-24 شهر</div>
+                    <div className="text-[8px] sm:text-[9px] text-neutral-400">استبدال فوري بدون تعقيد</div>
                   </div>
                 </div>
 
@@ -131,16 +143,16 @@ export default function HomePage() {
                 </div>
 
                 {/* Floating Chip Bottom */}
-                <div className="absolute -bottom-3 -left-2 z-20 flex items-center gap-2.5 p-2.5 rounded-2xl bg-black/80 border border-white/15 backdrop-blur-md shadow-xl text-xs">
-                  <div className="w-8 h-8 rounded-xl bg-lime-400/20 text-lime-400 flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <div className="absolute -bottom-3 -left-2 z-20 flex items-center gap-2 sm:gap-2.5 p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-black/80 border border-white/15 backdrop-blur-md shadow-xl text-xs">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-lime-400/20 text-lime-400 flex items-center justify-center shrink-0">
+                    <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <circle cx="12" cy="12" r="10"></circle>
                       <path d="M12 6v6l4 2"></path>
                     </svg>
                   </div>
                   <div>
-                    <div className="font-extrabold text-white text-[11px]">شحن سريع 24-48 ساعة</div>
-                    <div className="text-[9px] text-neutral-400">معاينة وفحص قبل الاستلام</div>
+                    <div className="font-extrabold text-white text-[10px] sm:text-[11px]">شحن سريع 24-48 ساعة</div>
+                    <div className="text-[8px] sm:text-[9px] text-neutral-400">معاينة وفحص قبل الاستلام</div>
                   </div>
                 </div>
 
@@ -152,24 +164,7 @@ export default function HomePage() {
       </section>
 
       {/* Marquee Ticker */}
-      <div className="bg-lime-400 text-black py-3 overflow-hidden select-none" aria-hidden="true">
-        <div className="flex whitespace-nowrap animate-marquee">
-          <div className="flex items-center gap-8 font-extrabold text-xs sm:text-sm px-4">
-            <span>🛡️ فحص ومعاينة الساعة قبل الدفع للمندوب</span>
-            <span>★ ساعات أصلية 100% بضمان الوكيل المعتمد</span>
-            <span>📱 تتبع الطلبات برقم مرجع فريد #B10 عبر الواتساب</span>
-            <span>🚚 شحن سريع لجميع محافظات مصر خلال 24 - 48 ساعة</span>
-            <span>🎁 علبة هدايا فاخرة مجانية مع كل ساعة</span>
-          </div>
-          <div className="flex items-center gap-8 font-extrabold text-xs sm:text-sm px-4">
-            <span>🛡️ فحص ومعاينة الساعة قبل الدفع للمندوب</span>
-            <span>★ ساعات أصلية 100% بضمان الوكيل المعتمد</span>
-            <span>📱 تتبع الطلبات برقم مرجع فريد #B10 عبر الواتساب</span>
-            <span>🚚 شحن سريع لجميع محافظات مصر خلال 24 - 48 ساعة</span>
-            <span>🎁 علبة هدايا فاخرة مجانية مع كل ساعة</span>
-          </div>
-        </div>
-      </div>
+      <MarqueeTicker />
 
       {/* 1. Watch Categories / Types (Bento Grid) */}
       <section className="py-14 sm:py-20 bg-white" id="categories">
@@ -278,7 +273,7 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {displayBestSellers.map(p => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -311,7 +306,7 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {displayTopRated.map(p => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -320,8 +315,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. Men & Women Collections Spotlight */}
-      <AudienceSection />
+      {/* 4. Dedicated Men's & Women's Collections */}
+      <MensCollectionSection products={menProducts} />
+      <WomensCollectionSection products={womenProducts} />
 
       {/* 5. Explore Collections Full Banner CTA */}
       <CollectionCTA />
@@ -366,7 +362,7 @@ export default function HomePage() {
               {/* CTAs */}
               <div className="flex items-center gap-3 pt-4 flex-wrap">
                 <Button
-                  className="bg-lime-400 hover:bg-lime-500 text-black font-extrabold h-12 px-7 rounded-full shadow-lg shadow-lime-400/20 text-sm sm:text-base"
+                  className="w-full sm:w-auto bg-lime-400 hover:bg-lime-500 text-black font-extrabold h-12 px-7 rounded-full shadow-lg shadow-lime-400/20 text-sm sm:text-base"
                   onClick={() => {
                     if (dealProduct) openCheckoutWithProduct(dealProduct);
                   }}
@@ -374,7 +370,7 @@ export default function HomePage() {
                   اطلب العرض الآن بـ 4,890 ج.م
                 </Button>
 
-                <Button asChild variant="outline" className="border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold h-12 px-6 rounded-full text-sm">
+                <Button asChild variant="outline" className="w-full sm:w-auto border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold h-12 px-6 rounded-full text-sm">
                   <Link href={`/product/${dealProduct?.id || 'ben10-apex-chrono'}`}>
                     تفاصيل الساعة كاملة
                   </Link>

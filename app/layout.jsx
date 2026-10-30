@@ -12,13 +12,14 @@ export const metadata = {
 
 export const viewport = {
   width: "device-width",
-  initialScale: 1
+  initialScale: 1,
+  maximumScale: 5
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className="min-h-screen bg-[#f8faf8] text-[#131715] font-sans antialiased selection:bg-lime-400 selection:text-black">
+      <body className="min-h-screen bg-[#f8faf8] text-[#131715] font-sans antialiased selection:bg-lime-400 selection:text-black overflow-x-hidden">
         <CartProvider>
           <ClientStoreWrapper>
             {children}

@@ -34,8 +34,8 @@ function ShopContent() {
     }
 
     if (audienceParam) {
-      if (audienceParam === "men") setActiveAudience("رجالي");
-      else if (audienceParam === "women") setActiveAudience("حريمي");
+      if (audienceParam === "men" || audienceParam === "رجالي") setActiveAudience("رجالي");
+      else if (audienceParam === "women" || audienceParam === "حريمي") setActiveAudience("حريمي");
       else setActiveAudience(audienceParam);
     }
 
@@ -57,9 +57,9 @@ function ShopContent() {
 
     // Audience match
     if (activeAudience !== "all") {
-      if (p.target_audience && !p.target_audience.includes(activeAudience)) {
-        return false;
-      }
+      if (!p.target_audience) return false;
+      const matchesAudience = p.target_audience.includes(activeAudience) || p.target_audience === "للجنسين";
+      if (!matchesAudience) return false;
     }
 
     // Search query match
@@ -138,7 +138,7 @@ function ShopContent() {
       </section>
 
       {/* Filter Bar */}
-      <section className="sticky top-16 sm:top-20 z-30 bg-white/95 backdrop-blur-md border-b border-neutral-200 py-3 shadow-sm">
+      <section className="top-0 sm:sticky sm:top-20 z-30 bg-white/95 backdrop-blur-md border-b border-neutral-200 py-3 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2.5">
           
           {/* Categories Horizontal Scroll */}
@@ -156,7 +156,7 @@ function ShopContent() {
                 key={cat.id}
                 type="button"
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all ${
+                className={`px-3.5 py-2 min-h-[38px] rounded-full text-xs font-bold shrink-0 transition-all flex items-center justify-center ${
                   activeCategory === cat.id
                     ? "bg-lime-400 text-black shadow-sm"
                     : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
@@ -170,7 +170,7 @@ function ShopContent() {
           {/* Sub Row: Audience, Sort, Count */}
           <div className="flex items-center justify-between gap-3 flex-wrap pt-1 border-t border-neutral-100 text-xs">
             {/* Audience */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 flex-wrap">
               <span className="font-bold text-neutral-400">الجمهور:</span>
               {[
                 { id: "all", label: "الكل" },
@@ -181,7 +181,7 @@ function ShopContent() {
                   key={aud.id}
                   type="button"
                   onClick={() => setActiveAudience(aud.id)}
-                  className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                  className={`px-3 py-1.5 min-h-[36px] rounded-lg font-bold transition-all flex items-center justify-center ${
                     activeAudience === aud.id
                       ? "bg-neutral-900 text-white"
                       : "text-neutral-600 hover:bg-neutral-100"
@@ -198,7 +198,7 @@ function ShopContent() {
               <select
                 value={activeSort}
                 onChange={(e) => setActiveSort(e.target.value)}
-                className="h-8 px-2.5 rounded-lg border border-neutral-200 bg-white text-xs font-bold text-neutral-800 outline-none focus:ring-1 focus:ring-lime-400"
+                className="h-10 px-3 rounded-lg border border-neutral-200 bg-white text-xs font-bold text-neutral-800 outline-none focus:ring-1 focus:ring-lime-400 cursor-pointer"
               >
                 <option value="featured">المقترح والمميز</option>
                 <option value="bestseller">الأكثر طلباً ومبيعاً</option>
@@ -211,7 +211,7 @@ function ShopContent() {
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="text-xs font-bold text-rose-500 hover:underline mr-2"
+                  className="min-h-[36px] flex items-center text-xs font-bold text-rose-500 hover:underline mr-2"
                 >
                   إعادة تعيين
                 </button>
@@ -244,7 +244,7 @@ function ShopContent() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {filtered.map(p => (
               <ProductCard key={p.id} product={p} />
             ))}

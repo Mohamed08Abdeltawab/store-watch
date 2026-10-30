@@ -47,7 +47,7 @@ export default function QuickViewModal() {
             نظرة سريعة ومواصفات الساعة
           </div>
           <button
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-sm font-bold"
+            className="flex items-center justify-center w-11 h-11 rounded-full bg-neutral-200/60 hover:bg-neutral-300 text-neutral-600 transition-colors text-base font-bold shrink-0 cursor-pointer"
             type="button"
             onClick={() => setQuickProduct(null)}
             aria-label="إغلاق"
@@ -73,7 +73,7 @@ export default function QuickViewModal() {
                   <button
                     type="button"
                     onClick={() => setActiveImgIndex(prev => (prev > 0 ? prev - 1 : images.length - 1))}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-xs backdrop-blur-sm transition-transform active:scale-95"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-sm backdrop-blur-sm transition-transform active:scale-95 cursor-pointer"
                     aria-label="السابق"
                   >
                     ◀
@@ -81,7 +81,7 @@ export default function QuickViewModal() {
                   <button
                     type="button"
                     onClick={() => setActiveImgIndex(prev => (prev < images.length - 1 ? prev + 1 : 0))}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-xs backdrop-blur-sm transition-transform active:scale-95"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-sm backdrop-blur-sm transition-transform active:scale-95 cursor-pointer"
                     aria-label="التالي"
                   >
                     ▶
@@ -177,14 +177,14 @@ export default function QuickViewModal() {
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   variant="outline"
-                  className="w-full text-neutral-800 font-bold h-10 rounded-xl border-neutral-200"
+                  className="w-full text-neutral-800 font-bold h-11 rounded-xl border-neutral-200"
                   onClick={() => addToCart(quickProduct, 1)}
                 >
                   🛒 أضف للسلة
                 </Button>
 
                 <Button
-                  className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold h-10 rounded-xl gap-1.5"
+                  className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-bold h-11 rounded-xl gap-1.5"
                   onClick={() => sendDirectWhatsApp(quickProduct)}
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">

@@ -23,7 +23,7 @@ export default function ClientStoreWrapper({ children }) {
   return (
     <>
       <Navbar />
-      <main id="main">{children}</main>
+      <main id="main" className="min-w-0 w-full overflow-x-clip">{children}</main>
       <Footer />
       <CartDrawer />
       <WishlistDrawer />

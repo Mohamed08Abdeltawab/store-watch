@@ -70,6 +70,8 @@
 
 html {
   scroll-behavior: smooth;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -78,4 +80,43 @@ body {
   color: #131715;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Scrollbar utilities for horizontal scrolling chips */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ==========================================================================
+   Continuous Right-to-Left Infinite Marquee Ticker (R1)
+   ========================================================================== */
+@keyframes marquee-rtl {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-rtl 32s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation-duration: 90s;
+  }
 }
