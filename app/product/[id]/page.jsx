@@ -24,6 +24,8 @@ export default function ProductDetailPage({ params }) {
   const [loading, setLoading] = useState(true);
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [selectedGov, setSelectedGov] = useState(GOVERNORATES[0]);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [touchStartX, setTouchStartX] = useState(null);
 
   useEffect(() => {
     // Try finding in products from context
@@ -47,6 +49,105 @@ export default function ProductDetailPage({ params }) {
     }
   }, [productId, products]);
 
+  // Robust image extraction helper
+  const images = (() => {
+    if (!product) return ["/img/ben10-classic-concept-01.png"];
+    let list = [];
+
+    if (Array.isArray(product.images)) {
+      list = product.images;
+    } else if (typeof product.images === "string") {
+      try {
+        const parsed = JSON.parse(product.images);
+        if (Array.isArray(parsed)) list = parsed;
+        else if (typeof parsed === "string") list = [parsed];
+      } catch {
+        if (product.images.includes(",")) {
+          list = product.images.split(",").map(s => s.trim());
+        } else if (product.images.trim()) {
+          list = [product.images.trim()];
+        }
+      }
+    }
+
+    list = list
+      .filter(item => typeof item === "string" && item.trim().length > 0)
+      .map(item => item.trim());
+
+    if (product.image && typeof product.image === "string" && product.image.trim()) {
+      const trimmed = product.image.trim();
+      if (!list.includes(trimmed)) {
+        list.unshift(trimmed);
+      }
+    }
+
+    list = Array.from(new Set(list));
+    return list.length > 0 ? list : ["/img/ben10-classic-concept-01.png"];
+  })();
+
+  // Reset or clamp image index
+  useEffect(() => {
+    if (activeImgIndex >= images.length) {
+      setActiveImgIndex(0);
+    }
+  }, [images.length, activeImgIndex]);
+
+  // Image flipping functions
+  const handleNextImage = () => {
+    if (images.length <= 1) return;
+    setActiveImgIndex(prev => (prev + 1) % images.length);
+  };
+
+  const handlePrevImage = () => {
+    if (images.length <= 1) return;
+    setActiveImgIndex(prev => (prev - 1 + images.length) % images.length);
+  };
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (images.length <= 1 && !isLightboxOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
+
+      if (e.key === "Escape" && isLightboxOpen) {
+        setIsLightboxOpen(false);
+      } else if (e.key === "ArrowLeft") {
+        // In Arabic RTL, left arrow moves to next image
+        handleNextImage();
+      } else if (e.key === "ArrowRight") {
+        // In Arabic RTL, right arrow moves to previous image
+        handlePrevImage();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [images.length, isLightboxOpen]);
+
+  // Touch Swipe Handlers for mobile
+  const handleTouchStart = (e) => {
+    if (images.length <= 1) return;
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX === null || images.length <= 1) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diffX = touchStartX - touchEndX;
+
+    if (Math.abs(diffX) > 40) {
+      if (diffX > 0) {
+        // Swiped left -> next image
+        handleNextImage();
+      } else {
+        // Swiped right -> previous image
+        handlePrevImage();
+      }
+    }
+    setTouchStartX(null);
+  };
+
   if (loading) {
     return (
       <div className="py-28 text-center space-y-3">
@@ -69,10 +170,6 @@ export default function ProductDetailPage({ params }) {
       </div>
     );
   }
-
-  const images = (product.images && product.images.length > 0)
-    ? product.images
-    : (product.image ? [product.image] : ["/img/ben10-classic-concept-01.png"]);
 
   const discount = product.old_price
     ? Math.round(((product.old_price - product.price) / product.old_price) * 100)
@@ -109,11 +206,18 @@ export default function ProductDetailPage({ params }) {
             
             {/* Gallery Column */}
             <div className="lg:col-span-6 space-y-4">
-              <div className="relative aspect-square w-full rounded-3xl overflow-hidden bg-white border border-neutral-200/80 p-6 flex items-center justify-center shadow-sm">
+              <div
+                className="relative aspect-square w-full rounded-3xl overflow-hidden bg-white border border-neutral-200/80 p-6 flex items-center justify-center shadow-sm select-none touch-pan-y group"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+              >
                 <img
+                  key={activeImgIndex}
                   src={images[activeImgIndex] || product.image}
                   alt={product.name}
-                  className="max-h-full max-w-full object-contain transition-transform duration-300 hover:scale-105"
+                  className="max-h-full max-w-full object-contain transition-all duration-300 hover:scale-105 animate-in fade-in zoom-in-95 cursor-zoom-in"
+                  onClick={() => setIsLightboxOpen(true)}
+                  title="انقر لتكبير ومعاينة الصورة كاملة"
                 />
 
                 {/* Badges */}
@@ -130,60 +234,146 @@ export default function ProductDetailPage({ params }) {
                   )}
                 </div>
 
-                {/* Wishlist toggle */}
-                <button
-                  type="button"
-                  className={`absolute top-4 left-4 z-10 flex items-center justify-center w-11 h-11 rounded-full bg-white/90 shadow-md backdrop-blur-sm transition-all hover:scale-110 cursor-pointer ${
-                    isFav ? "text-rose-500" : "text-neutral-400 hover:text-neutral-700"
-                  }`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleWishlist(product.id);
-                  }}
-                  aria-label="المفضلة"
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill={isFav ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                  </svg>
-                </button>
+                {/* Top Action Buttons (Wishlist + Zoom Lightbox) */}
+                <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+                  <button
+                    type="button"
+                    className={`flex items-center justify-center w-11 h-11 rounded-full bg-white/90 shadow-md backdrop-blur-sm transition-all hover:scale-110 cursor-pointer border border-neutral-200/50 ${
+                      isFav ? "text-rose-500" : "text-neutral-400 hover:text-neutral-700"
+                    }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleWishlist(product.id);
+                    }}
+                    aria-label="المفضلة"
+                    title={isFav ? "إزالة من المفضلة" : "إضافة للمفضلة"}
+                  >
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill={isFav ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  </button>
 
-                {/* Navigation arrows if multiple images */}
+                  <button
+                    type="button"
+                    className="flex items-center justify-center w-11 h-11 rounded-full bg-white/90 shadow-md backdrop-blur-sm text-neutral-600 hover:text-black transition-all hover:scale-110 cursor-pointer border border-neutral-200/50"
+                    onClick={() => setIsLightboxOpen(true)}
+                    aria-label="تكبير الصورة"
+                    title="تكبير ومعاينة الصورة كاملة"
+                  >
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      <line x1="11" y1="8" x2="11" y2="14"></line>
+                      <line x1="8" y1="11" x2="14" y2="11"></line>
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Navigation arrows if multiple images (أزرار التقليب) */}
                 {images.length > 1 && (
                   <>
+                    {/* Right Button (Previous in RTL) */}
                     <button
                       type="button"
-                      className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-sm backdrop-blur-sm transition-transform active:scale-95 cursor-pointer"
-                      onClick={() => setActiveImgIndex(prev => (prev > 0 ? prev - 1 : images.length - 1))}
-                      aria-label="السابق"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-black shadow-lg shadow-black/10 border border-neutral-200 backdrop-blur-md flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer z-10 group/btn"
+                      onClick={handlePrevImage}
+                      aria-label="الصورة السابقة"
+                      title="الصورة السابقة"
                     >
-                      ◀
+                      <svg className="w-6 h-6 transition-transform group-hover/btn:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
                     </button>
+
+                    {/* Left Button (Next in RTL) */}
                     <button
                       type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-sm backdrop-blur-sm transition-transform active:scale-95 cursor-pointer"
-                      onClick={() => setActiveImgIndex(prev => (prev < images.length - 1 ? prev + 1 : 0))}
-                      aria-label="التالي"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-white text-neutral-800 hover:text-black shadow-lg shadow-black/10 border border-neutral-200 backdrop-blur-md flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer z-10 group/btn"
+                      onClick={handleNextImage}
+                      aria-label="الصورة التالية"
+                      title="الصورة التالية"
                     >
-                      ▶
+                      <svg className="w-6 h-6 transition-transform group-hover/btn:-translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
                     </button>
+
+                    {/* Bottom floating badge with counter & mini navigation */}
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-3 py-1.5 rounded-full bg-neutral-900/85 hover:bg-neutral-900 text-white backdrop-blur-md text-xs font-bold shadow-lg transition-all border border-white/10">
+                      <button
+                        type="button"
+                        onClick={handlePrevImage}
+                        className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors cursor-pointer"
+                        aria-label="السابق"
+                        title="الصورة السابقة"
+                      >
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                      </button>
+
+                      <span className="text-[11px] tracking-wider select-none px-1">
+                        صورة {activeImgIndex + 1} من {images.length}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={handleNextImage}
+                        className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors cursor-pointer"
+                        aria-label="التالي"
+                        title="الصورة التالية"
+                      >
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                      </button>
+                    </div>
                   </>
                 )}
               </div>
 
-              {/* Thumbnails */}
+              {/* Indicator Dots */}
               {images.length > 1 && (
-                <div className="flex items-center gap-3 overflow-x-auto py-1">
+                <div className="flex items-center justify-center gap-1.5 pt-1">
+                  {images.map((_, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setActiveImgIndex(idx)}
+                      className={`h-2 transition-all duration-300 rounded-full cursor-pointer ${
+                        activeImgIndex === idx
+                          ? "w-7 bg-lime-500 shadow-sm"
+                          : "w-2 bg-neutral-300 hover:bg-neutral-400"
+                      }`}
+                      aria-label={`انتقال للصورة ${idx + 1}`}
+                      title={`صورة ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Thumbnails Strip */}
+              {images.length > 1 && (
+                <div className="flex items-center gap-3 overflow-x-auto py-2 px-1 scrollbar-thin">
                   {images.map((imgUrl, idx) => (
                     <button
                       key={idx}
                       type="button"
-                      className={`w-16 h-16 rounded-2xl border-2 p-1 bg-white shrink-0 transition-all ${
-                        activeImgIndex === idx ? "border-lime-500 scale-105 shadow-sm" : "border-neutral-200 opacity-60 hover:opacity-100"
+                      className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 p-1.5 bg-white shrink-0 transition-all duration-200 cursor-pointer overflow-hidden ${
+                        activeImgIndex === idx
+                          ? "border-lime-500 ring-2 ring-lime-400/50 scale-105 shadow-md"
+                          : "border-neutral-200 opacity-60 hover:opacity-100 hover:border-neutral-400"
                       }`}
                       onClick={() => setActiveImgIndex(idx)}
+                      aria-label={`عرض صورة ${idx + 1}`}
                     >
-                      <img src={imgUrl} alt="" className="w-full h-full object-contain" />
+                      <img src={imgUrl} alt={`${product.name} - ${idx + 1}`} className="w-full h-full object-contain" />
+                      <span className={`absolute bottom-1 right-1 text-[9px] font-bold px-1 rounded ${
+                        activeImgIndex === idx ? "bg-lime-400 text-black" : "bg-black/60 text-white"
+                      }`}>
+                        {idx + 1}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -390,6 +580,94 @@ export default function ProductDetailPage({ params }) {
 
         </div>
       </section>
+
+      {/* Fullscreen Lightbox Modal */}
+      {isLightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex flex-col justify-between p-4 sm:p-6 backdrop-blur-md animate-in fade-in duration-200 select-none"
+          role="dialog"
+          aria-modal="true"
+        >
+          {/* Top Bar */}
+          <div className="flex items-center justify-between text-white pb-3 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <span className="font-extrabold text-sm sm:text-base">{product.name}</span>
+              {images.length > 1 && (
+                <Badge className="bg-lime-400 text-black font-extrabold text-xs">
+                  {activeImgIndex + 1} / {images.length}
+                </Badge>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsLightboxOpen(false)}
+              className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center font-bold text-lg transition-colors cursor-pointer"
+              aria-label="إغلاق المعاينة"
+              title="إغلاق (Esc)"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Main Lightbox Image View with Large Arrows */}
+          <div className="relative flex-1 flex items-center justify-center p-4">
+            <img
+              src={images[activeImgIndex] || product.image}
+              alt={product.name}
+              className="max-h-[75vh] max-w-[90vw] object-contain transition-all duration-300 drop-shadow-2xl"
+            />
+
+            {images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={handlePrevImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-black/70 hover:bg-black text-white border border-white/20 flex items-center justify-center text-xl transition-transform hover:scale-110 active:scale-95 cursor-pointer shadow-2xl z-20 group"
+                  aria-label="السابق"
+                  title="الصورة السابقة"
+                >
+                  <svg className="w-7 h-7 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleNextImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-black/70 hover:bg-black text-white border border-white/20 flex items-center justify-center text-xl transition-transform hover:scale-110 active:scale-95 cursor-pointer shadow-2xl z-20 group"
+                  aria-label="التالي"
+                  title="الصورة التالية"
+                >
+                  <svg className="w-7 h-7 transition-transform group-hover:-translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Bottom Thumbnails Strip in Lightbox */}
+          {images.length > 1 && (
+            <div className="flex items-center justify-center gap-2 overflow-x-auto py-2 pt-4 border-t border-white/10">
+              {images.map((imgUrl, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setActiveImgIndex(idx)}
+                  className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl border-2 p-1 bg-white/5 transition-all overflow-hidden shrink-0 cursor-pointer ${
+                    activeImgIndex === idx
+                      ? "border-lime-400 scale-105 shadow-lg shadow-lime-400/20"
+                      : "border-white/20 opacity-50 hover:opacity-90"
+                  }`}
+                  aria-label={`معاينة صورة ${idx + 1}`}
+                >
+                  <img src={imgUrl} alt="" className="w-full h-full object-contain" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -22,13 +22,52 @@ export default function QuickViewModal() {
 
   if (!quickProduct) return null;
 
-  const images = (quickProduct.images && quickProduct.images.length > 0)
-    ? quickProduct.images
-    : (quickProduct.image ? [quickProduct.image] : ["/img/ben10-classic-concept-01.png"]);
+  // Parse images safely
+  const images = (() => {
+    if (!quickProduct) return ["/img/ben10-classic-concept-01.png"];
+    let list = [];
+    if (Array.isArray(quickProduct.images)) {
+      list = quickProduct.images;
+    } else if (typeof quickProduct.images === "string") {
+      try {
+        const parsed = JSON.parse(quickProduct.images);
+        if (Array.isArray(parsed)) list = parsed;
+        else if (typeof parsed === "string") list = [parsed];
+      } catch {
+        if (quickProduct.images.includes(",")) {
+          list = quickProduct.images.split(",").map(s => s.trim());
+        } else if (quickProduct.images.trim()) {
+          list = [quickProduct.images.trim()];
+        }
+      }
+    }
+
+    list = list
+      .filter(item => typeof item === "string" && item.trim().length > 0)
+      .map(item => item.trim());
+
+    if (quickProduct.image && typeof quickProduct.image === "string" && quickProduct.image.trim()) {
+      const trimmed = quickProduct.image.trim();
+      if (!list.includes(trimmed)) list.unshift(trimmed);
+    }
+
+    list = Array.from(new Set(list));
+    return list.length > 0 ? list : ["/img/ben10-classic-concept-01.png"];
+  })();
 
   const discount = quickProduct.old_price
     ? Math.round(((quickProduct.old_price - quickProduct.price) / quickProduct.old_price) * 100)
     : 0;
+
+  const handleNext = () => {
+    if (images.length <= 1) return;
+    setActiveImgIndex(prev => (prev + 1) % images.length);
+  };
+
+  const handlePrev = () => {
+    if (images.length <= 1) return;
+    setActiveImgIndex(prev => (prev - 1 + images.length) % images.length);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true">
@@ -61,48 +100,83 @@ export default function QuickViewModal() {
           
           {/* Media Column */}
           <div className="flex flex-col gap-3">
-            <div className="relative aspect-square w-full rounded-2xl bg-neutral-100/70 p-4 flex items-center justify-center border border-neutral-100 overflow-hidden">
+            <div className="relative aspect-square w-full rounded-2xl bg-neutral-100/70 p-4 flex items-center justify-center border border-neutral-100 overflow-hidden select-none group">
               <img
+                key={activeImgIndex}
                 src={images[activeImgIndex] || quickProduct.image}
                 alt={quickProduct.name}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain transition-all duration-300 animate-in fade-in zoom-in-95"
               />
 
               {images.length > 1 && (
                 <>
+                  {/* Right Button (Previous in RTL) */}
                   <button
                     type="button"
-                    onClick={() => setActiveImgIndex(prev => (prev > 0 ? prev - 1 : images.length - 1))}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-sm backdrop-blur-sm transition-transform active:scale-95 cursor-pointer"
-                    aria-label="السابق"
+                    onClick={handlePrev}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-neutral-900 shadow-md border border-neutral-200 flex items-center justify-center backdrop-blur-sm transition-all hover:scale-110 active:scale-95 cursor-pointer z-10"
+                    aria-label="الصورة السابقة"
+                    title="الصورة السابقة"
                   >
-                    ◀
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
                   </button>
+
+                  {/* Left Button (Next in RTL) */}
                   <button
                     type="button"
-                    onClick={() => setActiveImgIndex(prev => (prev < images.length - 1 ? prev + 1 : 0))}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center text-sm backdrop-blur-sm transition-transform active:scale-95 cursor-pointer"
-                    aria-label="التالي"
+                    onClick={handleNext}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-neutral-900 shadow-md border border-neutral-200 flex items-center justify-center backdrop-blur-sm transition-all hover:scale-110 active:scale-95 cursor-pointer z-10"
+                    aria-label="الصورة التالية"
+                    title="الصورة التالية"
                   >
-                    ▶
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
                   </button>
+
+                  {/* Bottom Counter */}
+                  <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-full bg-neutral-900/80 text-white text-[11px] font-bold backdrop-blur-sm z-10">
+                    {activeImgIndex + 1} / {images.length}
+                  </div>
                 </>
               )}
             </div>
 
+            {/* Indicator Dots */}
+            {images.length > 1 && (
+              <div className="flex items-center justify-center gap-1.5 py-0.5">
+                {images.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setActiveImgIndex(i)}
+                    className={`h-1.5 transition-all duration-200 rounded-full cursor-pointer ${
+                      activeImgIndex === i ? "w-5 bg-lime-500" : "w-1.5 bg-neutral-300 hover:bg-neutral-400"
+                    }`}
+                    aria-label={`صورة ${i + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+
             {/* Thumbnails */}
             {images.length > 1 && (
-              <div className="flex items-center gap-2 overflow-x-auto py-1">
+              <div className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-thin">
                 {images.map((img, i) => (
                   <button
                     key={i}
                     type="button"
                     onClick={() => setActiveImgIndex(i)}
-                    className={`w-14 h-14 rounded-xl border-2 p-1 bg-neutral-50 shrink-0 transition-all ${
-                      activeImgIndex === i ? "border-lime-500 scale-105" : "border-neutral-200 opacity-70 hover:opacity-100"
+                    className={`relative w-14 h-14 rounded-xl border-2 p-1 bg-white shrink-0 transition-all cursor-pointer ${
+                      activeImgIndex === i ? "border-lime-500 ring-2 ring-lime-400/40 scale-105 shadow-sm" : "border-neutral-200 opacity-60 hover:opacity-100"
                     }`}
                   >
                     <img src={img} alt="" className="w-full h-full object-contain" />
+                    <span className="absolute bottom-0.5 right-0.5 text-[8px] font-bold px-1 rounded bg-black/60 text-white">
+                      {i + 1}
+                    </span>
                   </button>
                 ))}
               </div>
