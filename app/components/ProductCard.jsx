@@ -11,8 +11,7 @@ export default function ProductCard({ product }) {
     toggleWishlist,
     addToCart,
     setQuickProduct,
-    sendDirectWhatsApp,
-    openCheckoutWithProduct
+    sendDirectWhatsApp
   } = useCart();
 
   if (!product) return null;
@@ -147,27 +146,11 @@ export default function ProductCard({ product }) {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-            {/* Instant Cash Buy button */}
-            <button
-              type="button"
-              className="flex items-center justify-center gap-0.5 sm:gap-1 px-1.5 sm:px-2.5 h-8 sm:h-9 rounded-xl bg-neutral-900 hover:bg-black text-lime-400 font-extrabold text-[10px] sm:text-xs transition-transform active:scale-95 shadow-sm"
-              title="شراء فوري كاش (معاينة قبل الدفع)"
-              aria-label="شراء فوري كاش"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                openCheckoutWithProduct(product);
-              }}
-            >
-              <span className="text-xs leading-none">⚡</span>
-              <span className="leading-none">كاش</span>
-            </button>
-
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Quick WhatsApp order button */}
             <button
               type="button"
-              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white transition-transform active:scale-95 shadow-sm"
+              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white transition-transform active:scale-95 shadow-sm cursor-pointer"
               title="طلب مباشر عبر واتساب"
               onClick={(e) => {
                 e.preventDefault();
@@ -184,7 +167,7 @@ export default function ProductCard({ product }) {
             {/* Add to Cart button */}
             <button
               type="button"
-              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-lime-400 hover:bg-lime-500 text-black font-extrabold transition-all active:scale-95 shadow-sm shadow-lime-400/30"
+              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-lime-400 hover:bg-lime-500 text-black font-extrabold transition-all active:scale-95 shadow-sm shadow-lime-400/30 cursor-pointer"
               aria-label="إضافة إلى السلة"
               title="إضافة إلى السلة"
               onClick={(e) => {

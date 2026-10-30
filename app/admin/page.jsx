@@ -195,8 +195,12 @@ export default function AdminDashboardPage() {
     notify("تم تعيين الصورة كغلاف رئيسي للساعة");
   }
 
-  // Remove an image from the list
-  function handleRemoveImage(idx) {
+  // Remove an image from the list and delete it permanently from the server
+  async function handleRemoveImage(idx) {
+    const targetUrl = form.images[idx];
+    if (!targetUrl) return;
+
+    // Immediately update state
     setForm(prev => {
       const imgs = prev.images.filter((_, i) => i !== idx);
       return {
@@ -205,6 +209,21 @@ export default function AdminDashboardPage() {
         image: imgs[0] || "/img/ben10-classic-concept-01.png"
       };
     });
+
+    // Call server to permanently delete the image file
+    try {
+      const res = await fetch("/api/upload", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: targetUrl })
+      });
+      const data = await res.json();
+      if (data.success) {
+        notify("تم حذف ملف الصورة نهائياً من المتجر والخادم 🗑️");
+      }
+    } catch (err) {
+      console.error("Failed to delete image permanently:", err);
+    }
   }
 
   // Move image order left / right
@@ -824,7 +843,7 @@ export default function AdminDashboardPage() {
                           <button
                             type="button"
                             onClick={() => handleRemoveImage(idx)}
-                            title="حذف الصورة"
+                            title="حذف الصورة نهائياً من المتجر والخادم"
                             className="bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500 text-rose-300 rounded text-[11px] px-2 py-1 cursor-pointer transition-colors"
                           >
                             ✕

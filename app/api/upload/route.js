@@ -79,3 +79,62 @@ export async function POST(req) {
     return NextResponse.json({ success: false, error: "فشل حفظ الصور: " + err.message }, { status: 500 });
   }
 }
+
+export async function DELETE(req) {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("ben10_admin_token");
+    if (!token || token.value !== "ben10_authorized_session") {
+      return NextResponse.json({ success: false, error: "غير مصرح لك بحذف الصور" }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const url = body?.url;
+
+    if (!url || typeof url !== "string") {
+      return NextResponse.json({ success: false, error: "رابط الصورة مطلوب لحذفها" }, { status: 400 });
+    }
+
+    const bucketName = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET || "watches";
+    const useSupabase = isSupabaseConfigured();
+
+    // Check if it's stored in Supabase Storage
+    if (useSupabase && (url.includes(bucketName) || url.includes("supabase.co"))) {
+      try {
+        const supabase = getSupabaseAdmin();
+        const cleanUrl = url.split("?")[0];
+        const filename = path.basename(cleanUrl);
+        const { error } = await supabase.storage.from(bucketName).remove([filename]);
+        if (error) {
+          console.error("[Supabase Storage Delete Error]:", error);
+        }
+      } catch (err) {
+        console.error("Supabase Storage deletion error:", err);
+      }
+    }
+
+    // Check if it's stored in local public/uploads directory
+    if (url.startsWith("/uploads/") || url.includes("/uploads/")) {
+      const cleanUrl = url.split("?")[0];
+      const filename = path.basename(cleanUrl);
+      const filePath = path.join(process.cwd(), "public", "uploads", filename);
+
+      try {
+        await fs.unlink(filePath);
+      } catch (err) {
+        // If file doesn't exist on disk, ignore ENOENT
+        if (err.code !== "ENOENT") {
+          console.error("Local file deletion error:", err);
+        }
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "تم حذف ملف الصورة نهائياً من المتجر والخادم"
+    });
+  } catch (err) {
+    console.error("DELETE /api/upload error:", err);
+    return NextResponse.json({ success: false, error: "فشل حذف ملف الصورة: " + err.message }, { status: 500 });
+  }
+}
